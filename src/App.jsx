@@ -581,7 +581,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 // ─── PERSISTENT STATE HOOK ───────────────────────────────────────────────────
 // Saves to localStorage automatically. Falls back to defaultValue if nothing saved.
 function usePersist(key, defaultValue) {
-  const [state, setState] = React.useState(() => {
+  const [state, setState] = useState(() => {
     try {
       const saved = localStorage.getItem('pdp_' + key);
       return saved !== null ? JSON.parse(saved) : defaultValue;
