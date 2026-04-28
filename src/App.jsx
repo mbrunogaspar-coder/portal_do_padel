@@ -108,6 +108,7 @@ const Spin=()=><svg style={{animation:"ptSpin .7s linear infinite",display:"inli
 
 // ─── CSS ──────────────────────────────────────────────────────────────────────
 const CSS=`
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap');
 @keyframes ptSpin{to{transform:rotate(360deg)}}
 @keyframes ptUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes ptIn{from{opacity:0}to{opacity:1}}
@@ -119,7 +120,7 @@ const CSS=`
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{min-height:100%;background:#F4F0E8}
-body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.15);border-radius:99px}
 
@@ -178,7 +179,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 @media(min-width:580px){.pt-grid{grid-template-columns:1fr 1fr}}
 @media(min-width:860px){.pt-grid{grid-template-columns:1fr 1fr 1fr}}
 
-.pt-card{background:#FFFFFF;border:1px solid rgba(0,0,0,0.09);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;-webkit-tap-highlight-color:transparent;animation:ptUp .4s ease both}
+.pt-card{background:#FFFFFF;border:1px solid rgba(0,0,0,0.08);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .22s cubic-bezier(.25,.46,.45,.94),box-shadow .22s cubic-bezier(.25,.46,.45,.94);-webkit-tap-highlight-color:transparent;animation:ptUp .4s ease both;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .pt-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,0.09)}
 .pt-cbar{height:3px;background:#141210}
 .pt-ctop{padding:16px 16px 10px;display:flex;gap:12px;align-items:flex-start}
@@ -217,17 +218,17 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-pback:hover{background:rgba(0,0,0,0.05);color:#141210}
 .pt-pname{font-weight:800;font-size:14px;color:#141210;flex:1;letter-spacing:-.2px}
 
-.pt-phero{padding:36px 20px 28px;border-bottom:1px solid rgba(0,0,0,0.09);background:#141210;position:relative;overflow:hidden}
-.pt-phero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
-.pt-phero-content{position:relative;z-index:1;max-width:540px;margin:0 auto}
-.pt-phero-live{display:inline-flex;align-items:center;gap:7px;border-radius:99px;padding:5px 12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;color:rgba(255,255,255,.7)}
+.pt-phero{padding:36px 20px 28px;border-bottom:1px solid rgba(0,0,0,0.09);background:#F4F0E8;position:relative;overflow:hidden}
+.pt-phero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.pt-phero-content{position:relative;z-index:1;max-width:540px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center}
+.pt-phero-live{display:inline-flex;align-items:center;gap:7px;border-radius:99px;padding:5px 12px;border:1px solid rgba(0,0,0,.12);background:#141210;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;color:#F4F0E8}
 .pt-phero-live::before{content:'';width:5px;height:5px;border-radius:50%;background:#F4F0E8;flex-shrink:0;animation:ptPulse 2s infinite}
-.pt-phero-title{font-weight:800;font-size:clamp(34px,9vw,62px);line-height:.92;letter-spacing:-2px;color:#F4F0E8;margin-bottom:10px}
-.pt-phero-sub{font-size:13px;color:rgba(255,255,255,.45);font-weight:300}
-.pt-phero-info{margin-top:14px;font-size:11px;color:rgba(255,255,255,.3);display:flex;gap:14px;flex-wrap:wrap}
-.pt-phero-info b{color:rgba(255,255,255,.6);font-weight:600}
+.pt-phero-title{font-weight:800;font-size:clamp(34px,9vw,62px);line-height:.92;letter-spacing:-2px;color:#141210;margin-bottom:10px;font-family:'DM Serif Display','DM Sans',system-ui,sans-serif}
+.pt-phero-sub{font-size:13px;color:#7A766F;font-weight:300}
+.pt-phero-info{margin-top:14px;font-size:11px;color:#B5B0A8;display:flex;gap:14px;flex-wrap:wrap}
+.pt-phero-info b{color:#141210;font-weight:600}
 
-.pt-pbody{max-width:540px;margin:0 auto;padding:0 18px 130px}
+.pt-pbody{max-width:540px;margin:0 auto;padding:0 18px 130px;text-align:center}
 .pt-psec{padding-top:22px}
 .pt-pstep{display:flex;align-items:center;gap:9px;margin-bottom:12px}
 .pt-pstep-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;transition:all .2s}
@@ -237,7 +238,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 /* DAYS STRIP */
 .pt-days{display:flex !important;flex-direction:row !important;flex-wrap:nowrap !important;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:none;width:100%}
 .pt-days::-webkit-scrollbar{display:none}
-.pt-day{flex-shrink:0 !important;min-width:50px;padding:9px 7px;border:1.5px solid rgba(0,0,0,0.1);border-radius:10px;background:#FFFFFF;cursor:pointer;display:flex !important;flex-direction:column !important;align-items:center;gap:2px;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.pt-day{flex-shrink:0 !important;min-width:54px;padding:10px 8px;border:1.5px solid rgba(0,0,0,0.08);border-radius:12px;background:#FFFFFF;cursor:pointer;display:flex !important;flex-direction:column !important;align-items:center;gap:2px;-webkit-tap-highlight-color:transparent;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .pt-day:hover{border-color:rgba(0,0,0,0.25)}
 .pt-day-wd{font-size:8px;font-weight:700;letter-spacing:.8px;color:#B5B0A8;text-transform:uppercase}
 .pt-day-d{font-weight:800;font-size:18px;color:#141210;line-height:1.1}
@@ -247,18 +248,18 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 
 /* DURATIONS */
 .pt-durs{display:flex !important;flex-direction:row !important;flex-wrap:wrap;gap:8px}
-.pt-dur{padding:10px 18px;border:1.5px solid rgba(0,0,0,0.1);border-radius:10px;background:#FFFFFF;cursor:pointer;font-size:13px;font-weight:600;color:#7A766F;transition:all .15s;-webkit-tap-highlight-color:transparent;font-family:inherit}
+.pt-dur{padding:11px 20px;border:1.5px solid rgba(0,0,0,0.08);border-radius:12px;background:#FFFFFF;cursor:pointer;font-size:13px;font-weight:600;color:#7A766F;transition:all .16s cubic-bezier(.25,.46,.45,.94);-webkit-tap-highlight-color:transparent;font-family:inherit;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .pt-dur:hover{border-color:rgba(0,0,0,0.25);color:#141210}
 .pt-dur.on{background:#141210;color:#F4F0E8;border-color:#141210}
 
 /* SLOTS */
 .pt-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 @media(min-width:400px){.pt-slots{grid-template-columns:repeat(4,1fr)}}
-.pt-slot{border:1.5px solid rgba(0,0,0,0.1);border-radius:9px;padding:11px 6px;cursor:pointer;background:#FFFFFF;text-align:center;-webkit-tap-highlight-color:transparent;transition:all .15s;position:relative}
+.pt-slot{border:1.5px solid rgba(0,0,0,0.08);border-radius:11px;padding:12px 6px;cursor:pointer;background:#FFFFFF;text-align:center;-webkit-tap-highlight-color:transparent;transition:all .16s cubic-bezier(.25,.46,.45,.94);position:relative;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .pt-slot:hover:not(.pt-full):not(.pt-blk){border-color:rgba(0,0,0,0.28);transform:translateY(-1px)}
 .pt-slot-t{font-weight:800;font-size:16px;color:#141210;line-height:1}
 .pt-slot-sub{font-size:9px;color:#B5B0A8;margin-top:3px}
-.pt-slot.on{background:#141210;border-color:#141210}
+.pt-slot.on{background:#141210;border-color:#141210;box-shadow:0 4px 12px rgba(0,0,0,.18);transform:scale(1.02)}
 .pt-slot.on .pt-slot-t,.pt-slot.on .pt-slot-sub{color:#F4F0E8}
 .pt-slot.on::after{content:'✓';position:absolute;top:4px;right:6px;font-size:9px;font-weight:700;color:#F4F0E8}
 .pt-slot.pt-full{opacity:.22;cursor:not-allowed;border-style:dashed}
@@ -268,7 +269,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 
 /* COURTS */
 .pt-courts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.pt-court{border:1.5px solid rgba(0,0,0,0.1);border-radius:11px;padding:14px;cursor:pointer;background:#FFFFFF;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.pt-court{border:1.5px solid rgba(0,0,0,0.08);border-radius:13px;padding:15px;cursor:pointer;background:#FFFFFF;-webkit-tap-highlight-color:transparent;transition:all .16s cubic-bezier(.25,.46,.45,.94);box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .pt-court:hover{border-color:rgba(0,0,0,0.25)}
 .pt-court.on{background:#141210;border-color:#141210}
 .pt-court-name{font-weight:800;font-size:16px;color:#141210;letter-spacing:-.2px}
@@ -321,7 +322,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-pay-radio{width:14px;height:14px;border:1.5px solid rgba(0,0,0,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
 .pt-pay.on .pt-pay-radio{border-color:#F4F0E8;background:#F4F0E8}
 .pt-pay.on .pt-pay-radio::after{content:'';width:5px;height:5px;border-radius:50%;background:#141210}
-.pt-submit{width:100%;padding:14px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-tap-highlight-color:transparent;font-family:inherit;transition:all .15s}
+.pt-submit{width:100%;padding:15px;border-radius:12px;border:none;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-tap-highlight-color:transparent;font-family:inherit;transition:all .18s cubic-bezier(.25,.46,.45,.94)}
 .pt-submit:disabled{opacity:.4;cursor:not-allowed}
 .pt-foot{padding:12px 20px;display:flex;flex-direction:column;gap:8px;padding-bottom:max(18px,env(safe-area-inset-bottom,18px))}
 @media(min-width:600px){.pt-foot{flex-direction:row;justify-content:flex-end;padding-bottom:18px}.pt-foot .pt-submit{width:auto}}
@@ -505,7 +506,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-modal-foot{padding:0 18px 18px;display:flex;flex-direction:column;gap:7px}
 @media(min-width:600px){.pt-modal-foot{flex-direction:row;justify-content:flex-end;padding-bottom:16px}.pt-modal-foot .pt-btn-w{width:auto}}
 .pt-mfi{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:9px;padding:11px 13px;color:#EDE9E1;font-size:13px;outline:none;width:100%;-webkit-appearance:none;font-family:inherit;transition:border-color .18s}
-.pt-mfi:focus{border-color:rgba(255,255,255,.3)}
+.pt-mfi:focus{border-color:rgba(255,255,255,.3);box-shadow:0 0 0 3px rgba(255,255,255,.06)}
 .pt-mfi::placeholder{color:#3D3A35}
 .pt-mfi.err{border-color:#FF6B6B}
 .pt-merr{font-size:10px;color:#FF6B6B;margin-top:-7px}
@@ -894,7 +895,7 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((club.address||club.city||"")+" padel")}`}
               target="_blank"
               rel="noreferrer"
-              style={{display:"inline-flex",alignItems:"center",gap:6,marginTop:10,padding:"6px 12px",borderRadius:99,background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.15)",color:"rgba(255,255,255,.8)",fontSize:11,fontWeight:600,textDecoration:"none",letterSpacing:".3px",transition:"background .15s"}}
+              style={{display:"inline-flex",alignItems:"center",gap:6,marginTop:10,padding:"6px 12px",borderRadius:99,background:"rgba(0,0,0,.06)",border:"1px solid rgba(0,0,0,.1)",color:"#141210",fontSize:11,fontWeight:600,textDecoration:"none",letterSpacing:".3px",transition:"background .15s"}}
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               {club.address||club.city}
