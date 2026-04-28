@@ -674,7 +674,7 @@ export default function App() {
         {/* AUTH SCREENS */}
         {authScreen==="athleteLogin"    && <AthleteLogin  athletes={athletes} onLogin={a=>{setCurrentUser({type:"athlete",data:a});setAuthScreen(null);}} onGoRegister={()=>setAuthScreen("athleteRegister")} onBack={()=>setAuthScreen(null)}/>}
         {authScreen==="athleteRegister" && <AthleteRegister athletes={athletes} onRegister={a=>{setAthletes(p=>[...p,a]);setCurrentUser({type:"athlete",data:a});setAuthScreen(null);}} onGoLogin={()=>setAuthScreen("athleteLogin")} onBack={()=>setAuthScreen(null)}/>}
-        {authScreen==="clubLogin"       && <ClubLogin clubs={regClubs} onLogin={c=>{setCurrentUser({type:"club",data:c});setAuthScreen(null);setMode("admin");}} onGoRegister={()=>setAuthScreen("clubRegister")} onSuperLogin={()=>{setCurrentUser({type:"super",data:{name:"Super Admin",email:SUPER_ADMIN.email}});setAuthScreen(null);setMode("admin");}}/>}
+        {authScreen==="clubLogin"       && <ClubLogin clubs={regClubs} onLogin={c=>{setCurrentUser({type:"club",data:c});setAuthScreen(null);setMode("admin");}} onGoRegister={()=>setAuthScreen("clubRegister")} onSuperLogin={()=>{setCurrentUser({type:"super",data:{name:"Super Admin",email:SUPER_ADMIN.email}});setAuthScreen(null);setMode("admin");}} onBack={()=>setAuthScreen(null)}/>}
         {authScreen==="clubRegister"    && <ClubRegister clubs={regClubs} onSubmit={c=>{setRegClubs(p=>[...p,c]);}} onGoLogin={()=>setAuthScreen("clubLogin")}/>}
         {currentUser?.type==="super" && mode==="admin" && <SuperAdmin clubs={regClubs} onApprove={id=>setRegClubs(p=>p.map(c=>c.id===id?{...c,status:"approved"}:c))} onReject={id=>setRegClubs(p=>p.map(c=>c.id===id?{...c,status:"rejected"}:c))} onLogout={logout}/>}
 
@@ -3169,7 +3169,7 @@ function AthleteRegister({ athletes, onRegister, onGoLogin, onBack }) {
 }
 
 // ── CLUB LOGIN ────────────────────────────────────────────────────────────────
-function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin }) {
+function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin, onBack }) {
   const [email,setEmail]=useState("");
   const [pass,setPass]=useState("");
   const [err,setErr]=useState("");
@@ -3198,6 +3198,9 @@ function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin }) {
       <div style={{textAlign:"center",fontSize:13,color:"#7A766F",marginTop:8}}>
         Ainda não tens conta?{" "}
         <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoRegister}>Pedir acesso</span>
+      </div>
+      <div style={{textAlign:"center",marginTop:16}}>
+        <span style={{fontSize:12,color:"#B5B0A8",cursor:"pointer"}} onClick={onBack}>← Voltar</span>
       </div>
     </AuthLayout>
   );
