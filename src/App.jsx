@@ -261,7 +261,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-slot-sub{font-size:9px;color:#B5B0A8;margin-top:3px}
 .pt-slot.on{background:#141210;border-color:#141210;box-shadow:0 4px 12px rgba(0,0,0,.18);transform:scale(1.02)}
 .pt-slot.on .pt-slot-t,.pt-slot.on .pt-slot-sub{color:#F4F0E8}
-.pt-slot.on::after{content:'✓';position:absolute;top:4px;right:6px;font-size:9px;font-weight:700;color:#F4F0E8}
+
 .pt-slot.pt-full{opacity:.22;cursor:not-allowed;border-style:dashed}
 .pt-slot.pt-full .pt-slot-t{text-decoration:line-through}
 .pt-slot.pt-blk{opacity:.2;cursor:not-allowed;border-style:dashed}
