@@ -2561,7 +2561,7 @@ function WaitlistModal({club,day,time,dur,onClose,onJoin}){
         ):(
           <>
             <div style={{padding:"16px 20px 0"}}>
-              <div style={{fontSize:12,fontWeight:700,background:"rgba(0,0,0,.07)",color:"#7A766F",display:"inline-flex",padding:"3px 10px",borderRadius:99,marginBottom:8,letterSpacing:"1px",textTransform:"uppercase",fontSize:9}}>Lista de Espera</div>
+              <div style={{fontWeight:700,background:"rgba(0,0,0,.07)",color:"#7A766F",display:"inline-flex",padding:"3px 10px",borderRadius:99,marginBottom:8,letterSpacing:"1px",textTransform:"uppercase",fontSize:9}}>Lista de Espera</div>
               <div style={{fontSize:20,fontWeight:800,color:"#141210",letterSpacing:"-.5px",marginBottom:4}}>Avisa-me se abrir vaga</div>
               <div style={{fontSize:13,color:"#7A766F",marginBottom:16}}>{fmtLong(day)} · {time} · {durLbl(dur||60)}</div>
             </div>
