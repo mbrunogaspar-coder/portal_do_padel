@@ -25,14 +25,14 @@ const REGIONS = [
   {id:"madeira",label:"Madeira",icon:"🌺"},
 ];
 const CLUBS = [
-  {id:1,name:"Padel Arena",amenities:["parking","showers"],city:"Lisboa",district:"Lisboa",region:"lvt",courts:4,indoor:2,outdoor:2,priceDay:3,priceNight:4,nightFrom:18,rating:4.8,reviews:124,tags:["Indoor","Balneários","Estac."],open:"08–22h",highlight:true,desc:"4 campos premium no centro de Lisboa. Balneários equipados e estacionamento privativo."},
-  {id:2,name:"Norte Padel",amenities:["academy","shop"],city:"Porto",district:"Porto",region:"norte",courts:6,indoor:4,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.9,reviews:203,tags:["Indoor","Aulas","Loja"],open:"07–23h",highlight:true,desc:"O maior clube de padel do Porto. Academia com treinadores certificados e loja especializada."},
-  {id:3,name:"Algarve Padel",amenities:["pool","bar","lights"],city:"Faro",district:"Faro",region:"alg",courts:8,indoor:2,outdoor:6,priceDay:3,priceNight:5,nightFrom:18,rating:4.7,reviews:89,tags:["Outdoor","Piscina","Bar"],open:"08–21h",highlight:false,desc:"Clube com vista para a Ria Formosa. 6 campos outdoor iluminados e bar/restaurante."},
-  {id:4,name:"Setúbal Padel",amenities:["parking"],city:"Setúbal",district:"Setúbal",region:"lvt",courts:3,indoor:3,outdoor:0,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.5,reviews:67,tags:["Indoor","Estac."],open:"09–22h",highlight:false,desc:"Clube familiar com 3 campos cobertos. Ideal para jogar durante todo o ano."},
-  {id:5,name:"Coimbra Padel",amenities:["academy","showers"],city:"Coimbra",district:"Coimbra",region:"centro",courts:4,indoor:2,outdoor:2,priceDay:2,priceNight:3,nightFrom:18,rating:4.6,reviews:112,tags:["Indoor","Aulas"],open:"08–22h",highlight:false,desc:"Academia universitária com preços acessíveis. Programas para todos os níveis."},
-  {id:6,name:"Braga Padel Sport",amenities:["bar","lights"],city:"Braga",district:"Braga",region:"norte",courts:5,indoor:3,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.8,reviews:78,tags:["Indoor","Torneios","Bar"],open:"07:30–23h",highlight:false,desc:"Calendário activo de torneios e liga interna mensal para todos os níveis."},
-  {id:7,name:"Évora Padel",amenities:["academy"],city:"Évora",district:"Évora",region:"alent",courts:2,indoor:2,outdoor:0,priceDay:2,priceNight:3,nightFrom:18,rating:4.4,reviews:34,tags:["Indoor","Aulas"],open:"09–21h",highlight:false,desc:"O único clube de padel indoor do Alentejo Central. Moderno e acolhedor."},
-  {id:8,name:"Funchal Padel",amenities:["bar","lights"],city:"Funchal",district:"Funchal",region:"madeira",courts:3,indoor:1,outdoor:2,priceDay:3,priceNight:4.5,nightFrom:18,rating:4.9,reviews:56,tags:["Outdoor","Vista Mar","Bar"],open:"08–20h",highlight:true,desc:"Vista única para o Oceano Atlântico. Campos outdoor iluminados e bar com esplanada."},
+  {id:1,name:"Padel Arena",amenities:["parking","showers"],city:"Lisboa",district:"Lisboa",region:"lvt",courts:4,indoor:2,outdoor:2,priceDay:3,priceNight:4,nightFrom:18,rating:4.8,reviews:124,tags:["Indoor","Balneários","Estac."],open:"08–22h",desc:"4 campos premium no centro de Lisboa. Balneários equipados e estacionamento privativo."},
+  {id:2,name:"Norte Padel",amenities:["academy","shop"],city:"Porto",district:"Porto",region:"norte",courts:6,indoor:4,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.9,reviews:203,tags:["Indoor","Aulas","Loja"],open:"07–23h",desc:"O maior clube de padel do Porto. Academia com treinadores certificados e loja especializada."},
+  {id:3,name:"Algarve Padel",amenities:["pool","bar","lights"],city:"Faro",district:"Faro",region:"alg",courts:8,indoor:2,outdoor:6,priceDay:3,priceNight:5,nightFrom:18,rating:4.7,reviews:89,tags:["Outdoor","Piscina","Bar"],open:"08–21h",desc:"Clube com vista para a Ria Formosa. 6 campos outdoor iluminados e bar/restaurante."},
+  {id:4,name:"Setúbal Padel",amenities:["parking"],city:"Setúbal",district:"Setúbal",region:"lvt",courts:3,indoor:3,outdoor:0,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.5,reviews:67,tags:["Indoor","Estac."],open:"09–22h",desc:"Clube familiar com 3 campos cobertos. Ideal para jogar durante todo o ano."},
+  {id:5,name:"Coimbra Padel",amenities:["academy","showers"],city:"Coimbra",district:"Coimbra",region:"centro",courts:4,indoor:2,outdoor:2,priceDay:2,priceNight:3,nightFrom:18,rating:4.6,reviews:112,tags:["Indoor","Aulas"],open:"08–22h",desc:"Academia universitária com preços acessíveis. Programas para todos os níveis."},
+  {id:6,name:"Braga Padel Sport",amenities:["bar","lights"],city:"Braga",district:"Braga",region:"norte",courts:5,indoor:3,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.8,reviews:78,tags:["Indoor","Torneios","Bar"],open:"07:30–23h",desc:"Calendário activo de torneios e liga interna mensal para todos os níveis."},
+  {id:7,name:"Évora Padel",amenities:["academy"],city:"Évora",district:"Évora",region:"alent",courts:2,indoor:2,outdoor:0,priceDay:2,priceNight:3,nightFrom:18,rating:4.4,reviews:34,tags:["Indoor","Aulas"],open:"09–21h",desc:"O único clube de padel indoor do Alentejo Central. Moderno e acolhedor."},
+  {id:8,name:"Funchal Padel",amenities:["bar","lights"],city:"Funchal",district:"Funchal",region:"madeira",courts:3,indoor:1,outdoor:2,priceDay:3,priceNight:4.5,nightFrom:18,rating:4.9,reviews:56,tags:["Outdoor","Vista Mar","Bar"],open:"08–20h",desc:"Vista única para o Oceano Atlântico. Campos outdoor iluminados e bar com esplanada."},
 ];
 const BLOCK_CAT = {
   lessons:     {label:"Aulas"},
@@ -189,7 +189,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-cstars{font-size:11px;color:#141210}
 .pt-crv{font-size:12px;font-weight:700;color:#141210}
 .pt-crc{font-size:11px;color:#B5B0A8}
-.pt-cbadge{background:#141210;color:#F4F0E8;font-size:9px;font-weight:700;padding:3px 8px;border-radius:99px;letter-spacing:.8px;text-transform:uppercase;flex-shrink:0;align-self:flex-start}
+
 .pt-cdesc{padding:0 16px 12px;font-size:12px;color:#7A766F;line-height:1.65}
 .pt-cstats{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid rgba(0,0,0,0.07);border-bottom:1px solid rgba(0,0,0,0.07)}
 .pt-cs{padding:10px 12px;position:relative}
