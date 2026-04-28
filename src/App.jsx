@@ -623,7 +623,13 @@ export default function App() {
 
   // Per-club data helpers
   const clubId = currentUser?.type==="club" ? String(currentUser.data.id) : "demo";
-  const getCD  = (key, def) => (clubsData[clubId]||{})[key] ?? def;
+  const getCD  = (key, def) => {
+    const val = (clubsData[clubId]||{})[key];
+    if(val === undefined || val === null) return def;
+    if(Array.isArray(def) && !Array.isArray(val)) return def;
+    if(typeof def === 'object' && !Array.isArray(def) && typeof val !== 'object') return def;
+    return val;
+  };
   const setCD  = (key, val) => setClubsData(prev => ({
     ...prev,
     [clubId]: { ...(prev[clubId]||{}), [key]: typeof val==="function" ? val((prev[clubId]||{})[key]) : val }
@@ -3276,8 +3282,9 @@ function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin, onBack }) {
         Ainda não tens conta?{" "}
         <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoRegister}>Pedir acesso</span>
       </div>
-      <div style={{textAlign:"center",marginTop:16}}>
+      <div style={{textAlign:"center",marginTop:16,display:"flex",justifyContent:"center",gap:20}}>
         <span style={{fontSize:12,color:"#B5B0A8",cursor:"pointer"}} onClick={onBack}>← Voltar</span>
+        <span style={{fontSize:12,color:"#B5B0A8",cursor:"pointer"}} onClick={()=>{if(window.confirm("Limpar todos os dados de teste?")){ Object.keys(localStorage).filter(k=>k.startsWith("pdp_")).forEach(k=>localStorage.removeItem(k)); window.location.reload(); }}}>🗑 Limpar dados</span>
       </div>
     </AuthLayout>
   );
