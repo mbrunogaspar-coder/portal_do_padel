@@ -60,7 +60,7 @@ const fmtLong= (ds)=>new Date(ds+"T12:00:00").toLocaleDateString("pt-PT",{weekda
 const fmtSh  = (ds)=>new Date(ds+"T12:00:00").toLocaleDateString("pt-PT",{day:"2-digit",month:"2-digit"});
 const fmtFull= (ds)=>new Date(ds+"T12:00:00").toLocaleDateString("pt-PT",{day:"numeric",month:"long",year:"numeric"});
 const getWD  = (ds)=>new Date(ds+"T12:00:00").getDay();
-const ref    = ()=>"PDP-"+Math.random().toString(36).slice(-5).toUpperCase();
+const genRef = ()=>"PDP-"+Math.random().toString(36).slice(-5).toUpperCase();
 const ini    = (n)=>n.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
 const clvl   = (n)=>n>=10?"Pro":n>=4?"Regular":"Novo";
 
@@ -71,7 +71,7 @@ const ctFree   = (cid,date,t,d,bks,blks=[])=>{if(isBlocked(cid,date,t,d,blks))re
 const blkDate  = (blocks,date)=>blocks.filter(b=>b.type==="single"?b.date===date:b.weekdays.includes(getWD(date)));
 
 // ─── SEED ─────────────────────────────────────────────────────────────────────
-const mkB=(id,em,nm,cid,dt,tm,st,pay,dur=60)=>({id,contactEmail:em,contactName:nm,courtId:cid,date:dt,time:tm,dur,status:st,pay,ref:ref(),createdAt:dt+"T09:00:00"});
+const mkB=(id,em,nm,cid,dt,tm,st,pay,dur=60)=>({id,contactEmail:em,contactName:nm,courtId:cid,date:dt,time:tm,dur,status:st,pay,ref:genRef(),createdAt:dt+"T09:00:00"});
 const INIT_B=[mkB(101,"sofia@m.pt","Sofia Martins",1,"2026-04-19","10:00","confirmed","mbway"),mkB(102,"miguel@m.pt","Miguel Sousa",2,"2026-04-20","14:00","confirmed","card",90),mkB(103,"joao@m.pt","João Ferreira",1,"2026-04-21","09:00","confirmed","mbway"),mkB(104,"carla@m.pt","Carla Lopes",3,"2026-04-21","17:00","confirmed","local"),mkB(105,"sofia@m.pt","Sofia Martins",1,"2026-04-22","10:00","confirmed","mbway"),mkB(106,"ana@m.pt","Ana Costa",4,"2026-04-22","11:00","confirmed","multi",90),mkB(107,"miguel@m.pt","Miguel Sousa",2,"2026-04-23","15:00","confirmed","card"),mkB(108,"joao@m.pt","João Ferreira",3,"2026-04-23","19:00","confirmed","mbway"),mkB(109,"carla@m.pt","Carla Lopes",1,"2026-04-24","09:00","confirmed","local",120),mkB(110,"sofia@m.pt","Sofia Martins",2,"2026-04-24","18:00","confirmed","mbway"),mkB(201,"sofia@m.pt","Sofia Martins",1,"2026-04-25","10:00","confirmed","mbway"),mkB(202,"miguel@m.pt","Miguel Sousa",2,"2026-04-25","11:00","confirmed","card",90),mkB(203,"joao@m.pt","João Ferreira",1,"2026-04-25","14:00","pending","mbway"),mkB(204,"carla@m.pt","Carla Lopes",3,"2026-04-25","16:00","pending","local"),mkB(301,"ana@m.pt","Ana Costa",2,"2026-04-26","09:00","confirmed","multi"),mkB(302,"sofia@m.pt","Sofia Martins",4,"2026-04-26","17:00","pending","mbway",90)];
 const INIT_C=[{id:1,name:"Sofia Martins",email:"sofia@m.pt",phone:"+351 912 345 678",since:"2024-01-15",notes:"Prefere campos interiores. Vem às segundas e quartas."},{id:2,name:"João Ferreira",email:"joao@m.pt",phone:"+351 932 111 222",since:"2024-02-20",notes:""},{id:3,name:"Miguel Sousa",email:"miguel@m.pt",phone:"+351 917 555 666",since:"2023-11-05",notes:"Cliente antigo. Joga ao fim de semana."},{id:4,name:"Carla Lopes",email:"carla@m.pt",phone:"+351 936 777 888",since:"2024-04-01",notes:""},{id:5,name:"Ana Costa",email:"ana@m.pt",phone:"+351 962 333 444",since:"2024-03-10",notes:"Iniciante. Desconto nas primeiras reservas."}];
 const INIT_BLOCKS=[{id:1,type:"recurring",weekdays:[1,3,5],courtIds:[1,2],startTime:"09",endTime:"11",reason:"Aulas de Padel Adultos",category:"lessons"},{id:2,type:"recurring",weekdays:[6],courtIds:"all",startTime:"08",endTime:"10",reason:"Manutenção Semanal",category:"maintenance"},{id:3,type:"single",date:"2026-04-28",courtIds:[3,4],startTime:"14",endTime:"18",reason:"Torneio Interno",category:"event"}];
@@ -618,7 +618,7 @@ export default function App() {
   const portalBook = (data)=>{
     if(!contacts.find(c=>c.email===data.email))
       setConts(p=>[...p,{id:Date.now(),name:data.name,email:data.email,phone:data.phone,since:TODAY,notes:""}]);
-    const bk={id:Date.now()+1,contactEmail:data.email,contactName:data.name,courtId:data.court.id,date:data.date,time:data.time,dur:data.dur,status:adminCfg.requireApproval?"pending":"confirmed",pay:data.payment,ref:ref(),createdAt:new Date().toISOString()};
+    const bk={id:Date.now()+1,contactEmail:data.email,contactName:data.name,courtId:data.court.id,date:data.date,time:data.time,dur:data.dur,status:adminCfg.requireApproval?"pending":"confirmed",pay:data.payment,ref:genRef(),createdAt:new Date().toISOString()};
     setBook(p=>[...p,bk]);
     setNotifs(p=>[{id:Date.now()+2,type:"booking",msg:`${data.name} reservou ${data.court.name} · ${fmtSh(data.date)} ${data.time}`,time:"Agora",read:false},...p]);
     return bk;
@@ -2905,7 +2905,7 @@ function NewBookingModal({ cfg, day, bookings, blocks, onSave, onClose }) {
       dur: f.dur,
       status: f.status,
       pay: f.pay,
-      ref: ref(),
+      ref: genRef(),
       createdAt: new Date().toISOString(),
       createdByAdmin: true,
     };
