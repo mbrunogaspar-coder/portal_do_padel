@@ -667,7 +667,7 @@ export default function App() {
       <div style={{minHeight:"100vh",background:mode==="admin"?"#0E0D0B":"#F4F0E8"}}>
         {/* TOP MODESWITCH — hidden during auth screens */}
         {!authScreen && !(currentUser?.type==="super" && mode==="admin") && <div className="pt-top">
-          <div className="pt-top-brand">
+          <div className="pt-top-brand" style={{cursor:"pointer"}} onClick={()=>{setMode("discover");setClub(null);setAuthScreen(null);setShowProfile(false);}}>  
             <div className="pt-top-mark">PP</div>
             <div>
               <span className="pt-top-name">Portal do Padel</span>
