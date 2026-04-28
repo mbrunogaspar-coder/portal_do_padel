@@ -715,7 +715,7 @@ export default function App() {
 
         {!authScreen && !showProfile && currentUser?.type!=="super" && <>
         {/* VIEWS */}
-        {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}} allTournaments={[...activeTourneys.map(t=>({tournament:t,club:activeClubCfg}))]} currentUser={currentUser} onRegisterTournament={(item)=>{/* TODO */}} />}
+        {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}} allTournaments={[...activeTourneys.map(t=>({tournament:t,club:activeClubCfg}))]} currentUser={currentUser} onRegisterTournament={(item)=>{/* TODO */}} regClubs={regClubs.filter(c=>c.status==="approved")} />}
         {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={activeBookings} blocks={activeBlocks} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={tournaments} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} currentUser={currentUser} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
         {/* addBooking defined in App scope */}
         {mode==="admin"    && <AdminView cfg={activeClubCfg} setCfg={setActiveClubCfg} bookings={activeBookings} contacts={activeContacts} blocks={activeBlocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={activeTourneys} setTournaments={setActiveTourneys} onAddBooking={addBooking}/>}
@@ -728,11 +728,25 @@ export default function App() {
 // ═══════════════════════════════════════════════════════════════════════════════
 // DISCOVER VIEW
 // ═══════════════════════════════════════════════════════════════════════════════
-function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegisterTournament }) {
+function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegisterTournament, regClubs=[] }) {
   const [region, setRegion] = useState("all");
   const [search, setSearch] = useState("");
   const [discoverTab, setDiscoverTab] = useState("clubs");
-  const filtered = CLUBS.filter(c=>(region==="all"||c.region===region)&&(!search||c.name.toLowerCase().includes(search.toLowerCase())||c.city.toLowerCase().includes(search.toLowerCase())));
+  const allClubs = [
+    ...CLUBS,
+    ...regClubs.map(c=>({
+      id:c.id, name:c.name, city:c.city, district:c.city, region:c.region||"all",
+      address:c.address, phone:c.phone, email:c.email,
+      desc:`Clube de padel em ${c.city}.`,
+      courts: Array.isArray(c.courts)?c.courts.length:(c.courts||1),
+      indoor:c.indoor||1, outdoor:c.outdoor||0,
+      priceDay:c.priceDay||3, priceNight:c.priceNight||4,
+      nightFrom:c.nightFrom||"18", open:`${c.openFrom||"08"}–${c.openTo||"22"}h`,
+      amenities:c.amenities||[], tags:[], highlight:false,
+      isRegistered:true,
+    }))
+  ];
+  const filtered = allClubs.filter(c=>(region==="all"||c.region===region)&&(!search||c.name.toLowerCase().includes(search.toLowerCase())||c.city.toLowerCase().includes(search.toLowerCase())));
   const rc = (id)=>CLUBS.filter(c=>c.region===id).length;
 
   return (
