@@ -682,7 +682,7 @@ export default function App() {
         {!authScreen && currentUser?.type!=="super" && <>
         {/* VIEWS */}
         {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}}/>}
-        {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={bookings} blocks={blocks} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={tournaments} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
+        {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={bookings} blocks={blocks} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={tournaments} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} currentUser={currentUser} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
         {/* addBooking defined in App scope */}
         {mode==="admin"    && <AdminView cfg={adminCfg} setCfg={setAdmin} bookings={bookings} contacts={contacts} blocks={blocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={tournaments} setTournaments={setTournaments} onAddBooking={(bk)=>{setBook(p=>[...p,bk]);showToast("Campo marcado!");}}/>}
         </>}
@@ -788,7 +788,7 @@ function ClubCard({ club, delay, onSelect }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 // PORTAL VIEW
 // ═══════════════════════════════════════════════════════════════════════════════
-function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, bookingsAll, onCancelBooking, onJoinWaitlist, onRegisterTournament }) {
+function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, bookingsAll, onCancelBooking, onJoinWaitlist, currentUser, onRegisterTournament }) {
   const [portalTab, setPortalTab] = useState("reserve"); // "reserve" | "mybookings" | "tournaments"
   const [waitlistSlot, setWaitlistSlot] = useState(null);
   const [selDay,  setDay]   = useState(null);
@@ -973,13 +973,13 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
         <button className="pt-sbar-btn" onClick={()=>setSheet(true)}>Reservar →</button>
       </div>}
       {portalTab==="reserve"&&waitlistSlot&&<WaitlistModal club={club} day={waitlistSlot.day} time={waitlistSlot.time} dur={waitlistSlot.dur} onClose={()=>setWaitlistSlot(null)} onJoin={(e)=>{onJoinWaitlist&&onJoinWaitlist(e);setWaitlistSlot(null);}}/>}
-      {portalTab==="reserve"&&sheet&&<BookSheet club={club} court={selCt} day={selDay} time={selTime} dur={selDur} priceD={priceD} priceN={priceN} nf={nf} onClose={()=>setSheet(false)} onConfirm={doBook}/>}
+      {portalTab==="reserve"&&sheet&&<BookSheet club={club} court={selCt} day={selDay} time={selTime} dur={selDur} priceD={priceD} priceN={priceN} nf={nf} currentUser={currentUser} onClose={()=>setSheet(false)} onConfirm={doBook}/>}
     </div>
   );
 }
 
 function BookSheet({ club, court, day, time, dur, priceD, priceN, nf, onClose, onConfirm }) {
-  const [f,setF]=useState({name:"",email:"",phone:"",payment:""});
+  const [f,setF]=useState({name:"",email:"",phone:"",payment:"local"});
   const [e,setE]=useState({});
   const [ld,setLd]=useState(false);
   const set=(k,v)=>{setF(p=>({...p,[k]:v}));setE(p=>({...p,[k]:false}));};
@@ -1023,18 +1023,7 @@ function BookSheet({ club, court, day, time, dur, priceD, priceN, nf, onClose, o
               <div><input type="tel" inputMode="tel" className={`pt-fi ${e.phone?"err":""}`} placeholder="Telemóvel" value={f.phone} onChange={ev=>set("phone",ev.target.value)}/>{e.phone&&<div className="pt-errmsg">{e.phone}</div>}</div>
             </div>
           </div>
-          <div>
-            <div className="pt-form-lbl">Pagamento{e.payment&&<span className="pt-errmsg" style={{marginLeft:6}}>{e.payment}</span>}</div>
-            <div className="pt-pay-grid">
-              {PAY.map(p=>(
-                <div key={p.id} className={`pt-pay ${f.payment===p.id?"on":""}`} onClick={()=>set("payment",p.id)}>
-                  <span className="pt-pay-ico">{p.icon}</span>
-                  <span className="pt-pay-lbl">{p.label}</span>
-                  <div className="pt-pay-radio">{f.payment===p.id&&<div style={{width:5,height:5,borderRadius:"50%",background:"#141210"}}/>}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+
         </div>
         <div className="pt-foot">
           <button className="pt-submit" style={{background:"rgba(0,0,0,0.08)",color:"#7A766F",border:"1px solid rgba(0,0,0,0.1)"}} onClick={onClose}>Cancelar</button>
