@@ -778,7 +778,7 @@ export default function App() {
       // All registered approved clubs' tournaments
       ...regClubs.filter(c=>c.status==="approved").flatMap(c=>{
         const cTourneys = (clubsData[String(c.id)]||{}).tournaments||[];
-        return cTourneys.map(t=>({tournament:t,club:c}));
+        return cTourneys.map(t=>({tournament:t,club:{...c,isRegistered:true}}));
       })
     ]} currentUser={currentUser} onRegisterTournament={(item)=>{setClub(item.club);setMode("portal");setPendingTournamentReg(item.tournament.id);}} regClubs={regClubs.filter(c=>c.status==="approved")} />}
         {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={portalBookings(club)} blocks={portalBlocks(club)} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={portalTournaments(club)} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} currentUser={currentUser} pendingTournamentReg={pendingTournamentReg} onClearPendingReg={()=>setPendingTournamentReg(null)} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
@@ -800,7 +800,7 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
   const allClubs = [
     ...CLUBS,
     ...regClubs.map(c=>({
-      id:c.id, name:c.name, city:c.city, district:c.city, region:c.region||"all",
+      id:c.id, name:c.name, city:c.city, district:c.city, region:c.region||"all", isRegistered:true,
       address:c.address, phone:c.phone, email:c.email,
       desc:`Clube de padel em ${c.city}.`,
       courts: Array.isArray(c.courts)?c.courts.length:(c.courts||1),
