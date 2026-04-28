@@ -1101,7 +1101,7 @@ function AdminView({cfg,setCfg,bookings,contacts,blocks,notifs,onConfirm,onCance
 
         <div className="pt-acontent">
           {view==="dash"    && <AdminDash    cfg={cfg} bookings={bookings} contacts={contacts} onSetView={setView}/>}
-          {view==="agenda"  && <AdminAgenda  cfg={cfg} bookings={bookings} blocks={blocks} onConfirm={onConfirm} onCancel={onCancel} onAddBlock={onAddBlock} onDelBlock={onDelBlock}/>}
+          {view==="agenda"  && <AdminAgenda  cfg={cfg} bookings={bookings} blocks={blocks} onConfirm={onConfirm} onCancel={onCancel} onAddBlock={onAddBlock} onDelBlock={onDelBlock} onAddBooking={(bk)=>{setBook(p=>[...p,bk]);showToast("Reserva criada!");}}/>}
           {view==="clients" && <AdminClients contacts={contacts} bookings={bookings} cfg={cfg} search={srch} onUpdate={onUpdateCt} onDelete={onDeleteCt} onCancel={onCancel}/>}
           {view==="config"  && <AdminConfig  cfg={cfg} setCfg={setCfg} showToast={showToast}/>}
           {view==="torneiros" && <AdminTournaments tournaments={tournaments} setTournaments={setTournaments} cfg={cfg}/>}
@@ -1220,9 +1220,10 @@ function AdminDash({ cfg, bookings, contacts, onSetView }) {
   );
 }
 
-function AdminAgenda({ cfg, bookings, blocks, onConfirm, onCancel, onAddBlock, onDelBlock }) {
+function AdminAgenda({ cfg, bookings, blocks, onConfirm, onCancel, onAddBlock, onDelBlock, onAddBooking }) {
   const [tab,setTab]=useState("reservas");
   const [gridDay,setGridDay]=useState(TODAY);
+  const [showNR,setShowNR]=useState(false);
   const [day,setDay]=useState(TODAY);
   const [showBM,setShowBM]=useState(false);
   const pending=bookings.filter(b=>b.status==="pending");
@@ -1255,6 +1256,9 @@ function AdminAgenda({ cfg, bookings, blocks, onConfirm, onCancel, onAddBlock, o
               );})}
             </div>
           )}
+          <div className="row g2 mb14">
+            <button className="pt-btn pt-btn-light pt-btn-sm mla" onClick={()=>setShowNR(true)}>+ Nova Reserva</button>
+          </div>
           <div className="pt-adtabs">
             {FDAYS.slice(0,10).map(d=>(
               <div key={d.date} className={`pt-adtab ${day===d.date?"on":""}`} onClick={()=>setDay(d.date)}>
@@ -1291,6 +1295,9 @@ function AdminAgenda({ cfg, bookings, blocks, onConfirm, onCancel, onAddBlock, o
 
       {tab==="grid"&&(
         <>
+          <div className="row g2 mb14">
+            <button className="pt-btn pt-btn-light pt-btn-sm mla" onClick={()=>setShowNR(true)}>+ Nova Reserva</button>
+          </div>
           <div className="pt-adtabs">
             {FDAYS.slice(0,7).map(d=>(
               <div key={d.date} className={`pt-adtab ${gridDay===d.date?"on":""}`} onClick={()=>setGridDay(d.date)}>
@@ -1322,6 +1329,7 @@ function AdminAgenda({ cfg, bookings, blocks, onConfirm, onCancel, onAddBlock, o
             </div>
           );})}
           {showBM&&<BlockModal cfg={cfg} onSave={(b)=>{onAddBlock(b);setShowBM(false);}} onClose={()=>setShowBM(false)}/>}
+          {showNR&&<NewBookingModal cfg={cfg} day={day} bookings={bookings} blocks={blocks} onSave={(bk)=>{onAddBooking&&onAddBooking(bk);setShowNR(false);}} onClose={()=>setShowNR(false)}/>}
         </>
       )}
     </>
@@ -2855,6 +2863,154 @@ function TournamentPortalView({tournaments,onRegister}){
           </div>
         ))}
         {tournaments.length===0&&<div style={{textAlign:"center",padding:"48px 0"}}><div style={{fontSize:40,marginBottom:12}}>🏆</div><div style={{fontSize:16,fontWeight:800,color:"#141210",marginBottom:6}}>Sem torneios</div><div style={{fontSize:14,color:"#7A766F"}}>Quando o clube criar torneios aparecerão aqui.</div></div>}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// NEW BOOKING MODAL (admin creates booking manually)
+// ═══════════════════════════════════════════════════════════════════════════════
+function NewBookingModal({ cfg, day, bookings, blocks, onSave, onClose }) {
+  const activeCourts = cfg.courts.filter(c => c.active);
+  const genSlotsLocal = (f,t) => { const s=[]; for(let h=parseInt(f);h<parseInt(t);h++){s.push(`${String(h).padStart(2,"0")}:00`);s.push(`${String(h).padStart(2,"0")}:30`);} return s; };
+  const slots = genSlotsLocal(cfg.openFrom, cfg.openTo);
+
+  const [f, setF] = useState({
+    name: "", email: "", phone: "",
+    courtId: activeCourts[0]?.id || 1,
+    date: day || TODAY,
+    time: "09:00",
+    dur: 60,
+    pay: "local",
+    status: "confirmed",
+  });
+  const [err, setErr] = useState("");
+  const set = (k,v) => setF(p => ({...p, [k]:v}));
+
+  // Check if selected slot is free
+  const isFree = () => ctFree(f.courtId, f.date, f.time, f.dur, bookings, blocks);
+
+  const save = () => {
+    if (!f.name.trim()) { setErr("Nome obrigatório"); return; }
+    if (!isFree()) { setErr("Este slot já está ocupado ou bloqueado."); return; }
+    const bk = {
+      id: Date.now(),
+      contactName: f.name.trim(),
+      contactEmail: f.email.trim() || `manual_${Date.now()}@admin.pt`,
+      contactPhone: f.phone.trim(),
+      courtId: parseInt(f.courtId),
+      date: f.date,
+      time: f.time,
+      dur: f.dur,
+      status: f.status,
+      pay: f.pay,
+      ref: ref(),
+      createdAt: new Date().toISOString(),
+      createdByAdmin: true,
+    };
+    onSave(bk);
+  };
+
+  const night = isNt(f.time, parseInt(cfg.nightFrom||18));
+  const price = (night ? cfg.priceNight : cfg.priceDay) * cfg.playersPerCourt * (f.dur/60);
+  const endH  = addMins(f.time, f.dur);
+  const free  = isFree();
+
+  const SFL = ({children}) => <div style={{fontSize:10,fontWeight:700,color:"#7A766F",textTransform:"uppercase",letterSpacing:".8px",marginBottom:6}}>{children}</div>;
+
+  return (
+    <div className="pt-mbg" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="pt-modal">
+        <div className="pt-modal-handle"/>
+        <div className="pt-modal-hd">
+          <span className="pt-modal-tt">Nova Reserva</span>
+          <button className="pt-modal-close" onClick={onClose}><I n="x" s={13}/></button>
+        </div>
+        <div className="pt-modal-body">
+          {err && <div style={{fontSize:12,color:"#FF6B6B",padding:"8px 12px",background:"rgba(255,107,107,.08)",borderRadius:8}}>{err}</div>}
+
+          {/* DATE + COURT */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            <div className="pt-sfg">
+              <SFL>Data</SFL>
+              <input type="date" className="pt-mfi" value={f.date} onChange={e=>set("date",e.target.value)}/>
+            </div>
+            <div className="pt-sfg">
+              <SFL>Campo</SFL>
+              <select className="pt-mfi" value={f.courtId} onChange={e=>set("courtId",parseInt(e.target.value))}>
+                {activeCourts.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
+          </div>
+
+          {/* TIME + DURATION */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            <div className="pt-sfg">
+              <SFL>Hora</SFL>
+              <select className="pt-mfi" value={f.time} onChange={e=>set("time",e.target.value)}>
+                {slots.filter(t=>slotFit(t,f.dur,cfg.openTo)).map(t=><option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
+            <div className="pt-sfg">
+              <SFL>Duração</SFL>
+              <select className="pt-mfi" value={f.dur} onChange={e=>set("dur",parseInt(e.target.value))}>
+                <option value={60}>1h</option>
+                <option value={90}>1h30</option>
+                <option value={120}>2h</option>
+              </select>
+            </div>
+          </div>
+
+          {/* SLOT STATUS */}
+          <div style={{padding:"10px 12px",borderRadius:9,background:free?"rgba(52,211,153,.08)":"rgba(255,107,107,.08)",border:`1px solid ${free?"rgba(52,211,153,.2)":"rgba(255,107,107,.2)"}`,fontSize:12,fontWeight:600,color:free?"#34D399":"#FF6B6B",display:"flex",alignItems:"center",gap:8}}>
+            <span>{free?"✓":"✗"}</span>
+            {free
+              ? `${cfg.courts.find(c=>c.id===parseInt(f.courtId))?.name} · ${f.time}–${endH} · ${Math.round(price)}€ · ${night?"🌙 Noturno":"☀️ Diurno"}`
+              : "Slot ocupado ou bloqueado — escolhe outro horário"
+            }
+          </div>
+
+          {/* CLIENT INFO */}
+          <div className="pt-sfg">
+            <SFL>Nome do cliente</SFL>
+            <input className="pt-mfi" placeholder="Nome completo" value={f.name} onChange={e=>set("name",e.target.value)}/>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            <div className="pt-sfg">
+              <SFL>Email (opcional)</SFL>
+              <input type="email" className="pt-mfi" placeholder="email@..." value={f.email} onChange={e=>set("email",e.target.value)}/>
+            </div>
+            <div className="pt-sfg">
+              <SFL>Telemóvel (opcional)</SFL>
+              <input type="tel" className="pt-mfi" placeholder="+351..." value={f.phone} onChange={e=>set("phone",e.target.value)}/>
+            </div>
+          </div>
+
+          {/* PAYMENT + STATUS */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            <div className="pt-sfg">
+              <SFL>Pagamento</SFL>
+              <select className="pt-mfi" value={f.pay} onChange={e=>set("pay",e.target.value)}>
+                {PAY.map(p=><option key={p.id} value={p.id}>{p.icon} {p.label}</option>)}
+              </select>
+            </div>
+            <div className="pt-sfg">
+              <SFL>Estado</SFL>
+              <select className="pt-mfi" value={f.status} onChange={e=>set("status",e.target.value)}>
+                <option value="confirmed">✓ Confirmada</option>
+                <option value="pending">⏳ Pendente</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-modal-foot">
+          <button className="pt-btn pt-btn-ghost pt-btn-w" onClick={onClose}>Cancelar</button>
+          <button className="pt-btn pt-btn-light pt-btn-w" onClick={save} disabled={!free}>
+            <I n="ok" s={13}/> Marcar Campo
+          </button>
+        </div>
       </div>
     </div>
   );
