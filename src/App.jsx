@@ -747,10 +747,10 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
       </section>
 
       {/* DISCOVER TABS */}
-      <div style={{padding:"16px 18px 0",maxWidth:1040,margin:"0 auto"}}>
-        <div style={{display:"flex",gap:3,background:"rgba(0,0,0,.06)",borderRadius:9,padding:3}}>
-          <button onClick={()=>setDiscoverTab("clubs")} style={{flex:1,padding:"9px",borderRadius:7,border:"none",background:discoverTab==="clubs"?"#FFFFFF":"transparent",color:discoverTab==="clubs"?"#141210":"#7A766F",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>🏟 Clubes</button>
-          <button onClick={()=>setDiscoverTab("tournaments")} style={{flex:1,padding:"9px",borderRadius:7,border:"none",background:discoverTab==="tournaments"?"#FFFFFF":"transparent",color:discoverTab==="tournaments"?"#141210":"#7A766F",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>🏆 Torneios</button>
+      <div style={{maxWidth:1040,margin:"0 auto",padding:"28px 20px 0",display:"flex",justifyContent:"center"}}>
+        <div style={{display:"inline-flex",gap:2,background:"rgba(0,0,0,.06)",borderRadius:12,padding:4}}>
+          <button onClick={()=>setDiscoverTab("clubs")} style={{padding:"10px 32px",borderRadius:9,border:"none",background:discoverTab==="clubs"?"#141210":"transparent",color:discoverTab==="clubs"?"#F4F0E8":"#7A766F",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",transition:"all .18s",letterSpacing:"-.2px"}}>Clubes</button>
+          <button onClick={()=>setDiscoverTab("tournaments")} style={{padding:"10px 32px",borderRadius:9,border:"none",background:discoverTab==="tournaments"?"#141210":"transparent",color:discoverTab==="tournaments"?"#F4F0E8":"#7A766F",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",transition:"all .18s",letterSpacing:"-.2px"}}>Torneios</button>
         </div>
       </div>
 
@@ -758,9 +758,9 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
       {discoverTab==="clubs" && <>
       {/* CLUBS SECTION */}
       <div className="pt-sec">
-        <div className="pt-sech">
-          <h2 className="pt-sect">Clubes</h2>
-          <span className="pt-secc">{filtered.length} disponível{filtered.length!==1?"is":""}</span>
+        <div className="pt-sech" style={{flexDirection:"column",alignItems:"center",gap:4}}>
+          <h2 className="pt-sect" style={{textAlign:"center"}}>Clubes</h2>
+          <p style={{fontSize:13,color:"#7A766F",textAlign:"center",margin:0}}>Encontra clubes perto de ti.</p>
         </div>
         <div className="pt-rgs">
           {REGIONS.map(r=>(
@@ -3607,17 +3607,10 @@ function DiscoverTournaments({ allTournaments, onRegister, currentUser }) {
 
   return (
     <div style={{background:"#F4F0E8", minHeight:"calc(100vh - 52px)"}}>
-      <div style={{padding:"36px 20px 24px", borderBottom:"1px solid rgba(0,0,0,.08)"}}>
-        <div style={{fontSize:11,fontWeight:700,background:"#141210",color:"#F4F0E8",display:"inline-flex",alignItems:"center",gap:6,padding:"4px 12px",borderRadius:99,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:14}}>
-          <span style={{width:5,height:5,borderRadius:"50%",background:"#F4F0E8"}}/>Torneios
-        </div>
-        <h2 style={{fontSize:"clamp(32px,8vw,56px)",fontWeight:800,color:"#141210",letterSpacing:"-2px",lineHeight:.92,marginBottom:10}}>Encontra<br/>um torneio</h2>
-        <p style={{fontSize:14,color:"#7A766F",lineHeight:1.65}}>Inscreve-te em torneios de padel perto de ti.</p>
-      </div>
-
-      {/* Region filter */}
-      <div style={{padding:"16px 18px 0", maxWidth:700, margin:"0 auto"}}>
-        <div style={{display:"flex",gap:7,overflow:"auto",paddingBottom:4,scrollbarWidth:"none",marginBottom:16}}>
+      <div style={{maxWidth:1040,margin:"0 auto",padding:"36px 20px 24px",borderBottom:"1px solid rgba(0,0,0,.08)"}}>
+        <h2 style={{fontSize:20,fontWeight:800,color:"#141210",letterSpacing:"-.5px",marginBottom:8,textAlign:"center"}}>Torneios</h2>
+        <p style={{fontSize:14,color:"#7A766F",lineHeight:1.65,marginBottom:20,textAlign:"center"}}>Inscreve-te em torneios perto de ti.</p>
+        <div style={{display:"flex",gap:7,overflow:"auto",paddingBottom:4,scrollbarWidth:"none"}}>
           {REGIONS.map(r=>(
             <div key={r.id} className={`pt-rg ${region===r.id?"on":""}`} onClick={()=>setRegion(r.id)}>
               {r.icon} {r.label}
@@ -3626,7 +3619,7 @@ function DiscoverTournaments({ allTournaments, onRegister, currentUser }) {
         </div>
       </div>
 
-      <div style={{padding:"0 18px 80px", maxWidth:700, margin:"0 auto"}}>
+      <div style={{padding:"20px 20px 80px", maxWidth:1040, margin:"0 auto"}}>
         {filtered(open).length>0 && (
           <>
             <div style={{fontSize:10,fontWeight:700,color:"#B5B0A8",textTransform:"uppercase",letterSpacing:"1.5px",marginBottom:12}}>Inscrições Abertas</div>
