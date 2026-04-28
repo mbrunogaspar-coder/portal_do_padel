@@ -200,7 +200,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-csl{font-size:9px;color:#B5B0A8;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 .pt-ctags{padding:10px 16px;display:flex;gap:6px;flex-wrap:wrap}
 .pt-ctag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:#F4F0E8;color:#7A766F}
-.pt-cfoot{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:#F9F7F3}
+.pt-cfoot{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:#F9F7F3;margin-top:auto}
 .pt-cprice-v{font-weight:800;font-size:18px;color:#141210;letter-spacing:-.3px}
 .pt-cprice-r{font-size:12px;color:#B5B0A8}
 .pt-ccta{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:9px;background:#141210;color:#F4F0E8;border:none;font-size:12px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:inherit}
