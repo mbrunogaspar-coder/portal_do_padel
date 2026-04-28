@@ -602,7 +602,15 @@ function usePersist(key, defaultValue) {
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const [mode,    setMode]   = useState("discover");
-  const [club,    setClub]   = useState(null);      // selected club (portal)
+  const [club,    setClub]   = useState(null);
+
+  // ── AUTH STATE ──
+  const [athletes,    setAthletes]     = usePersist("athletes",    []);
+  const [regClubs,    setRegClubs]     = usePersist("regClubs",    []);
+  const [currentUser, setCurrentUser]  = useState(null);  // {type:"athlete"|"club"|"super", data:{}}
+  const [authScreen,  setAuthScreen]   = useState(null);  // "athleteLogin"|"athleteRegister"|"clubLogin"|"clubRegister"
+
+  const logout = () => { setCurrentUser(null); setAuthScreen(null); setMode("discover"); };      // selected club (portal)
   const [adminCfg,setAdmin]  = usePersist("cfg",       DEF_CLUB);
   const [bookings,setBook]   = usePersist("bookings",  INIT_B);
   const [contacts,setConts]  = usePersist("contacts",  INIT_C);
@@ -634,8 +642,8 @@ export default function App() {
     <>
       <style>{CSS}</style>
       <div style={{minHeight:"100vh",background:mode==="admin"?"#0E0D0B":"#F4F0E8"}}>
-        {/* TOP MODESWITCH */}
-        <div className="pt-top">
+        {/* TOP MODESWITCH — hidden during auth screens */}
+        {!authScreen && !(currentUser?.type==="super" && mode==="admin") && <div className="pt-top">
           <div className="pt-top-brand">
             <div className="pt-top-mark">PP</div>
             <div>
@@ -646,15 +654,38 @@ export default function App() {
           <div className="pt-modes">
             <button className={`pt-mode ${mode==="discover"?"on":""}`} onClick={()=>{setMode("discover");setClub(null);}}>Descobrir</button>
             <button className={`pt-mode ${mode==="portal"?"on":""}`} onClick={()=>setMode("portal")}>Reservar</button>
-            <button className={`pt-mode ${mode==="admin"?"on":""}`} onClick={()=>setMode("admin")}>Clube</button>
+            <button className={`pt-mode ${mode==="admin"?"on":""}`} onClick={()=>{
+              if(currentUser?.type==="club"||currentUser?.type==="super") setMode("admin");
+              else setAuthScreen("clubLogin");
+            }}>Clube</button>
           </div>
-        </div>
+          {/* Auth user indicator */}
+          {currentUser&&(
+            <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
+              <span style={{fontSize:11,fontWeight:600,color:"#141210",maxWidth:90,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{currentUser.data?.name||currentUser.data?.email}</span>
+              <button onClick={logout} style={{fontSize:11,color:"#7A766F",background:"rgba(0,0,0,.06)",border:"none",cursor:"pointer",fontFamily:"inherit",padding:"4px 8px",borderRadius:6}}>Sair</button>
+            </div>
+          )}
+          {!currentUser&&(
+            <button onClick={()=>setAuthScreen("athleteLogin")} style={{fontSize:11,fontWeight:600,padding:"5px 12px",borderRadius:7,background:"#141210",color:"#F4F0E8",border:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Entrar</button>
+          )}
+        </div>}
 
+        {/* AUTH SCREENS */}
+        {authScreen==="athleteLogin"    && <AthleteLogin  athletes={athletes} onLogin={a=>{setCurrentUser({type:"athlete",data:a});setAuthScreen(null);}} onGoRegister={()=>setAuthScreen("athleteRegister")} onBack={()=>setAuthScreen(null)}/>}
+        {authScreen==="athleteRegister" && <AthleteRegister athletes={athletes} onRegister={a=>{setAthletes(p=>[...p,a]);setCurrentUser({type:"athlete",data:a});setAuthScreen(null);}} onGoLogin={()=>setAuthScreen("athleteLogin")} onBack={()=>setAuthScreen(null)}/>}
+        {authScreen==="clubLogin"       && <ClubLogin clubs={regClubs} onLogin={c=>{setCurrentUser({type:"club",data:c});setAuthScreen(null);setMode("admin");}} onGoRegister={()=>setAuthScreen("clubRegister")} onSuperLogin={()=>{setCurrentUser({type:"super",data:{name:"Super Admin",email:SUPER_ADMIN.email}});setAuthScreen(null);setMode("admin");}}/>}
+        {authScreen==="clubRegister"    && <ClubRegister clubs={regClubs} onSubmit={c=>{setRegClubs(p=>[...p,c]);}} onGoLogin={()=>setAuthScreen("clubLogin")}/>}
+        {currentUser?.type==="super" && mode==="admin" && <SuperAdmin clubs={regClubs} onApprove={id=>setRegClubs(p=>p.map(c=>c.id===id?{...c,status:"approved"}:c))} onReject={id=>setRegClubs(p=>p.map(c=>c.id===id?{...c,status:"rejected"}:c))} onLogout={logout}/>}
+
+        {/* MAIN VIEWS — only when no auth screen showing */}
+        {!authScreen && currentUser?.type!=="super" && <>
         {/* VIEWS */}
         {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}}/>}
         {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={bookings} blocks={blocks} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={tournaments} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
         {/* addBooking defined in App scope */}
         {mode==="admin"    && <AdminView cfg={adminCfg} setCfg={setAdmin} bookings={bookings} contacts={contacts} blocks={blocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={tournaments} setTournaments={setTournaments} onAddBooking={(bk)=>{setBook(p=>[...p,bk]);showToast("Campo marcado!");}}/>}
+        </>}
       </div>
     </>
   );
@@ -3012,6 +3043,342 @@ function NewBookingModal({ cfg, day, bookings, blocks, onSave, onClose }) {
             <I n="ok" s={13}/> Marcar Campo
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// AUTH SYSTEM
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── SUPER ADMIN CREDENTIALS (hardcoded for demo) ─────────────────────────────
+const SUPER_ADMIN = { email: "admin@portaldopadel.pt", password: "pdp2026super" };
+
+// ── AUTH SCREENS ──────────────────────────────────────────────────────────────
+
+function AuthLayout({ children, title, subtitle }) {
+  return (
+    <div style={{minHeight:"100vh",background:"#F4F0E8",display:"flex",flexDirection:"column"}}>
+      <div style={{padding:"20px 22px",borderBottom:"1px solid rgba(0,0,0,.08)",display:"flex",alignItems:"center",gap:9,background:"rgba(244,240,232,.95)"}}>
+        <div style={{width:30,height:30,borderRadius:8,background:"#141210",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:"#F4F0E8"}}>PP</div>
+        <div>
+          <div style={{fontWeight:800,fontSize:13,color:"#141210",letterSpacing:"-.2px"}}>Portal do Padel</div>
+          <div style={{fontSize:9,color:"#B5B0A8",letterSpacing:"1.5px",textTransform:"uppercase"}}>Clubes</div>
+        </div>
+      </div>
+      <div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"24px 20px"}}>
+        <div style={{width:"100%",maxWidth:400}}>
+          <div style={{textAlign:"center",marginBottom:28}}>
+            <h1 style={{fontSize:28,fontWeight:800,color:"#141210",letterSpacing:"-1px",lineHeight:1,marginBottom:8}}>{title}</h1>
+            {subtitle&&<p style={{fontSize:14,color:"#7A766F",lineHeight:1.6}}>{subtitle}</p>}
+          </div>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AuthInput({ label, type="text", value, onChange, placeholder, error }) {
+  return (
+    <div style={{marginBottom:12}}>
+      {label&&<div style={{fontSize:10,fontWeight:700,color:"#7A766F",textTransform:"uppercase",letterSpacing:"1px",marginBottom:6}}>{label}</div>}
+      <input
+        type={type} inputMode={type==="email"?"email":type==="tel"?"tel":undefined}
+        value={value} onChange={onChange} placeholder={placeholder}
+        style={{width:"100%",background:"#FFFFFF",border:`1.5px solid ${error?"#E53E3E":"rgba(0,0,0,.12)"}`,borderRadius:10,padding:"13px 14px",fontSize:14,outline:"none",fontFamily:"inherit",color:"#141210",transition:"border-color .2s"}}
+        onFocus={e=>e.target.style.borderColor="#141210"}
+        onBlur={e=>e.target.style.borderColor=error?"#E53E3E":"rgba(0,0,0,.12)"}
+      />
+      {error&&<div style={{fontSize:11,color:"#E53E3E",marginTop:4}}>{error}</div>}
+    </div>
+  );
+}
+
+function AuthBtn({ children, onClick, secondary, disabled }) {
+  return (
+    <button onClick={onClick} disabled={disabled} style={{width:"100%",padding:"14px",borderRadius:10,border:secondary?"1.5px solid rgba(0,0,0,.15)":"none",background:secondary?"transparent":"#141210",color:secondary?"#7A766F":"#F4F0E8",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",opacity:disabled?.5:1,marginBottom:8}}>
+      {children}
+    </button>
+  );
+}
+
+// ── ATHLETE LOGIN ─────────────────────────────────────────────────────────────
+function AthleteLogin({ athletes, onLogin, onGoRegister, onBack }) {
+  const [email,setEmail]=useState("");
+  const [pass,setPass]=useState("");
+  const [err,setErr]=useState("");
+  const [loading,setLoading]=useState(false);
+
+  const submit = async () => {
+    setErr("");
+    if(!email.trim()||!pass.trim()){setErr("Preenche todos os campos.");return;}
+    setLoading(true);
+    await new Promise(r=>setTimeout(r,700));
+    const athlete = athletes.find(a=>a.email.toLowerCase()===email.toLowerCase().trim()&&a.password===pass);
+    if(!athlete){setErr("Email ou password incorrectos.");setLoading(false);return;}
+    onLogin(athlete);
+  };
+
+  return (
+    <AuthLayout title="Bem-vindo de volta" subtitle="Entra na tua conta de atleta">
+      <AuthInput label="Email" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="o.teu@email.pt" error={err&&!email.trim()?"Obrigatório":""}/>
+      <AuthInput label="Password" type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••" error={err&&!pass.trim()?"Obrigatório":""}/>
+      {err&&<div style={{fontSize:12,color:"#E53E3E",padding:"9px 12px",background:"rgba(229,62,62,.07)",borderRadius:8,marginBottom:12}}>{err}</div>}
+      <AuthBtn onClick={submit} disabled={loading}>{loading?"A entrar…":"Entrar"}</AuthBtn>
+      <div style={{textAlign:"center",fontSize:13,color:"#7A766F",marginTop:8}}>
+        Ainda não tens conta?{" "}
+        <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoRegister}>Regista-te</span>
+      </div>
+      <div style={{textAlign:"center",marginTop:16}}>
+        <span style={{fontSize:12,color:"#B5B0A8",cursor:"pointer"}} onClick={onBack}>← Voltar</span>
+      </div>
+    </AuthLayout>
+  );
+}
+
+// ── ATHLETE REGISTER ──────────────────────────────────────────────────────────
+function AthleteRegister({ athletes, onRegister, onGoLogin, onBack }) {
+  const [f,setF]=useState({name:"",email:"",phone:"",password:"",confirm:""});
+  const [errs,setErrs]=useState({});
+  const [loading,setLoading]=useState(false);
+  const set=(k,v)=>setF(p=>({...p,[k]:v}));
+
+  const submit = async () => {
+    const e={};
+    if(!f.name.trim()) e.name="Obrigatório";
+    if(!f.email.trim()||!/\S+@\S+\.\S+/.test(f.email)) e.email="Email inválido";
+    if(athletes.find(a=>a.email.toLowerCase()===f.email.toLowerCase().trim())) e.email="Este email já está registado";
+    if(f.password.length<6) e.password="Mínimo 6 caracteres";
+    if(f.password!==f.confirm) e.confirm="As passwords não coincidem";
+    setErrs(e);
+    if(Object.keys(e).length) return;
+    setLoading(true);
+    await new Promise(r=>setTimeout(r,700));
+    const athlete={id:Date.now(),name:f.name.trim(),email:f.email.trim(),phone:f.phone.trim(),password:f.password,since:TODAY,notes:""};
+    onRegister(athlete);
+  };
+
+  return (
+    <AuthLayout title="Criar conta" subtitle="Junta-te ao Portal do Padel">
+      <AuthInput label="Nome completo" value={f.name} onChange={e=>set("name",e.target.value)} placeholder="O teu nome" error={errs.name}/>
+      <AuthInput label="Email" type="email" value={f.email} onChange={e=>set("email",e.target.value)} placeholder="o.teu@email.pt" error={errs.email}/>
+      <AuthInput label="Telemóvel (opcional)" type="tel" value={f.phone} onChange={e=>set("phone",e.target.value)} placeholder="+351 9xx xxx xxx"/>
+      <AuthInput label="Password" type="password" value={f.password} onChange={e=>set("password",e.target.value)} placeholder="Mínimo 6 caracteres" error={errs.password}/>
+      <AuthInput label="Confirmar password" type="password" value={f.confirm} onChange={e=>set("confirm",e.target.value)} placeholder="Repete a password" error={errs.confirm}/>
+      <AuthBtn onClick={submit} disabled={loading}>{loading?"A criar conta…":"Criar Conta"}</AuthBtn>
+      <div style={{textAlign:"center",fontSize:13,color:"#7A766F",marginTop:8}}>
+        Já tens conta?{" "}
+        <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoLogin}>Entrar</span>
+      </div>
+      <div style={{textAlign:"center",marginTop:16}}>
+        <span style={{fontSize:12,color:"#B5B0A8",cursor:"pointer"}} onClick={onBack}>← Voltar</span>
+      </div>
+    </AuthLayout>
+  );
+}
+
+// ── CLUB LOGIN ────────────────────────────────────────────────────────────────
+function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin }) {
+  const [email,setEmail]=useState("");
+  const [pass,setPass]=useState("");
+  const [err,setErr]=useState("");
+  const [loading,setLoading]=useState(false);
+
+  const submit = async () => {
+    setErr("");
+    if(!email.trim()||!pass.trim()){setErr("Preenche todos os campos.");return;}
+    // Super admin
+    if(email.trim()===SUPER_ADMIN.email&&pass===SUPER_ADMIN.password){onSuperLogin();return;}
+    setLoading(true);
+    await new Promise(r=>setTimeout(r,700));
+    const club = clubs.find(c=>c.email.toLowerCase()===email.toLowerCase().trim()&&c.password===pass);
+    if(!club){setErr("Email ou password incorrectos.");setLoading(false);return;}
+    if(club.status==="pending"){setErr("A tua conta está a aguardar aprovação.");setLoading(false);return;}
+    if(club.status==="rejected"){setErr("O teu pedido foi rejeitado. Contacta-nos para mais informações.");setLoading(false);return;}
+    onLogin(club);
+  };
+
+  return (
+    <AuthLayout title="Área do Clube" subtitle="Entra no backoffice do teu clube">
+      <AuthInput label="Email do clube" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="clube@email.pt" error={err&&!email.trim()?"Obrigatório":""}/>
+      <AuthInput label="Password" type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••" error={err&&!pass.trim()?"Obrigatório":""}/>
+      {err&&<div style={{fontSize:12,color:"#E53E3E",padding:"9px 12px",background:"rgba(229,62,62,.07)",borderRadius:8,marginBottom:12}}>{err}</div>}
+      <AuthBtn onClick={submit} disabled={loading}>{loading?"A entrar…":"Entrar"}</AuthBtn>
+      <div style={{textAlign:"center",fontSize:13,color:"#7A766F",marginTop:8}}>
+        Ainda não tens conta?{" "}
+        <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoRegister}>Pedir acesso</span>
+      </div>
+    </AuthLayout>
+  );
+}
+
+// ── CLUB REGISTER ─────────────────────────────────────────────────────────────
+function ClubRegister({ clubs, onSubmit, onGoLogin }) {
+  const [f,setF]=useState({name:"",email:"",phone:"",address:"",city:"",password:"",confirm:""});
+  const [errs,setErrs]=useState({});
+  const [loading,setLoading]=useState(false);
+  const [done,setDone]=useState(false);
+  const set=(k,v)=>setF(p=>({...p,[k]:v}));
+
+  const submit = async () => {
+    const e={};
+    if(!f.name.trim())    e.name="Obrigatório";
+    if(!f.email.trim()||!/\S+@\S+\.\S+/.test(f.email)) e.email="Email inválido";
+    if(clubs.find(c=>c.email.toLowerCase()===f.email.toLowerCase().trim())) e.email="Este email já está registado";
+    if(!f.phone.trim())   e.phone="Obrigatório";
+    if(!f.address.trim()) e.address="Obrigatório";
+    if(!f.city.trim())    e.city="Obrigatório";
+    if(f.password.length<6) e.password="Mínimo 6 caracteres";
+    if(f.password!==f.confirm) e.confirm="As passwords não coincidem";
+    setErrs(e);
+    if(Object.keys(e).length) return;
+    setLoading(true);
+    await new Promise(r=>setTimeout(r,800));
+    const club={
+      id:Date.now(), name:f.name.trim(), email:f.email.trim(),
+      phone:f.phone.trim(), address:f.address.trim(), city:f.city.trim(),
+      password:f.password, status:"pending", since:TODAY,
+      // Default club config
+      tagline:"O teu campo. À tua hora.", priceDay:3, priceNight:4,
+      nightFrom:"18", openFrom:"08", openTo:"22", durations:[60,90,120],
+      playersPerCourt:4, courts:[{id:1,name:"Court 1",indoor:true,active:true}],
+      requireApproval:true, allowCancel:true, cancelHours:24,
+      showOccupancy:true, advanceDays:14,
+    };
+    onSubmit(club);
+    setDone(true);
+    setLoading(false);
+  };
+
+  if(done) return(
+    <AuthLayout title="Pedido enviado!" subtitle="">
+      <div style={{textAlign:"center",padding:"8px 0 24px"}}>
+        <div style={{fontSize:48,marginBottom:16}}>✅</div>
+        <p style={{fontSize:14,color:"#7A766F",lineHeight:1.65,marginBottom:20}}>O teu pedido foi submetido com sucesso. A equipa Portal do Padel irá analisar e responder em breve.</p>
+        <AuthBtn onClick={onGoLogin} secondary>Voltar ao login</AuthBtn>
+      </div>
+    </AuthLayout>
+  );
+
+  return (
+    <AuthLayout title="Pedir acesso" subtitle="Regista o teu clube no Portal do Padel">
+      <AuthInput label="Nome do clube" value={f.name} onChange={e=>set("name",e.target.value)} placeholder="Ex: Padel Arena Lisboa" error={errs.name}/>
+      <AuthInput label="Email" type="email" value={f.email} onChange={e=>set("email",e.target.value)} placeholder="clube@email.pt" error={errs.email}/>
+      <AuthInput label="Telefone" type="tel" value={f.phone} onChange={e=>set("phone",e.target.value)} placeholder="+351 2xx xxx xxx" error={errs.phone}/>
+      <AuthInput label="Morada" value={f.address} onChange={e=>set("address",e.target.value)} placeholder="Rua, número" error={errs.address}/>
+      <AuthInput label="Cidade" value={f.city} onChange={e=>set("city",e.target.value)} placeholder="Lisboa" error={errs.city}/>
+      <AuthInput label="Password" type="password" value={f.password} onChange={e=>set("password",e.target.value)} placeholder="Mínimo 6 caracteres" error={errs.password}/>
+      <AuthInput label="Confirmar password" type="password" value={f.confirm} onChange={e=>set("confirm",e.target.value)} placeholder="Repete a password" error={errs.confirm}/>
+      <div style={{fontSize:11,color:"#7A766F",marginBottom:16,padding:"10px 12px",background:"rgba(0,0,0,.04)",borderRadius:8,lineHeight:1.6}}>
+        📋 O teu pedido será analisado pela equipa Portal do Padel. Receberás resposta por email.
+      </div>
+      <AuthBtn onClick={submit} disabled={loading}>{loading?"A enviar…":"Submeter Pedido"}</AuthBtn>
+      <div style={{textAlign:"center",fontSize:13,color:"#7A766F",marginTop:8}}>
+        Já tens conta?{" "}
+        <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoLogin}>Entrar</span>
+      </div>
+    </AuthLayout>
+  );
+}
+
+// ── SUPER ADMIN PANEL ─────────────────────────────────────────────────────────
+function SuperAdmin({ clubs, onApprove, onReject, onLogout }) {
+  const [filter,setFilter]=useState("pending");
+  const [search,setSearch]=useState("");
+
+  const filtered = clubs
+    .filter(c=>filter==="all"||c.status===filter)
+    .filter(c=>!search||c.name.toLowerCase().includes(search.toLowerCase())||c.city.toLowerCase().includes(search.toLowerCase()));
+
+  const counts={
+    pending: clubs.filter(c=>c.status==="pending").length,
+    approved: clubs.filter(c=>c.status==="approved").length,
+    rejected: clubs.filter(c=>c.status==="rejected").length,
+  };
+
+  const statusStyle={
+    pending:  {bg:"rgba(245,158,11,.1)",  c:"#B45309"},
+    approved: {bg:"rgba(52,211,153,.1)",  c:"#065F46"},
+    rejected: {bg:"rgba(229,62,62,.1)",   c:"#9B1C1C"},
+  };
+
+  return (
+    <div style={{minHeight:"100vh",background:"#F4F0E8"}}>
+      {/* Header */}
+      <div style={{background:"#141210",padding:"0 20px",height:54,display:"flex",alignItems:"center",gap:12}}>
+        <div style={{width:28,height:28,borderRadius:7,background:"#F4F0E8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:800,color:"#141210"}}>PP</div>
+        <div style={{flex:1}}>
+          <div style={{fontSize:13,fontWeight:800,color:"#F4F0E8",letterSpacing:"-.2px"}}>Super Admin</div>
+          <div style={{fontSize:9,color:"rgba(255,255,255,.4)",letterSpacing:"1px",textTransform:"uppercase"}}>Portal do Padel</div>
+        </div>
+        <button onClick={onLogout} style={{fontSize:12,color:"rgba(255,255,255,.5)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Sair</button>
+      </div>
+
+      <div style={{padding:"20px 18px",maxWidth:720,margin:"0 auto"}}>
+        {/* KPIs */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:20}}>
+          {[
+            {l:"Pendentes",v:counts.pending,c:"#B45309",bg:"rgba(245,158,11,.1)"},
+            {l:"Aprovados", v:counts.approved,c:"#065F46",bg:"rgba(52,211,153,.1)"},
+            {l:"Rejeitados",v:counts.rejected,c:"#9B1C1C",bg:"rgba(229,62,62,.1)"},
+          ].map(k=>(
+            <div key={k.l} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,padding:"14px 12px"}}>
+              <div style={{fontSize:24,fontWeight:800,color:k.c,letterSpacing:"-1px"}}>{k.v}</div>
+              <div style={{fontSize:11,color:"#7A766F",marginTop:3}}>{k.l}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Search */}
+        <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.1)",borderRadius:10,display:"flex",alignItems:"center",gap:8,padding:"10px 14px",marginBottom:14}}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B5B0A8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input style={{flex:1,border:"none",outline:"none",fontSize:14,fontFamily:"inherit",color:"#141210",background:"none"}} placeholder="Pesquisar clube..." value={search} onChange={e=>setSearch(e.target.value)}/>
+        </div>
+
+        {/* Filter tabs */}
+        <div style={{display:"flex",gap:4,background:"rgba(0,0,0,.06)",borderRadius:9,padding:3,marginBottom:16}}>
+          {[{v:"pending",l:`Pendentes (${counts.pending})`},{v:"approved",l:`Aprovados (${counts.approved})`},{v:"rejected",l:`Rejeitados (${counts.rejected})`},{v:"all",l:"Todos"}].map(t=>(
+            <button key={t.v} onClick={()=>setFilter(t.v)} style={{flex:1,padding:"7px 8px",borderRadius:7,border:"none",background:filter===t.v?"#FFFFFF":"transparent",color:filter===t.v?"#141210":"#7A766F",fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit",boxShadow:filter===t.v?"0 1px 4px rgba(0,0,0,.1)":"none",transition:"all .15s",whiteSpace:"nowrap"}}>
+              {t.l}
+            </button>
+          ))}
+        </div>
+
+        {/* Clubs list */}
+        {filtered.length===0?(
+          <div style={{textAlign:"center",padding:"48px 0",color:"#B5B0A8",fontSize:14}}>Sem clubes nesta categoria.</div>
+        ):filtered.map(c=>{
+          const ss=statusStyle[c.status]||statusStyle.pending;
+          return(
+            <div key={c.id} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:14,padding:"16px",marginBottom:12}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+                <div>
+                  <div style={{fontSize:16,fontWeight:800,color:"#141210",letterSpacing:"-.3px"}}>{c.name}</div>
+                  <div style={{fontSize:12,color:"#7A766F",marginTop:3}}>📍 {c.address}, {c.city}</div>
+                  <div style={{fontSize:12,color:"#7A766F",marginTop:2}}>📧 {c.email} · 📞 {c.phone}</div>
+                  <div style={{fontSize:11,color:"#B5B0A8",marginTop:2}}>Pedido em {fmtFull(c.since)}</div>
+                </div>
+                <span style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:99,background:ss.bg,color:ss.c,whiteSpace:"nowrap",textTransform:"uppercase",letterSpacing:".5px"}}>
+                  {c.status==="pending"?"Pendente":c.status==="approved"?"Aprovado":"Rejeitado"}
+                </span>
+              </div>
+              {c.status==="pending"&&(
+                <div style={{display:"flex",gap:8,marginTop:4}}>
+                  <button onClick={()=>onApprove(c.id)} style={{flex:1,padding:"10px",borderRadius:9,background:"#141210",color:"#F4F0E8",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>✓ Aprovar</button>
+                  <button onClick={()=>onReject(c.id)}  style={{flex:1,padding:"10px",borderRadius:9,background:"transparent",color:"#E53E3E",border:"1.5px solid rgba(229,62,62,.25)",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>✕ Rejeitar</button>
+                </div>
+              )}
+              {c.status==="approved"&&(
+                <button onClick={()=>onReject(c.id)} style={{padding:"8px 14px",borderRadius:9,background:"transparent",color:"#E53E3E",border:"1.5px solid rgba(229,62,62,.2)",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Suspender acesso</button>
+              )}
+              {c.status==="rejected"&&(
+                <button onClick={()=>onApprove(c.id)} style={{padding:"8px 14px",borderRadius:9,background:"transparent",color:"#065F46",border:"1.5px solid rgba(52,211,153,.3)",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Reactivar</button>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
