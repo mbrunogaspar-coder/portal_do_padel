@@ -225,10 +225,10 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-phero-live::before{content:'';width:5px;height:5px;border-radius:50%;background:#F4F0E8;flex-shrink:0;animation:ptPulse 2s infinite}
 .pt-phero-title{font-weight:800;font-size:clamp(34px,9vw,62px);line-height:.92;letter-spacing:-2px;color:#141210;margin-bottom:10px;font-family:'DM Serif Display','DM Sans',system-ui,sans-serif}
 .pt-phero-sub{font-size:13px;color:#7A766F;font-weight:300}
-.pt-phero-info{margin-top:14px;font-size:11px;color:#B5B0A8;display:flex;gap:14px;flex-wrap:wrap}
-.pt-phero-info b{color:#141210;font-weight:600}
+.pt-phero-info{margin-top:14px;font-size:12px;color:#5A5652;display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.pt-phero-info b{color:#141210;font-weight:700}
 
-.pt-pbody{max-width:540px;margin:0 auto;padding:0 18px 130px;text-align:center}
+.pt-pbody{max-width:600px;margin:0 auto;padding:0 20px 130px}
 .pt-psec{padding-top:22px}
 .pt-pstep{display:flex;align-items:center;gap:9px;margin-bottom:12px}
 .pt-pstep-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;transition:all .2s}
