@@ -577,17 +577,39 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 }
 `;
 
+
+// ─── PERSISTENT STATE HOOK ───────────────────────────────────────────────────
+// Saves to localStorage automatically. Falls back to defaultValue if nothing saved.
+function usePersist(key, defaultValue) {
+  const [state, setState] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem('pdp_' + key);
+      return saved !== null ? JSON.parse(saved) : defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  });
+  const setPersist = (value) => {
+    setState(prev => {
+      const next = typeof value === 'function' ? value(prev) : value;
+      try { localStorage.setItem('pdp_' + key, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
+  return [state, setPersist];
+}
+
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const [mode,    setMode]   = useState("discover");
   const [club,    setClub]   = useState(null);      // selected club (portal)
-  const [adminCfg,setAdmin]  = useState(DEF_CLUB);  // admin club config
-  const [bookings,setBook]   = useState(INIT_B);
-  const [contacts,setConts]  = useState(INIT_C);
-  const [blocks,  setBlocks] = useState(INIT_BLOCKS);
-  const [notifs,  setNotifs] = useState(INIT_N);
-  const [tournaments,setTournaments] = useState([]);
-  const [waitlist,setWaitlist] = useState([]);
+  const [adminCfg,setAdmin]  = usePersist("cfg",       DEF_CLUB);
+  const [bookings,setBook]   = usePersist("bookings",  INIT_B);
+  const [contacts,setConts]  = usePersist("contacts",  INIT_C);
+  const [blocks,  setBlocks] = usePersist("blocks",    INIT_BLOCKS);
+  const [notifs,  setNotifs] = usePersist("notifs",    INIT_N);
+  const [tournaments,setTournaments] = usePersist("tournaments", []);
+  const [waitlist,setWaitlist]       = usePersist("waitlist",    []);
   const addWaitlist=(entry)=>setWaitlist(p=>[...p,{id:Date.now(),...entry}]);
   const cancelPortalBk=(id)=>{ setBook(p=>p.filter(b=>b.id!==id)); };
   const [toast,   setToast]  = useState(null);
@@ -1561,6 +1583,17 @@ function AdminConfig({ cfg, setCfg, showToast }) {
 
       <button className="pt-btn pt-btn-light pt-btn-w" style={{fontSize:14,padding:"13px"}} onClick={save}>Guardar Configurações</button>
       <p style={{textAlign:"center",marginTop:8,paddingBottom:4,fontSize:10,color:"#3D3A35"}}>Alterações reflectem-se imediatamente no Portal</p>
+
+      <div style={{marginTop:24,padding:"14px 16px",borderRadius:12,border:"1px solid rgba(255,77,109,.15)",background:"rgba(255,77,109,.04)"}}>
+        <div style={{fontSize:12,fontWeight:700,color:"#FF6B6B",marginBottom:4}}>Zona de Perigo</div>
+        <div style={{fontSize:11,color:"#7A766F",marginBottom:10}}>Apaga todos os dados de teste (reservas, clientes, torneios). Usa antes de ir para produção.</div>
+        <button className="pt-btn pt-btn-del pt-btn-w" onClick={()=>{
+          if(window.confirm("Tens a certeza? Todos os dados serão apagados.")){
+            Object.keys(localStorage).filter(k=>k.startsWith("pdp_")).forEach(k=>localStorage.removeItem(k));
+            window.location.reload();
+          }
+        }}>🗑 Limpar todos os dados de teste</button>
+      </div>
     </>
   );
 }
