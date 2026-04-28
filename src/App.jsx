@@ -662,11 +662,12 @@ export default function App() {
     return bk;
   };
   const confirmBk = (id)=>{ setActiveBookings(p=>p.map(b=>b.id===id?{...b,status:"confirmed"}:b)); showToast("Reserva confirmada!"); };
-  const cancelBk  = (id)=>{ setBook(p=>p.filter(b=>b.id!==id)); showToast("Reserva cancelada."); };
+  const cancelBk  = (id)=>{ setActiveBookings(p=>p.filter(b=>b.id!==id)); showToast("Reserva cancelada."); };
   const updateCt  = (id,d)=>{ setConts(p=>p.map(c=>c.id===id?{...c,...d}:c)); showToast("Cliente actualizado!"); };
   const deleteCt  = (id)=>{ setConts(p=>p.filter(c=>c.id!==id)); showToast("Cliente removido."); };
-  const addBlock  = (b)=>{ setBlocks(p=>[...p,{id:Date.now(),...b}]); showToast("Bloqueio criado!"); };
-  const delBlock  = (id)=>{ setBlocks(p=>p.filter(b=>b.id!==id)); showToast("Bloqueio removido."); };
+  const addBlock   = (b)=>{ setActiveBlocks(p=>[...p,{id:Date.now(),...b}]); showToast("Bloqueio criado!"); };
+  const addBooking = (bk)=>{ setActiveBookings(p=>[...p,bk]); showToast("Campo marcado!"); };
+  const delBlock  = (id)=>{ setActiveBlocks(p=>p.filter(b=>b.id!==id)); showToast("Bloqueio removido."); };
 
   return (
     <>
