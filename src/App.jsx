@@ -781,7 +781,14 @@ export default function App() {
         return cTourneys.map(t=>({tournament:t,club:{...c,isRegistered:true}}));
       })
     ]} currentUser={currentUser} onRegisterTournament={(item)=>{setClub(item.club);setMode("portal");setPendingTournamentReg(item.tournament.id);}} regClubs={regClubs.filter(c=>c.status==="approved")} />}
-        {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={portalBookings(club)} blocks={portalBlocks(club)} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={portalTournaments(club)} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} currentUser={currentUser} pendingTournamentReg={pendingTournamentReg} onClearPendingReg={()=>setPendingTournamentReg(null)} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
+        {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={portalBookings(club)} blocks={portalBlocks(club)} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={portalTournaments(club)} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} currentUser={currentUser} pendingTournamentReg={pendingTournamentReg} onClearPendingReg={()=>setPendingTournamentReg(null)} onRegisterTournament={(tid,catId,pair)=>{
+      const c = club||CLUBS[0];
+      const pid = portalClubId(c);
+      const newPair = {id:Date.now(),...pair,status:"pending"};
+      const updater = p => (Array.isArray(p)?p:[]).map(t=>t.id===tid?{...t,categories:t.categories.map(cat=>cat.id===catId?{...cat,pairs:[...(cat.pairs||[]),newPair]}:cat)}:t);
+      if(pid==="demo") setTournaments(updater);
+      else setClubsData(prev=>({...prev,[pid]:{...(prev[pid]||{}),tournaments:updater((prev[pid]||{}).tournaments||[])}}));
+    }} />}
         {/* addBooking defined in App scope */}
         {mode==="admin"    && <AdminView cfg={activeClubCfg} setCfg={setActiveClubCfg} bookings={activeBookings} contacts={activeContacts} blocks={activeBlocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={activeTourneys} setTournaments={setActiveTourneys} onAddBooking={addBooking}/>}
         </>}
