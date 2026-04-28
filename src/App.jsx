@@ -137,13 +137,13 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 /* ── DISCOVERY ── */
 .pt-page{background:#F4F0E8;min-height:calc(100vh - 52px)}
 
-.pt-hero{padding:52px 20px 40px;text-align:center;position:relative;overflow:hidden}
+.pt-hero{padding:72px 20px 52px;text-align:center;position:relative;overflow:hidden;background:linear-gradient(180deg,#EEEBE3 0%,#F4F0E8 60%)}
 .pt-hero::before{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:600px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,0,0,0.1),transparent)}
 .pt-eyebrow{display:inline-flex;align-items:center;gap:7px;background:#141210;color:#F4F0E8;border-radius:99px;padding:5px 14px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;animation:ptUp .5s ease both}
 .pt-edot{width:5px;height:5px;border-radius:50%;background:#F4F0E8;flex-shrink:0;animation:ptPulse 2s infinite}
-.pt-h1{font-weight:800;font-size:clamp(40px,11vw,84px);line-height:.9;letter-spacing:-3px;color:#141210;margin-bottom:18px;animation:ptUp .5s .06s ease both}
+.pt-h1{font-weight:800;font-size:clamp(48px,12vw,96px);line-height:.88;letter-spacing:-4px;color:#141210;margin-bottom:22px;animation:ptUp .5s .06s ease both;font-family:"DM Serif Display","DM Sans",system-ui,sans-serif}
 .pt-h1 em{font-style:normal;color:#141210;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:3px}
-.pt-sub{font-size:15px;color:#7A766F;max-width:460px;margin:0 auto 36px;line-height:1.65;font-weight:400;animation:ptUp .5s .1s ease both}
+.pt-sub{font-size:16px;color:#7A766F;max-width:480px;margin:0 auto 40px;line-height:1.7;font-weight:400;animation:ptUp .5s .1s ease both}
 
 .pt-search{max-width:520px;margin:0 auto 48px;background:#FFFFFF;border:1.5px solid rgba(0,0,0,0.12);border-radius:14px;display:flex;align-items:center;box-shadow:0 2px 16px rgba(0,0,0,0.07);animation:ptUp .5s .14s ease both;overflow:hidden;transition:border-color .2s}
 .pt-search:focus-within{border-color:rgba(0,0,0,0.28)}
@@ -151,14 +151,14 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-si{flex:1;border:none;outline:none;font-size:14px;padding:14px 0;background:none;color:#141210;min-width:0;font-family:inherit}
 .pt-si::placeholder{color:#B5B0A8}
 .pt-sdiv{width:1px;height:24px;background:rgba(0,0,0,0.09);flex-shrink:0}
-.pt-sbtn{margin:5px;padding:9px 15px;border-radius:10px;background:#141210;color:#F4F0E8;border:none;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.pt-sbtn{margin:5px;padding:10px 18px;border-radius:10px;background:#141210;color:#F4F0E8;border:none;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;-webkit-tap-highlight-color:transparent}
 
-.pt-stats{display:flex;justify-content:center;max-width:580px;margin:0 auto 8px;animation:ptUp .5s .18s ease both}
-.pt-stat{flex:1;text-align:center;padding:16px 8px;position:relative}
+.pt-stats{display:flex;justify-content:center;max-width:640px;margin:0 auto 8px;animation:ptUp .5s .18s ease both}
+.pt-stat{flex:1;text-align:center;padding:20px 8px;position:relative}
 .pt-stat::after{content:'';position:absolute;right:0;top:20%;height:60%;width:1px;background:rgba(0,0,0,0.09)}
 .pt-stat:last-child::after{display:none}
-.pt-sv{font-weight:800;font-size:26px;color:#141210;letter-spacing:-1px;line-height:1}
-.pt-sl{font-size:11px;color:#7A766F;margin-top:3px}
+.pt-sv{font-weight:800;font-size:32px;color:#141210;letter-spacing:-1.5px;line-height:1;font-family:"DM Serif Display","DM Sans",system-ui,sans-serif}
+.pt-sl{font-size:11px;color:#7A766F;margin-top:5px;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
 
 .pt-sec{padding:24px 18px 0;max-width:1040px;margin:0 auto}
 .pt-sech{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
@@ -218,7 +218,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-pback:hover{background:rgba(0,0,0,0.05);color:#141210}
 .pt-pname{font-weight:800;font-size:14px;color:#141210;flex:1;letter-spacing:-.2px}
 
-.pt-phero{padding:36px 20px 28px;border-bottom:1px solid rgba(0,0,0,0.09);background:#F4F0E8;position:relative;overflow:hidden}
+.pt-phero{padding:48px 20px 36px;border-bottom:1px solid rgba(0,0,0,0.08);background:linear-gradient(180deg,#EEEBE3 0%,#F4F0E8 100%);position:relative;overflow:hidden}
 .pt-phero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
 .pt-phero-content{position:relative;z-index:1;max-width:540px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center}
 .pt-phero-live{display:inline-flex;align-items:center;gap:7px;border-radius:99px;padding:5px 12px;border:1px solid rgba(0,0,0,.12);background:#141210;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;color:#F4F0E8}
@@ -229,10 +229,10 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-phero-info b{color:#141210;font-weight:700}
 
 .pt-pbody{max-width:600px;margin:0 auto;padding:0 20px 130px}
-.pt-psec{padding-top:28px;display:flex;flex-direction:column;align-items:center}
+.pt-psec{padding-top:32px;display:flex;flex-direction:column;align-items:center}
 .pt-pstep{display:flex;align-items:center;gap:9px;margin-bottom:14px;justify-content:center}
-.pt-pstep-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;transition:all .2s}
-.pt-pstep-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#B5B0A8;transition:color .2s}
+.pt-pstep-n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;transition:all .2s;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.pt-pstep-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#B5B0A8;transition:color .2s}
 .pt-pstep-lbl.act{color:#141210}
 
 /* DAYS STRIP */
@@ -630,7 +630,14 @@ export default function App() {
   }));
 
   // Club-scoped data (falls back to shared demo data for "demo" club)
-  const activeClubCfg  = clubId==="demo" ? adminCfg  : (getCD("cfg", {...DEF_CLUB, ...currentUser?.data}));
+  const activeClubCfg  = clubId==="demo" ? adminCfg : getCD("cfg", {
+    ...DEF_CLUB,
+    name:    currentUser?.data?.name    || DEF_CLUB.name,
+    address: currentUser?.data?.address || DEF_CLUB.address,
+    city:    currentUser?.data?.city    || DEF_CLUB.city,
+    phone:   currentUser?.data?.phone   || DEF_CLUB.phone,
+    email:   currentUser?.data?.email   || DEF_CLUB.email,
+  });
   const activeBookings = clubId==="demo" ? bookings  : getCD("bookings",  []);
   const activeContacts = clubId==="demo" ? contacts  : getCD("contacts",  []);
   const activeBlocks   = clubId==="demo" ? blocks    : getCD("blocks",    []);
@@ -3114,7 +3121,7 @@ function AuthLayout({ children, title, subtitle }) {
       <div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"24px 20px"}}>
         <div style={{width:"100%",maxWidth:400}}>
           <div style={{textAlign:"center",marginBottom:28}}>
-            <h1 style={{fontSize:28,fontWeight:800,color:"#141210",letterSpacing:"-1px",lineHeight:1,marginBottom:8}}>{title}</h1>
+            <h1 style={{fontSize:32,fontWeight:800,color:"#141210",letterSpacing:"-1.5px",lineHeight:.95,marginBottom:10,fontFamily:'"DM Serif Display","DM Sans",system-ui,sans-serif'}}>{title}</h1>
             {subtitle&&<p style={{fontSize:14,color:"#7A766F",lineHeight:1.6}}>{subtitle}</p>}
           </div>
           {children}
@@ -3239,8 +3246,8 @@ function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin, onBack }) {
     await new Promise(r=>setTimeout(r,700));
     const club = clubs.find(c=>c.email.toLowerCase()===email.toLowerCase().trim()&&c.password===pass);
     if(!club){setErr("Email ou password incorrectos.");setLoading(false);return;}
-    if(club.status==="pending"){setErr("A tua conta está a aguardar aprovação.");setLoading(false);return;}
-    if(club.status==="rejected"){setErr("O teu pedido foi rejeitado. Contacta-nos para mais informações.");setLoading(false);return;}
+    if(club.status==="pending"){setErr("⏳ O teu pedido está pendente de aprovação. A equipa Portal do Padel irá contactar-te em breve.");setLoading(false);return;}
+    if(club.status==="rejected"){setErr("O teu pedido foi rejeitado. Contacta admin@portaldopadel.pt para mais informações.");setLoading(false);return;}
     onLogin(club);
   };
 
@@ -3303,8 +3310,16 @@ function ClubRegister({ clubs, onSubmit, onGoLogin }) {
     <AuthLayout title="Pedido enviado!" subtitle="">
       <div style={{textAlign:"center",padding:"8px 0 24px"}}>
         <div style={{fontSize:48,marginBottom:16}}>✅</div>
-        <p style={{fontSize:14,color:"#7A766F",lineHeight:1.65,marginBottom:20}}>O teu pedido foi submetido com sucesso. A equipa Portal do Padel irá analisar e responder em breve.</p>
-        <AuthBtn onClick={onGoLogin} secondary>Voltar ao login</AuthBtn>
+        <p style={{fontSize:14,color:"#7A766F",lineHeight:1.65,marginBottom:16}}>O teu pedido foi submetido. Aguarda aprovação pela equipa Portal do Padel.</p>
+        <div style={{background:"#F4F0E8",borderRadius:10,padding:"12px 16px",marginBottom:20,textAlign:"left"}}>
+          <div style={{fontSize:11,fontWeight:700,color:"#7A766F",textTransform:"uppercase",letterSpacing:"1px",marginBottom:6}}>Próximos passos</div>
+          <div style={{fontSize:13,color:"#141210",lineHeight:1.7}}>
+            1. A equipa Portal do Padel analisa o teu pedido<br/>
+            2. Recebes aprovação por email<br/>
+            3. Faz login com o teu email e password
+          </div>
+        </div>
+        <AuthBtn onClick={onGoLogin} secondary>Ir para o login</AuthBtn>
       </div>
     </AuthLayout>
   );
