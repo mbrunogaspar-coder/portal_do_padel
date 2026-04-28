@@ -659,11 +659,40 @@ export default function App() {
   const [toast,   setToast]  = useState(null);
   const showToast = (m)=>{ setToast(m); setTimeout(()=>setToast(null),3000); };
 
+  // Get bookings/blocks for a specific visited club (not necessarily logged-in club)
+  const portalClubId = (c) => c?.isRegistered ? String(c.id) : "demo";
+  const portalBookings = (c) => {
+    const pid = portalClubId(c);
+    if(pid==="demo") return bookings;
+    const val = (clubsData[pid]||{})["bookings"];
+    return Array.isArray(val) ? val : [];
+  };
+  const portalBlocks = (c) => {
+    const pid = portalClubId(c);
+    if(pid==="demo") return blocks;
+    const val = (clubsData[pid]||{})["blocks"];
+    return Array.isArray(val) ? val : [];
+  };
+  const setPortalBookings = (c, val) => {
+    const pid = portalClubId(c);
+    if(pid==="demo") setBook(val);
+    else setClubsData(prev=>({...prev,[pid]:{...(prev[pid]||{}),bookings:typeof val==="function"?val((prev[pid]||{}).bookings||[]):val}}));
+  };
+  const setPortalContacts = (c, val) => {
+    const pid = portalClubId(c);
+    if(pid==="demo") setConts(val);
+    else setClubsData(prev=>({...prev,[pid]:{...(prev[pid]||{}),contacts:typeof val==="function"?val((prev[pid]||{}).contacts||[]):val}}));
+  };
+
   const portalBook = (data)=>{
-    if(!activeContacts.find(c=>c.email===data.email))
-      setActiveContacts(p=>[...p,{id:Date.now(),name:data.name,email:data.email,phone:data.phone,since:TODAY,notes:""}]);
-    const bk={id:Date.now()+1,contactEmail:data.email,contactName:data.name,courtId:data.court.id,date:data.date,time:data.time,dur:data.dur,status:activeClubCfg.requireApproval?"pending":"confirmed",pay:data.payment,ref:genRef(),createdAt:new Date().toISOString()};
-    setActiveBookings(p=>[...p,bk]);
+    const c = club||CLUBS[0];
+    const curContacts = portalBookings(c); // reuse for contacts check
+    setPortalContacts(c, p=>{
+      if(p.find(ct=>ct.email===data.email)) return p;
+      return [...p,{id:Date.now(),name:data.name,email:data.email,phone:data.phone,since:TODAY,notes:""}];
+    });
+    const bk={id:Date.now()+1,contactEmail:data.email,contactName:data.name,courtId:data.court.id,date:data.date,time:data.time,dur:data.dur,status:(c.requireApproval??true)?"pending":"confirmed",pay:data.payment||"local",ref:genRef(),createdAt:new Date().toISOString()};
+    setPortalBookings(c, p=>[...p,bk]);
     setNotifs(p=>[{id:Date.now()+2,type:"booking",msg:`${data.name} reservou ${data.court.name} · ${fmtSh(data.date)} ${data.time}`,time:"Agora",read:false},...p]);
     return bk;
   };
@@ -722,7 +751,7 @@ export default function App() {
         {!authScreen && !showProfile && currentUser?.type!=="super" && <>
         {/* VIEWS */}
         {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}} allTournaments={[...activeTourneys.map(t=>({tournament:t,club:activeClubCfg}))]} currentUser={currentUser} onRegisterTournament={(item)=>{/* TODO */}} regClubs={regClubs.filter(c=>c.status==="approved")} />}
-        {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={activeBookings} blocks={activeBlocks} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={tournaments} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} currentUser={currentUser} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
+        {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={portalBookings(club)} blocks={portalBlocks(club)} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={tournaments} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} currentUser={currentUser} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
         {/* addBooking defined in App scope */}
         {mode==="admin"    && <AdminView cfg={activeClubCfg} setCfg={setActiveClubCfg} bookings={activeBookings} contacts={activeContacts} blocks={activeBlocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={activeTourneys} setTournaments={setActiveTourneys} onAddBooking={addBooking}/>}
         </>}
