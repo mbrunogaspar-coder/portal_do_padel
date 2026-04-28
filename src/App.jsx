@@ -198,7 +198,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-cs:last-child::after{display:none}
 .pt-csv{font-weight:800;font-size:17px;color:#141210;letter-spacing:-.3px;line-height:1}
 .pt-csl{font-size:9px;color:#B5B0A8;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
-.pt-ctags{padding:10px 16px;display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.pt-ctags{padding:10px 16px;display:flex;gap:6px;flex-wrap:wrap}
 .pt-ctag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:#F4F0E8;color:#7A766F}
 .pt-cfoot{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:#F9F7F3}
 .pt-cprice-v{font-weight:800;font-size:18px;color:#141210;letter-spacing:-.3px}
@@ -799,8 +799,8 @@ function ClubCard({ club, delay, onSelect }) {
       <div className="pt-ctop">
         <div style={{flex:1,minWidth:0}}>
           <div className="pt-cname">{club.name}</div>
-          <div className="pt-cloc"><I n="map" s={10} c="#B5B0A8"/> {club.city}, {club.district}</div>
-          {club.phone&&<div style={{fontSize:10,color:"#B5B0A8",marginTop:2,display:"flex",alignItems:"center",gap:4}}><I n="phone" s={9} c="#B5B0A8"/> {club.phone}</div>}
+          <div className="pt-cloc">📍 {club.city}, {club.district}</div>
+          {club.phone&&<div style={{fontSize:10,color:"#B5B0A8",marginTop:2}}>{club.phone}</div>}
         </div>
 
       </div>
