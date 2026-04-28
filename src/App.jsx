@@ -580,11 +580,25 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 
 // ─── PERSISTENT STATE HOOK ───────────────────────────────────────────────────
 // Saves to localStorage automatically. Falls back to defaultValue if nothing saved.
+const DATA_VERSION = "v4"; // bump this to force reset on incompatible changes
+
 function usePersist(key, defaultValue) {
   const [state, setState] = useState(() => {
     try {
+      // Version check — reset if data is from old version
+      const ver = localStorage.getItem('pdp_version');
+      if(ver !== DATA_VERSION) {
+        Object.keys(localStorage).filter(k=>k.startsWith('pdp_')).forEach(k=>localStorage.removeItem(k));
+        localStorage.setItem('pdp_version', DATA_VERSION);
+        return defaultValue;
+      }
       const saved = localStorage.getItem('pdp_' + key);
-      return saved !== null ? JSON.parse(saved) : defaultValue;
+      if(saved === null) return defaultValue;
+      const parsed = JSON.parse(saved);
+      // Type safety — if we expect array but got something else, use default
+      if(Array.isArray(defaultValue) && !Array.isArray(parsed)) return defaultValue;
+      if(typeof defaultValue === 'object' && !Array.isArray(defaultValue) && typeof parsed !== 'object') return defaultValue;
+      return parsed;
     } catch {
       return defaultValue;
     }
