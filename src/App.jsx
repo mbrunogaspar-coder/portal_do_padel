@@ -653,7 +653,7 @@ export default function App() {
         {/* VIEWS */}
         {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}}/>}
         {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={bookings} blocks={blocks} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={tournaments} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
-        {mode==="admin"    && <AdminView cfg={adminCfg} setCfg={setAdmin} bookings={bookings} contacts={contacts} blocks={blocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={tournaments} setTournaments={setTournaments}/>}
+        {mode==="admin"    && <AdminView cfg={adminCfg} setCfg={setAdmin} bookings={bookings} contacts={contacts} blocks={blocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={tournaments} setTournaments={setTournaments} onAddBooking={onAddBooking}/>}
       </div>
     </>
   );
@@ -1048,7 +1048,7 @@ function PortalSuccess({ data, onBack }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 // ADMIN VIEW
 // ═══════════════════════════════════════════════════════════════════════════════
-function AdminView({cfg,setCfg,bookings,contacts,blocks,notifs,onConfirm,onCancel,onUpdateCt,onDeleteCt,onAddBlock,onDelBlock,showToast,toast,tournaments,setTournaments}) {
+function AdminView({cfg,setCfg,bookings,contacts,blocks,notifs,onConfirm,onCancel,onUpdateCt,onDeleteCt,onAddBlock,onDelBlock,showToast,toast,tournaments,setTournaments,onAddBooking}) {
   const [view,setView]=useState("dash");
   const [showN,setShowN]=useState(false);
   const [srch,setSrch]=useState("");
@@ -1101,7 +1101,7 @@ function AdminView({cfg,setCfg,bookings,contacts,blocks,notifs,onConfirm,onCance
 
         <div className="pt-acontent">
           {view==="dash"    && <AdminDash    cfg={cfg} bookings={bookings} contacts={contacts} onSetView={setView}/>}
-          {view==="agenda"  && <AdminAgenda  cfg={cfg} bookings={bookings} blocks={blocks} onConfirm={onConfirm} onCancel={onCancel} onAddBlock={onAddBlock} onDelBlock={onDelBlock} onAddBooking={(bk)=>{setBook(p=>[...p,bk]);showToast("Reserva criada!");}}/>}
+          {view==="agenda"  && <AdminAgenda  cfg={cfg} bookings={bookings} blocks={blocks} onConfirm={onConfirm} onCancel={onCancel} onAddBlock={onAddBlock} onDelBlock={onDelBlock} onAddBooking={onAddBooking}/>}
           {view==="clients" && <AdminClients contacts={contacts} bookings={bookings} cfg={cfg} search={srch} onUpdate={onUpdateCt} onDelete={onDeleteCt} onCancel={onCancel}/>}
           {view==="config"  && <AdminConfig  cfg={cfg} setCfg={setCfg} showToast={showToast}/>}
           {view==="torneiros" && <AdminTournaments tournaments={tournaments} setTournaments={setTournaments} cfg={cfg}/>}
