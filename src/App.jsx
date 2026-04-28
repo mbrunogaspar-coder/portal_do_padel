@@ -624,6 +624,7 @@ export default function App() {
   const [currentUser, setCurrentUser]  = useState(null);  // {type:"athlete"|"club"|"super", data:{}}
   const [authScreen,  setAuthScreen]   = useState(null);  // "athleteLogin"|"athleteRegister"|"clubLogin"|"clubRegister"
   const [showProfile, setShowProfile]  = useState(false);
+  const [pendingTournamentReg, setPendingTournamentReg] = useState(null);
 
   const logout = () => { setCurrentUser(null); setAuthScreen(null); setMode("discover"); };      // selected club (portal)
   const [adminCfg,setAdmin]  = usePersist("cfg",       DEF_CLUB);
@@ -764,8 +765,8 @@ export default function App() {
 
         {!authScreen && !showProfile && currentUser?.type!=="super" && <>
         {/* VIEWS */}
-        {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}} allTournaments={[...activeTourneys.map(t=>({tournament:t,club:activeClubCfg}))]} currentUser={currentUser} onRegisterTournament={(item)=>{/* TODO */}} regClubs={regClubs.filter(c=>c.status==="approved")} />}
-        {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={portalBookings(club)} blocks={portalBlocks(club)} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={tournaments} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} currentUser={currentUser} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
+        {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}} allTournaments={[...activeTourneys.map(t=>({tournament:t,club:activeClubCfg}))]} currentUser={currentUser} onRegisterTournament={(item)=>{setClub(item.club);setMode("portal");setPendingTournamentReg(item.tournament.id);}} regClubs={regClubs.filter(c=>c.status==="approved")} />}
+        {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={portalBookings(club)} blocks={portalBlocks(club)} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={tournaments} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} currentUser={currentUser} pendingTournamentReg={pendingTournamentReg} onClearPendingReg={()=>setPendingTournamentReg(null)} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
         {/* addBooking defined in App scope */}
         {mode==="admin"    && <AdminView cfg={activeClubCfg} setCfg={setActiveClubCfg} bookings={activeBookings} contacts={activeContacts} blocks={activeBlocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={activeTourneys} setTournaments={setActiveTourneys} onAddBooking={addBooking}/>}
         </>}
@@ -896,8 +897,9 @@ function ClubCard({ club, delay, onSelect }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 // PORTAL VIEW
 // ═══════════════════════════════════════════════════════════════════════════════
-function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, bookingsAll, onCancelBooking, onJoinWaitlist, currentUser, onRegisterTournament }) {
+function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, bookingsAll, onCancelBooking, onJoinWaitlist, currentUser, onRegisterTournament, pendingTournamentReg, onClearPendingReg }) {
   const [portalTab, setPortalTab] = useState("reserve"); // "reserve" | "mybookings" | "tournaments"
+  useEffect(()=>{ if(pendingTournamentReg){ setPortalTab("tournaments"); } },[pendingTournamentReg]);
   const [waitlistSlot, setWaitlistSlot] = useState(null);
   const [selDay,  setDay]   = useState(null);
   const [selDur,  setDur]   = useState(null);
