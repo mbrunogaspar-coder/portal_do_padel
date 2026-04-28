@@ -653,7 +653,8 @@ export default function App() {
         {/* VIEWS */}
         {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}}/>}
         {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={bookings} blocks={blocks} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={tournaments} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
-        {mode==="admin"    && <AdminView cfg={adminCfg} setCfg={setAdmin} bookings={bookings} contacts={contacts} blocks={blocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={tournaments} setTournaments={setTournaments} onAddBooking={addBooking}/>}
+        {/* addBooking defined in App scope */}
+        {mode==="admin"    && <AdminView cfg={adminCfg} setCfg={setAdmin} bookings={bookings} contacts={contacts} blocks={blocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={tournaments} setTournaments={setTournaments} onAddBooking={(bk)=>{setBook(p=>[...p,bk]);showToast("Campo marcado!");}}/>}
       </div>
     </>
   );
@@ -1101,7 +1102,7 @@ function AdminView({cfg,setCfg,bookings,contacts,blocks,notifs,onConfirm,onCance
 
         <div className="pt-acontent">
           {view==="dash"    && <AdminDash    cfg={cfg} bookings={bookings} contacts={contacts} onSetView={setView}/>}
-          {view==="agenda"  && <AdminAgenda  cfg={cfg} bookings={bookings} blocks={blocks} onConfirm={onConfirm} onCancel={onCancel} onAddBlock={onAddBlock} onDelBlock={onDelBlock} onAddBooking={addBooking}/>}
+          {view==="agenda"  && <AdminAgenda  cfg={cfg} bookings={bookings} blocks={blocks} onConfirm={onConfirm} onCancel={onCancel} onAddBlock={onAddBlock} onDelBlock={onDelBlock} onAddBooking={onAddBooking}/>}
           {view==="clients" && <AdminClients contacts={contacts} bookings={bookings} cfg={cfg} search={srch} onUpdate={onUpdateCt} onDelete={onDeleteCt} onCancel={onCancel}/>}
           {view==="config"  && <AdminConfig  cfg={cfg} setCfg={setCfg} showToast={showToast}/>}
           {view==="torneiros" && <AdminTournaments tournaments={tournaments} setTournaments={setTournaments} cfg={cfg}/>}
