@@ -661,7 +661,7 @@ export default function App() {
   const activeBookings = clubId==="demo" ? bookings  : getCD("bookings",  []);
   const activeContacts = clubId==="demo" ? contacts  : getCD("contacts",  []);
   const activeBlocks   = clubId==="demo" ? blocks    : getCD("blocks",    []);
-  const activeTourneys = clubId==="demo" ? tournaments: getCD("tournaments",[]);
+  const activeTourneys = clubId==="demo" ? tournaments: (()=>{ const v=getCD("tournaments",[]); return Array.isArray(v)?v:[]; })();
 
   const setActiveClubCfg  = clubId==="demo" ? setAdmin  : (v=>setCD("cfg",v));
   const setActiveBookings = clubId==="demo" ? setBook   : (v=>setCD("bookings",v));
@@ -1799,7 +1799,7 @@ function AdminTournaments({tournaments,setTournaments,cfg}){
   const [showCreate,setShowCreate]=useState(false);
 
   const t=sel?tournaments.find(t=>t.id===sel):null;
-  if(t) return <TournamentDetail t={t} cfg={cfg} onBack={()=>setSel(null)} onUpdate={(updated)=>setTournaments(p=>p.map(x=>x.id===updated.id?updated:x))}/>;
+  if(t) return <TournamentDetail t={t} cfg={cfg} onBack={()=>setSel(null)} onUpdate={(updated)=>setTournaments(p=>(Array.isArray(p)?p:[]).map(x=>x.id===updated.id?updated:x))}/>;
 
   return(
     <>
@@ -1835,7 +1835,7 @@ function AdminTournaments({tournaments,setTournaments,cfg}){
         </div>
       )}
 
-      {showCreate&&<TournamentCreate cfg={cfg} onSave={(t)=>{setTournaments(p=>[...p,t]);setShowCreate(false);setSel(t.id);}} onClose={()=>setShowCreate(false)}/>}
+      {showCreate&&<TournamentCreate cfg={cfg} onSave={(t)=>{setTournaments(p=>[...(Array.isArray(p)?p:[]),t]);setShowCreate(false);setSel(t.id);}} onClose={()=>setShowCreate(false)}/>}
     </>
   );
 }
