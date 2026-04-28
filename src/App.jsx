@@ -1,3 +1,4 @@
+import { LayoutGrid, CalendarDays, Users, Bell, Settings, Check, X, Plus, ArrowLeft, Search, Lock, Pencil, Trash2, Mail, Phone, TrendingUp, BarChart2, MapPin, Trophy, ArrowRight, LogOut, UserCircle2, Home } from "lucide-react";
 import { useState, useMemo, useRef, useEffect } from "react";
 
 // ─── PALETTE (no per-club colors, pure monochrome) ────────────────────────────
@@ -24,14 +25,14 @@ const REGIONS = [
   {id:"madeira",label:"Madeira",icon:"🌺"},
 ];
 const CLUBS = [
-  {id:1,name:"Padel Arena",city:"Lisboa",district:"Lisboa",region:"lvt",courts:4,indoor:2,outdoor:2,priceDay:3,priceNight:4,nightFrom:18,rating:4.8,reviews:124,tags:["Indoor","Balneários","Estac."],open:"08–22h",highlight:true,desc:"4 campos premium no centro de Lisboa. Balneários equipados e estacionamento privativo."},
-  {id:2,name:"Norte Padel",city:"Porto",district:"Porto",region:"norte",courts:6,indoor:4,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.9,reviews:203,tags:["Indoor","Aulas","Loja"],open:"07–23h",highlight:true,desc:"O maior clube de padel do Porto. Academia com treinadores certificados e loja especializada."},
-  {id:3,name:"Algarve Padel",city:"Faro",district:"Faro",region:"alg",courts:8,indoor:2,outdoor:6,priceDay:3,priceNight:5,nightFrom:18,rating:4.7,reviews:89,tags:["Outdoor","Piscina","Bar"],open:"08–21h",highlight:false,desc:"Clube com vista para a Ria Formosa. 6 campos outdoor iluminados e bar/restaurante."},
-  {id:4,name:"Setúbal Padel",city:"Setúbal",district:"Setúbal",region:"lvt",courts:3,indoor:3,outdoor:0,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.5,reviews:67,tags:["Indoor","Estac."],open:"09–22h",highlight:false,desc:"Clube familiar com 3 campos cobertos. Ideal para jogar durante todo o ano."},
-  {id:5,name:"Coimbra Padel",city:"Coimbra",district:"Coimbra",region:"centro",courts:4,indoor:2,outdoor:2,priceDay:2,priceNight:3,nightFrom:18,rating:4.6,reviews:112,tags:["Indoor","Aulas"],open:"08–22h",highlight:false,desc:"Academia universitária com preços acessíveis. Programas para todos os níveis."},
-  {id:6,name:"Braga Padel Sport",city:"Braga",district:"Braga",region:"norte",courts:5,indoor:3,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.8,reviews:78,tags:["Indoor","Torneios","Bar"],open:"07:30–23h",highlight:false,desc:"Calendário activo de torneios e liga interna mensal para todos os níveis."},
-  {id:7,name:"Évora Padel",city:"Évora",district:"Évora",region:"alent",courts:2,indoor:2,outdoor:0,priceDay:2,priceNight:3,nightFrom:18,rating:4.4,reviews:34,tags:["Indoor","Aulas"],open:"09–21h",highlight:false,desc:"O único clube de padel indoor do Alentejo Central. Moderno e acolhedor."},
-  {id:8,name:"Funchal Padel",city:"Funchal",district:"Funchal",region:"madeira",courts:3,indoor:1,outdoor:2,priceDay:3,priceNight:4.5,nightFrom:18,rating:4.9,reviews:56,tags:["Outdoor","Vista Mar","Bar"],open:"08–20h",highlight:true,desc:"Vista única para o Oceano Atlântico. Campos outdoor iluminados e bar com esplanada."},
+  {id:1,name:"Padel Arena",amenities:["parking","showers"],city:"Lisboa",district:"Lisboa",region:"lvt",courts:4,indoor:2,outdoor:2,priceDay:3,priceNight:4,nightFrom:18,rating:4.8,reviews:124,tags:["Indoor","Balneários","Estac."],open:"08–22h",highlight:true,desc:"4 campos premium no centro de Lisboa. Balneários equipados e estacionamento privativo."},
+  {id:2,name:"Norte Padel",amenities:["academy","shop"],city:"Porto",district:"Porto",region:"norte",courts:6,indoor:4,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.9,reviews:203,tags:["Indoor","Aulas","Loja"],open:"07–23h",highlight:true,desc:"O maior clube de padel do Porto. Academia com treinadores certificados e loja especializada."},
+  {id:3,name:"Algarve Padel",amenities:["pool","bar","lights"],city:"Faro",district:"Faro",region:"alg",courts:8,indoor:2,outdoor:6,priceDay:3,priceNight:5,nightFrom:18,rating:4.7,reviews:89,tags:["Outdoor","Piscina","Bar"],open:"08–21h",highlight:false,desc:"Clube com vista para a Ria Formosa. 6 campos outdoor iluminados e bar/restaurante."},
+  {id:4,name:"Setúbal Padel",amenities:["parking"],city:"Setúbal",district:"Setúbal",region:"lvt",courts:3,indoor:3,outdoor:0,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.5,reviews:67,tags:["Indoor","Estac."],open:"09–22h",highlight:false,desc:"Clube familiar com 3 campos cobertos. Ideal para jogar durante todo o ano."},
+  {id:5,name:"Coimbra Padel",amenities:["academy","showers"],city:"Coimbra",district:"Coimbra",region:"centro",courts:4,indoor:2,outdoor:2,priceDay:2,priceNight:3,nightFrom:18,rating:4.6,reviews:112,tags:["Indoor","Aulas"],open:"08–22h",highlight:false,desc:"Academia universitária com preços acessíveis. Programas para todos os níveis."},
+  {id:6,name:"Braga Padel Sport",amenities:["bar","lights"],city:"Braga",district:"Braga",region:"norte",courts:5,indoor:3,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.8,reviews:78,tags:["Indoor","Torneios","Bar"],open:"07:30–23h",highlight:false,desc:"Calendário activo de torneios e liga interna mensal para todos os níveis."},
+  {id:7,name:"Évora Padel",amenities:["academy"],city:"Évora",district:"Évora",region:"alent",courts:2,indoor:2,outdoor:0,priceDay:2,priceNight:3,nightFrom:18,rating:4.4,reviews:34,tags:["Indoor","Aulas"],open:"09–21h",highlight:false,desc:"O único clube de padel indoor do Alentejo Central. Moderno e acolhedor."},
+  {id:8,name:"Funchal Padel",amenities:["bar","lights"],city:"Funchal",district:"Funchal",region:"madeira",courts:3,indoor:1,outdoor:2,priceDay:3,priceNight:4.5,nightFrom:18,rating:4.9,reviews:56,tags:["Outdoor","Vista Mar","Bar"],open:"08–20h",highlight:true,desc:"Vista única para o Oceano Atlântico. Campos outdoor iluminados e bar com esplanada."},
 ];
 const BLOCK_CAT = {
   lessons:     {label:"Aulas"},
@@ -39,6 +40,18 @@ const BLOCK_CAT = {
   event:       {label:"Evento"},
   other:       {label:"Outro"},
 };
+
+const AMENITIES = [
+  {id:"parking",    label:"Estacionamento", icon:"🚗"},
+  {id:"pool",       label:"Piscina",        icon:"🏊"},
+  {id:"bar",        label:"Bar / Restaurante", icon:"🍺"},
+  {id:"showers",    label:"Balneários",     icon:"🚿"},
+  {id:"shop",       label:"Loja",           icon:"🛍"},
+  {id:"academy",    label:"Aulas",          icon:"🎓"},
+  {id:"lights",     label:"Iluminação",     icon:"💡"},
+  {id:"accessible", label:"Acessibilidade", icon:"♿"},
+];
+
 const PAY = [{id:"mbway",label:"MB Way",icon:"📱"},{id:"multi",label:"Multibanco",icon:"🏧"},{id:"card",label:"Cartão",icon:"💳"},{id:"local",label:"No Local",icon:"💶"}];
 const WD_SHORT = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 
@@ -76,34 +89,20 @@ const INIT_B=[mkB(101,"sofia@m.pt","Sofia Martins",1,"2026-04-19","10:00","confi
 const INIT_C=[{id:1,name:"Sofia Martins",email:"sofia@m.pt",phone:"+351 912 345 678",since:"2024-01-15",notes:"Prefere campos interiores. Vem às segundas e quartas."},{id:2,name:"João Ferreira",email:"joao@m.pt",phone:"+351 932 111 222",since:"2024-02-20",notes:""},{id:3,name:"Miguel Sousa",email:"miguel@m.pt",phone:"+351 917 555 666",since:"2023-11-05",notes:"Cliente antigo. Joga ao fim de semana."},{id:4,name:"Carla Lopes",email:"carla@m.pt",phone:"+351 936 777 888",since:"2024-04-01",notes:""},{id:5,name:"Ana Costa",email:"ana@m.pt",phone:"+351 962 333 444",since:"2024-03-10",notes:"Iniciante. Desconto nas primeiras reservas."}];
 const INIT_BLOCKS=[{id:1,type:"recurring",weekdays:[1,3,5],courtIds:[1,2],startTime:"09",endTime:"11",reason:"Aulas de Padel Adultos",category:"lessons"},{id:2,type:"recurring",weekdays:[6],courtIds:"all",startTime:"08",endTime:"10",reason:"Manutenção Semanal",category:"maintenance"},{id:3,type:"single",date:"2026-04-28",courtIds:[3,4],startTime:"14",endTime:"18",reason:"Torneio Interno",category:"event"}];
 const INIT_N=[{id:1,type:"booking",msg:"João Ferreira reservou Court 1 · Hoje 14:00",time:"Há 2h",read:false},{id:2,type:"booking",msg:"Carla Lopes reservou Court 3 · Hoje 16:00",time:"Há 3h",read:false},{id:3,type:"client",msg:"Nova cliente: Ana Costa via portal",time:"Há 1 dia",read:true}];
-const DEF_CLUB={name:"Padel Arena",tagline:"O teu campo. À tua hora.",priceDay:3,priceNight:4,nightFrom:"18",openFrom:"08",openTo:"22",durations:[60,90,120],playersPerCourt:4,courts:[{id:1,name:"Court 1",indoor:true,active:true},{id:2,name:"Court 2",indoor:true,active:true},{id:3,name:"Court 3",indoor:false,active:true},{id:4,name:"Court 4",indoor:false,active:true}],requireApproval:true,allowCancel:true,cancelHours:24,showOccupancy:true,advanceDays:14,phone:"+351 210 000 000",email:"info@padelarena.pt",address:"Rua do Padel 123, Lisboa"};
+const DEF_CLUB={amenities:["showers","parking"],name:"Padel Arena",tagline:"O teu campo. À tua hora.",priceDay:3,priceNight:4,nightFrom:"18",openFrom:"08",openTo:"22",durations:[60,90,120],playersPerCourt:4,courts:[{id:1,name:"Court 1",indoor:true,active:true},{id:2,name:"Court 2",indoor:true,active:true},{id:3,name:"Court 3",indoor:false,active:true},{id:4,name:"Court 4",indoor:false,active:true}],requireApproval:true,allowCancel:true,cancelHours:24,showOccupancy:true,advanceDays:14,phone:"+351 210 000 000",email:"info@padelarena.pt",address:"Rua do Padel 123, Lisboa"};
 
-// ─── FLAT ICONS (monochrome stroke) ──────────────────────────────────────────
-const I = ({n,s=18,c="currentColor",w=1.75})=>{
-  const d={
-    grid: <><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></>,
-    cal:  <><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></>,
-    usr:  <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>,
-    bell: <><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></>,
-    set:  <><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></>,
-    ok:   <polyline points="20 6 9 17 4 12"/>,
-    x:    <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>,
-    plus: <><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></>,
-    back: <><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></>,
-    srch: <><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>,
-    lock: <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></>,
-    edit: <><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></>,
-    trash:<><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></>,
-    mail: <><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></>,
-    phone:<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.9 13.4a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.82 2.5h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.9a16 16 0 0 0 6 6l1.41-1.41a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>,
-    trn:  <><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></>,
-    pct:  <><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></>,
-    note: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></>,
-    map:  <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></>,
-    star: <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>,
-    wa:   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>,
-  };
-  return <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round">{d[n]}</svg>;
+// ─── PHOSPHOR ICONS WRAPPER ───────────────────────────────────────────────────
+const ICON_MAP = {
+  dash:  LayoutGrid, cal: CalendarDays, usr: Users, bell: Bell, set: Settings,
+  ok:    Check, x: X, plus: Plus, back: ArrowLeft, srch: Search,
+  lock:  Lock, edit: Pencil, trash: Trash2, mail: Mail, phone: Phone,
+  trn:   TrendingUp, pct: BarChart2, map: MapPin, star: Trophy, note: Phone,
+  arrow: ArrowRight, signout: LogOut, profile: UserCircle2, home: Home,
+};
+const I = ({n, s=18, c="currentColor"}) => {
+  const Ic = ICON_MAP[n];
+  if(!Ic) return null;
+  return <Ic size={s} color={c} strokeWidth={1.75}/>;
 };
 const Spin=()=><svg style={{animation:"ptSpin .7s linear infinite",display:"inline-block",verticalAlign:"middle"}} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>;
 
@@ -609,6 +608,7 @@ export default function App() {
   const [regClubs,    setRegClubs]     = usePersist("regClubs",    []);
   const [currentUser, setCurrentUser]  = useState(null);  // {type:"athlete"|"club"|"super", data:{}}
   const [authScreen,  setAuthScreen]   = useState(null);  // "athleteLogin"|"athleteRegister"|"clubLogin"|"clubRegister"
+  const [showProfile, setShowProfile]  = useState(false);
 
   const logout = () => { setCurrentUser(null); setAuthScreen(null); setMode("discover"); };      // selected club (portal)
   const [adminCfg,setAdmin]  = usePersist("cfg",       DEF_CLUB);
@@ -618,20 +618,42 @@ export default function App() {
   const [notifs,  setNotifs] = usePersist("notifs",    INIT_N);
   const [tournaments,setTournaments] = usePersist("tournaments", []);
   const [waitlist,setWaitlist]       = usePersist("waitlist",    []);
+  const [clubsData, setClubsData]    = usePersist("clubsData",   {});
+
+  // Per-club data helpers
+  const clubId = currentUser?.type==="club" ? String(currentUser.data.id) : "demo";
+  const getCD  = (key, def) => (clubsData[clubId]||{})[key] ?? def;
+  const setCD  = (key, val) => setClubsData(prev => ({
+    ...prev,
+    [clubId]: { ...(prev[clubId]||{}), [key]: typeof val==="function" ? val((prev[clubId]||{})[key]) : val }
+  }));
+
+  // Club-scoped data (falls back to shared demo data for "demo" club)
+  const activeClubCfg  = clubId==="demo" ? adminCfg  : (getCD("cfg", {...DEF_CLUB, ...currentUser?.data}));
+  const activeBookings = clubId==="demo" ? bookings  : getCD("bookings",  []);
+  const activeContacts = clubId==="demo" ? contacts  : getCD("contacts",  []);
+  const activeBlocks   = clubId==="demo" ? blocks    : getCD("blocks",    []);
+  const activeTourneys = clubId==="demo" ? tournaments: getCD("tournaments",[]);
+
+  const setActiveClubCfg  = clubId==="demo" ? setAdmin  : (v=>setCD("cfg",v));
+  const setActiveBookings = clubId==="demo" ? setBook   : (v=>setCD("bookings",v));
+  const setActiveContacts = clubId==="demo" ? setConts  : (v=>setCD("contacts",v));
+  const setActiveBlocks   = clubId==="demo" ? setBlocks : (v=>setCD("blocks",v));
+  const setActiveTourneys = clubId==="demo" ? setTournaments : (v=>setCD("tournaments",v));
   const addWaitlist=(entry)=>setWaitlist(p=>[...p,{id:Date.now(),...entry}]);
-  const cancelPortalBk=(id)=>{ setBook(p=>p.filter(b=>b.id!==id)); };
+  const cancelPortalBk=(id)=>{ setActiveBookings(p=>p.filter(b=>b.id!==id)); };
   const [toast,   setToast]  = useState(null);
   const showToast = (m)=>{ setToast(m); setTimeout(()=>setToast(null),3000); };
 
   const portalBook = (data)=>{
-    if(!contacts.find(c=>c.email===data.email))
-      setConts(p=>[...p,{id:Date.now(),name:data.name,email:data.email,phone:data.phone,since:TODAY,notes:""}]);
-    const bk={id:Date.now()+1,contactEmail:data.email,contactName:data.name,courtId:data.court.id,date:data.date,time:data.time,dur:data.dur,status:adminCfg.requireApproval?"pending":"confirmed",pay:data.payment,ref:genRef(),createdAt:new Date().toISOString()};
-    setBook(p=>[...p,bk]);
+    if(!activeContacts.find(c=>c.email===data.email))
+      setActiveContacts(p=>[...p,{id:Date.now(),name:data.name,email:data.email,phone:data.phone,since:TODAY,notes:""}]);
+    const bk={id:Date.now()+1,contactEmail:data.email,contactName:data.name,courtId:data.court.id,date:data.date,time:data.time,dur:data.dur,status:activeClubCfg.requireApproval?"pending":"confirmed",pay:data.payment,ref:genRef(),createdAt:new Date().toISOString()};
+    setActiveBookings(p=>[...p,bk]);
     setNotifs(p=>[{id:Date.now()+2,type:"booking",msg:`${data.name} reservou ${data.court.name} · ${fmtSh(data.date)} ${data.time}`,time:"Agora",read:false},...p]);
     return bk;
   };
-  const confirmBk = (id)=>{ setBook(p=>p.map(b=>b.id===id?{...b,status:"confirmed"}:b)); showToast("Reserva confirmada!"); };
+  const confirmBk = (id)=>{ setActiveBookings(p=>p.map(b=>b.id===id?{...b,status:"confirmed"}:b)); showToast("Reserva confirmada!"); };
   const cancelBk  = (id)=>{ setBook(p=>p.filter(b=>b.id!==id)); showToast("Reserva cancelada."); };
   const updateCt  = (id,d)=>{ setConts(p=>p.map(c=>c.id===id?{...c,...d}:c)); showToast("Cliente actualizado!"); };
   const deleteCt  = (id)=>{ setConts(p=>p.filter(c=>c.id!==id)); showToast("Cliente removido."); };
@@ -662,7 +684,7 @@ export default function App() {
           {/* Auth user indicator */}
           {currentUser&&(
             <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
-              <span style={{fontSize:11,fontWeight:600,color:"#141210",maxWidth:90,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{currentUser.data?.name||currentUser.data?.email}</span>
+              <span style={{fontSize:11,fontWeight:600,color:"#141210",maxWidth:90,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",cursor:"pointer",textDecoration:"underline",textDecorationColor:"rgba(0,0,0,.2)"}} onClick={()=>currentUser?.type==="athlete"&&setShowProfile(true)}>{currentUser.data?.name||currentUser.data?.email}</span>
               <button onClick={logout} style={{fontSize:11,color:"#7A766F",background:"rgba(0,0,0,.06)",border:"none",cursor:"pointer",fontFamily:"inherit",padding:"4px 8px",borderRadius:6}}>Sair</button>
             </div>
           )}
@@ -679,12 +701,15 @@ export default function App() {
         {currentUser?.type==="super" && mode==="admin" && <SuperAdmin clubs={regClubs} onApprove={id=>setRegClubs(p=>p.map(c=>c.id===id?{...c,status:"approved"}:c))} onReject={id=>setRegClubs(p=>p.map(c=>c.id===id?{...c,status:"rejected"}:c))} onLogout={logout}/>}
 
         {/* MAIN VIEWS — only when no auth screen showing */}
-        {!authScreen && currentUser?.type!=="super" && <>
+        {/* Athlete profile */}
+        {showProfile && currentUser?.type==="athlete" && <AthleteProfile athlete={currentUser.data} bookings={activeBookings} tournaments={activeTourneys} cfg={activeClubCfg} onEdit={()=>{}} onLogout={()=>{logout();setShowProfile(false);}} onBack={()=>setShowProfile(false)}/>}
+
+        {!authScreen && !showProfile && currentUser?.type!=="super" && <>
         {/* VIEWS */}
-        {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}}/>}
-        {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={bookings} blocks={blocks} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={tournaments} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} currentUser={currentUser} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
+        {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}} allTournaments={[...activeTourneys.map(t=>({tournament:t,club:activeClubCfg}))]} currentUser={currentUser} onRegisterTournament={(item)=>{/* TODO */}} />}
+        {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={activeBookings} blocks={activeBlocks} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={tournaments} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} currentUser={currentUser} onRegisterTournament={(tid,catId,pair)=>{setTournaments(p=>p.map(t=>t.id===tid?{...t,categories:t.categories.map(c=>c.id===catId?{...c,pairs:[...c.pairs,{id:Date.now(),...pair,status:'pending'}]}:c)}:t));}} />}
         {/* addBooking defined in App scope */}
-        {mode==="admin"    && <AdminView cfg={adminCfg} setCfg={setAdmin} bookings={bookings} contacts={contacts} blocks={blocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={tournaments} setTournaments={setTournaments} onAddBooking={(bk)=>{setBook(p=>[...p,bk]);showToast("Campo marcado!");}}/>}
+        {mode==="admin"    && <AdminView cfg={activeClubCfg} setCfg={setActiveClubCfg} bookings={activeBookings} contacts={activeContacts} blocks={activeBlocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={activeTourneys} setTournaments={setActiveTourneys} onAddBooking={addBooking}/>}
         </>}
       </div>
     </>
@@ -694,9 +719,10 @@ export default function App() {
 // ═══════════════════════════════════════════════════════════════════════════════
 // DISCOVER VIEW
 // ═══════════════════════════════════════════════════════════════════════════════
-function DiscoverView({ onSelectClub }) {
+function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegisterTournament }) {
   const [region, setRegion] = useState("all");
   const [search, setSearch] = useState("");
+  const [discoverTab, setDiscoverTab] = useState("clubs");
   const filtered = CLUBS.filter(c=>(region==="all"||c.region===region)&&(!search||c.name.toLowerCase().includes(search.toLowerCase())||c.city.toLowerCase().includes(search.toLowerCase())));
   const rc = (id)=>CLUBS.filter(c=>c.region===id).length;
 
@@ -720,6 +746,16 @@ function DiscoverView({ onSelectClub }) {
         </div>
       </section>
 
+      {/* DISCOVER TABS */}
+      <div style={{padding:"16px 18px 0",maxWidth:1040,margin:"0 auto"}}>
+        <div style={{display:"flex",gap:3,background:"rgba(0,0,0,.06)",borderRadius:9,padding:3}}>
+          <button onClick={()=>setDiscoverTab("clubs")} style={{flex:1,padding:"9px",borderRadius:7,border:"none",background:discoverTab==="clubs"?"#FFFFFF":"transparent",color:discoverTab==="clubs"?"#141210":"#7A766F",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>🏟 Clubes</button>
+          <button onClick={()=>setDiscoverTab("tournaments")} style={{flex:1,padding:"9px",borderRadius:7,border:"none",background:discoverTab==="tournaments"?"#FFFFFF":"transparent",color:discoverTab==="tournaments"?"#141210":"#7A766F",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>🏆 Torneios</button>
+        </div>
+      </div>
+
+      {discoverTab==="tournaments" && <DiscoverTournaments allTournaments={allTournaments} onRegister={onRegisterTournament} currentUser={currentUser}/>}
+      {discoverTab==="clubs" && <>
       {/* CLUBS SECTION */}
       <div className="pt-sec">
         <div className="pt-sech">
@@ -751,6 +787,7 @@ function DiscoverView({ onSelectClub }) {
         )}
       </div>
     </div>
+    </> /* end clubs tab */}
   );
 }
 
@@ -765,7 +802,7 @@ function ClubCard({ club, delay, onSelect }) {
           <div className="pt-cloc"><I n="map" s={10} c="#B5B0A8"/> {club.city}, {club.district}</div>
 
         </div>
-        {club.highlight&&<span className="pt-cbadge">Destaque</span>}
+
       </div>
       <div className="pt-cdesc">{club.desc}</div>
       <div className="pt-cstats">
@@ -774,7 +811,7 @@ function ClubCard({ club, delay, onSelect }) {
         <div className="pt-cs"><div className="pt-csv">{club.outdoor}</div><div className="pt-csl">Outdoor</div></div>
       </div>
       <div className="pt-ctags">
-        {club.tags.map(t=><span key={t} className="pt-ctag">{t}</span>)}
+        {(club.amenities||[]).map(id=>{const a=AMENITIES.find(x=>x.id===id);return a?<span key={id} className="pt-ctag">{a.icon} {a.label}</span>:null;})}
         <span className="pt-ctag">⏰ {club.open}</span>
       </div>
       <div className="pt-cfoot">
@@ -1581,6 +1618,24 @@ function AdminConfig({ cfg, setCfg, showToast }) {
 
       <div className="pt-acard" style={{padding:"14px 16px",marginBottom:10}}>
         {SH("Regras de Reserva")}
+      <div className="pt-sfg">
+        <label className="pt-sfl">Instalações do Clube</label>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginTop:4}}>
+          {AMENITIES.map(a=>{
+            const active=(l.amenities||[]).includes(a.id);
+            return(
+              <div key={a.id} className="pt-ccb" onClick={()=>{
+                const cur=l.amenities||[];
+                set("amenities",active?cur.filter(x=>x!==a.id):[...cur,a.id]);
+              }}>
+                <div className={`pt-cb-box ${active?"on":""}`}>{active&&<span style={{fontSize:9,fontWeight:800,color:"#141210"}}>✓</span>}</div>
+                <span style={{fontSize:12,fontWeight:500,color:"#EDE9E1"}}>{a.icon} {a.label}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
         {[{k:"requireApproval",l:"Aprovação manual",s:"Reservas ficam pendentes até confirmar"},{k:"allowCancel",l:"Permitir cancelamento",s:"Jogador pode cancelar"},{k:"showOccupancy",l:"Mostrar disponibilidade",s:"Jogadores vêem campos livres"}].map(o=>(
           <div key={o.k} className="pt-tog-row" onClick={()=>set(o.k,!l[o.k])}>
             <div style={{flex:1}}><div style={{fontSize:13,fontWeight:500,color:"#EDE9E1"}}>{o.l}</div><div style={{fontSize:10,color:"#7A766F",marginTop:2}}>{o.s}</div></div>
@@ -3371,6 +3426,259 @@ function SuperAdmin({ clubs, onApprove, onReject, onLogout }) {
             </div>
           );
         })}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ATHLETE PROFILE (Point 2)
+// ═══════════════════════════════════════════════════════════════════════════════
+function AthleteProfile({ athlete, bookings, tournaments, cfg, onEdit, onLogout, onBack }) {
+  const [tab, setTab] = useState("bookings");
+
+  const myBk = bookings
+    .filter(b => b.contactEmail?.toLowerCase() === athlete.email?.toLowerCase())
+    .sort((a,b) => b.date.localeCompare(a.date));
+
+  const upcoming = myBk.filter(b => b.date >= TODAY && b.status !== "cancelled");
+  const past     = myBk.filter(b => b.date < TODAY  || b.status === "cancelled");
+
+  // Tournaments where athlete is registered
+  const myTourneys = [];
+  tournaments.forEach(t => {
+    t.categories.forEach(cat => {
+      const pair = cat.pairs.find(p =>
+        p.p1?.toLowerCase().includes(athlete.name?.split(" ")[0]?.toLowerCase()) ||
+        p.p2?.toLowerCase().includes(athlete.name?.split(" ")[0]?.toLowerCase()) ||
+        p.contact?.toLowerCase() === athlete.email?.toLowerCase()
+      );
+      if(pair) myTourneys.push({ tournament: t, category: cat.id, pair, status: pair.status });
+    });
+  });
+
+  const statusColor = { confirmed:"#34D399", pending:"#F59E0B", cancelled:"#B5B0A8" };
+  const statusLabel = { confirmed:"Confirmada", pending:"Pendente", cancelled:"Cancelada" };
+
+  return (
+    <div style={{minHeight:"100vh", background:"#F4F0E8"}}>
+      {/* Header */}
+      <div style={{background:"rgba(244,240,232,.95)", backdropFilter:"blur(16px)", borderBottom:"1px solid rgba(0,0,0,.09)", padding:"0 18px", height:52, display:"flex", alignItems:"center", gap:10, position:"sticky", top:0, zIndex:50}}>
+        <button onClick={onBack} style={{display:"flex",alignItems:"center",gap:6,color:"#7A766F",background:"none",border:"none",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>← Voltar</button>
+        <span style={{fontWeight:800,fontSize:14,color:"#141210",flex:1}}>O meu perfil</span>
+        <button onClick={onLogout} style={{fontSize:12,color:"#E53E3E",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>Sair</button>
+      </div>
+
+      <div style={{padding:"20px 18px 80px", maxWidth:580, margin:"0 auto"}}>
+        {/* Profile card */}
+        <div style={{background:"#FFFFFF", border:"1px solid rgba(0,0,0,.09)", borderRadius:16, overflow:"hidden", marginBottom:16}}>
+          <div style={{background:"#141210", padding:"24px 18px", display:"flex", gap:14, alignItems:"center"}}>
+            <div style={{width:52, height:52, borderRadius:14, background:"rgba(255,255,255,.15)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, fontWeight:800, color:"#F4F0E8", flexShrink:0}}>
+              {athlete.name.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase()}
+            </div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:20, fontWeight:800, color:"#F4F0E8", letterSpacing:"-.5px"}}>{athlete.name}</div>
+              <div style={{fontSize:12, color:"rgba(255,255,255,.5)", marginTop:3}}>Atleta desde {fmtFull(athlete.since||TODAY)}</div>
+            </div>
+          </div>
+          <div style={{padding:"12px 18px"}}>
+            <div style={{display:"flex", alignItems:"center", gap:10, padding:"9px 0", borderBottom:"1px solid rgba(0,0,0,.07)"}}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B5B0A8" strokeWidth="2" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <span style={{fontSize:13, color:"#141210"}}>{athlete.email}</span>
+            </div>
+            {athlete.phone && (
+              <div style={{display:"flex", alignItems:"center", gap:10, padding:"9px 0"}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B5B0A8" strokeWidth="2" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.9 13.4a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.82 2.5h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.9a16 16 0 0 0 6 6l1.41-1.41a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <span style={{fontSize:13, color:"#141210"}}>{athlete.phone}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div style={{display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:16}}>
+          {[
+            {v:myBk.length,       l:"Reservas"},
+            {v:upcoming.length,   l:"Próximas"},
+            {v:myTourneys.length, l:"Torneios"},
+          ].map(s=>(
+            <div key={s.l} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,padding:"14px 12px",textAlign:"center"}}>
+              <div style={{fontSize:24,fontWeight:800,color:"#141210",letterSpacing:"-1px"}}>{s.v}</div>
+              <div style={{fontSize:11,color:"#7A766F",marginTop:3}}>{s.l}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Tabs */}
+        <div style={{display:"flex",gap:3,background:"rgba(0,0,0,.06)",borderRadius:9,padding:3,marginBottom:14}}>
+          {[{v:"bookings",l:"Reservas"},{v:"tournaments",l:"Torneios"}].map(t=>(
+            <button key={t.v} onClick={()=>setTab(t.v)} style={{flex:1,padding:"8px",borderRadius:7,border:"none",background:tab===t.v?"#FFFFFF":"transparent",color:tab===t.v?"#141210":"#7A766F",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>
+              {t.l}
+            </button>
+          ))}
+        </div>
+
+        {tab==="bookings" && (
+          <>
+            {upcoming.length>0 && (
+              <>
+                <div style={{fontSize:10,fontWeight:700,color:"#B5B0A8",textTransform:"uppercase",letterSpacing:"1.5px",marginBottom:10}}>Próximas</div>
+                {upcoming.map(b => <ProfileBookingRow key={b.id} b={b} cfg={cfg}/>)}
+              </>
+            )}
+            {past.length>0 && (
+              <>
+                <div style={{fontSize:10,fontWeight:700,color:"#B5B0A8",textTransform:"uppercase",letterSpacing:"1.5px",margin:"16px 0 10px"}}>Histórico</div>
+                {past.map(b => <ProfileBookingRow key={b.id} b={b} cfg={cfg} past/>)}
+              </>
+            )}
+            {myBk.length===0 && (
+              <div style={{textAlign:"center",padding:"40px 0",color:"#B5B0A8",fontSize:14}}>
+                <div style={{fontSize:36,marginBottom:10}}>🎾</div>
+                Ainda não tens reservas.
+              </div>
+            )}
+          </>
+        )}
+
+        {tab==="tournaments" && (
+          <>
+            {myTourneys.length===0 ? (
+              <div style={{textAlign:"center",padding:"40px 0",color:"#B5B0A8",fontSize:14}}>
+                <div style={{fontSize:36,marginBottom:10}}>🏆</div>
+                Ainda não estás inscrito em nenhum torneio.
+              </div>
+            ) : myTourneys.map((item,i) => (
+              <div key={i} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,padding:"14px 16px",marginBottom:10}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}>
+                  <div style={{fontSize:15,fontWeight:800,color:"#141210",letterSpacing:"-.3px"}}>{item.tournament.name}</div>
+                  <span style={{fontSize:9,fontWeight:700,padding:"3px 8px",borderRadius:99,background:item.status==="approved"?"rgba(52,211,153,.1)":"rgba(245,158,11,.1)",color:item.status==="approved"?"#065F46":"#B45309",textTransform:"uppercase",letterSpacing:".5px"}}>
+                    {item.status==="approved"?"Aprovado":"Pendente"}
+                  </span>
+                </div>
+                <div style={{fontSize:12,color:"#7A766F"}}>Categoria: <b style={{color:"#141210"}}>{item.category}</b></div>
+                <div style={{fontSize:12,color:"#7A766F",marginTop:3}}>{item.pair.p1} / {item.pair.p2}</div>
+                <div style={{fontSize:11,color:"#B5B0A8",marginTop:3}}>📅 {item.tournament.startDate}{item.tournament.endDate&&item.tournament.endDate!==item.tournament.startDate?` → ${item.tournament.endDate}`:""}</div>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ProfileBookingRow({ b, cfg, past }) {
+  const court = (cfg?.courts||[]).find(c=>c.id===b.courtId);
+  const night = isNt(b.time, parseInt(cfg?.nightFrom||18));
+  const price = ((night?cfg?.priceNight:cfg?.priceDay)||3) * (cfg?.playersPerCourt||4) * ((b.dur||60)/60);
+  const endH  = addMins(b.time||"00:00", b.dur||60);
+  const sc    = {confirmed:"#34D399", pending:"#F59E0B", cancelled:"#B5B0A8"}[b.status]||"#B5B0A8";
+  const sl    = {confirmed:"Confirmada", pending:"Pendente", cancelled:"Cancelada"}[b.status]||b.status;
+  return (
+    <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,padding:"14px 16px",marginBottom:10,opacity:past?.6:1}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}>
+        <div>
+          <div style={{fontSize:14,fontWeight:800,color:"#141210",letterSpacing:"-.2px"}}>{fmtLong(b.date)}</div>
+          <div style={{fontSize:12,color:"#7A766F",marginTop:2}}>{b.time}–{endH} · {durLbl(b.dur||60)} · {court?.name||"Campo"}</div>
+        </div>
+        <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:99,background:sc+"22",color:sc}}>{sl}</span>
+      </div>
+      <div style={{fontSize:13,fontWeight:700,color:"#141210"}}>{Math.round(price)}€ <span style={{fontSize:11,fontWeight:400,color:"#7A766F"}}>{night?"🌙 Noturno":"☀️ Diurno"}</span></div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DISCOVER TOURNAMENTS VIEW (Point 1)
+// ═══════════════════════════════════════════════════════════════════════════════
+function DiscoverTournaments({ allTournaments, onRegister, currentUser }) {
+  const [region, setRegion] = useState("all");
+  const [selT,   setSelT]   = useState(null);
+
+  // allTournaments = [{tournament, club}]
+  const open   = allTournaments.filter(({tournament:t}) => t.status==="open");
+  const active = allTournaments.filter(({tournament:t}) => ["groups","knockouts","finished"].includes(t.status));
+
+  const filtered = (list) => region==="all" ? list :
+    list.filter(({club}) => club?.region===region || (club?.city||"").toLowerCase().includes(region));
+
+  if(selT) return <TournamentPublicView t={selT.tournament} onBack={()=>setSelT(null)}/>;
+
+  return (
+    <div style={{background:"#F4F0E8", minHeight:"calc(100vh - 52px)"}}>
+      <div style={{padding:"36px 20px 24px", borderBottom:"1px solid rgba(0,0,0,.08)"}}>
+        <div style={{fontSize:11,fontWeight:700,background:"#141210",color:"#F4F0E8",display:"inline-flex",alignItems:"center",gap:6,padding:"4px 12px",borderRadius:99,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:14}}>
+          <span style={{width:5,height:5,borderRadius:"50%",background:"#F4F0E8"}}/>Torneios
+        </div>
+        <h2 style={{fontSize:"clamp(32px,8vw,56px)",fontWeight:800,color:"#141210",letterSpacing:"-2px",lineHeight:.92,marginBottom:10}}>Encontra<br/>um torneio</h2>
+        <p style={{fontSize:14,color:"#7A766F",lineHeight:1.65}}>Inscreve-te em torneios de padel perto de ti.</p>
+      </div>
+
+      {/* Region filter */}
+      <div style={{padding:"16px 18px 0", maxWidth:700, margin:"0 auto"}}>
+        <div style={{display:"flex",gap:7,overflow:"auto",paddingBottom:4,scrollbarWidth:"none",marginBottom:16}}>
+          {REGIONS.map(r=>(
+            <div key={r.id} className={`pt-rg ${region===r.id?"on":""}`} onClick={()=>setRegion(r.id)}>
+              {r.icon} {r.label}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{padding:"0 18px 80px", maxWidth:700, margin:"0 auto"}}>
+        {filtered(open).length>0 && (
+          <>
+            <div style={{fontSize:10,fontWeight:700,color:"#B5B0A8",textTransform:"uppercase",letterSpacing:"1.5px",marginBottom:12}}>Inscrições Abertas</div>
+            {filtered(open).map(({tournament:t, club},i) => (
+              <div key={i} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:14,overflow:"hidden",marginBottom:12}}>
+                <div style={{height:3,background:"#141210"}}/>
+                <div style={{padding:"16px"}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
+                    <div>
+                      <div style={{fontSize:16,fontWeight:800,color:"#141210",letterSpacing:"-.3px"}}>{t.name}</div>
+                      <div style={{fontSize:12,color:"#7A766F",marginTop:3}}>🏟 {club?.name||"Clube"} · 📍 {club?.city||""}</div>
+                      <div style={{fontSize:12,color:"#7A766F",marginTop:2}}>📅 {t.startDate}{t.endDate&&t.endDate!==t.startDate?` → ${t.endDate}`:""}</div>
+                    </div>
+                    <span style={{fontSize:9,fontWeight:700,padding:"3px 9px",borderRadius:99,background:"rgba(52,211,153,.1)",color:"#065F46",whiteSpace:"nowrap",textTransform:"uppercase",letterSpacing:".5px"}}>Aberto</span>
+                  </div>
+                  <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>
+                    {t.categories.map(c=><span key={c.id} style={{fontSize:11,fontWeight:700,padding:"3px 9px",borderRadius:99,background:"#F4F0E8",color:"#7A766F"}}>{c.id}</span>)}
+                  </div>
+                  <div style={{display:"flex",gap:8}}>
+                    <button onClick={()=>setSelT({tournament:t,club})} style={{flex:1,padding:"9px",borderRadius:9,background:"transparent",color:"#141210",border:"1.5px solid rgba(0,0,0,.12)",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Ver quadro</button>
+                    <button onClick={()=>onRegister({tournament:t,club})} style={{flex:1,padding:"9px",borderRadius:9,background:"#141210",color:"#F4F0E8",border:"none",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Inscrever →</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+
+        {filtered(active).length>0 && (
+          <>
+            <div style={{fontSize:10,fontWeight:700,color:"#B5B0A8",textTransform:"uppercase",letterSpacing:"1.5px",margin:"20px 0 12px"}}>A Decorrer / Concluídos</div>
+            {filtered(active).map(({tournament:t, club},i) => (
+              <div key={i} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:14,padding:"14px 16px",marginBottom:10,cursor:"pointer"}} onClick={()=>setSelT({tournament:t,club})}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <div>
+                    <div style={{fontSize:14,fontWeight:800,color:"#141210",letterSpacing:"-.2px"}}>{t.name}</div>
+                    <div style={{fontSize:11,color:"#7A766F",marginTop:2}}>🏟 {club?.name||"Clube"} · {t.startDate}{t.endDate&&t.endDate!==t.startDate?` → ${t.endDate}`:""}</div>
+                  </div>
+                  <TStatusBadgePub status={t.status}/>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+
+        {filtered(open).length===0 && filtered(active).length===0 && (
+          <div style={{textAlign:"center",padding:"56px 0"}}>
+            <div style={{fontSize:40,marginBottom:12}}>🏆</div>
+            <div style={{fontSize:16,fontWeight:800,color:"#141210",marginBottom:6}}>Sem torneios {region!=="all"?"nesta região":""}</div>
+            <div style={{fontSize:14,color:"#7A766F"}}>Quando os clubes abrirem torneios aparecerão aqui.</div>
+          </div>
+        )}
       </div>
     </div>
   );
