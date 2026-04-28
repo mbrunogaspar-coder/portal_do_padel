@@ -229,8 +229,8 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-phero-info b{color:#141210;font-weight:700}
 
 .pt-pbody{max-width:600px;margin:0 auto;padding:0 20px 130px}
-.pt-psec{padding-top:22px}
-.pt-pstep{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.pt-psec{padding-top:28px;display:flex;flex-direction:column;align-items:center}
+.pt-pstep{display:flex;align-items:center;gap:9px;margin-bottom:14px;justify-content:center}
 .pt-pstep-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;transition:all .2s}
 .pt-pstep-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#B5B0A8;transition:color .2s}
 .pt-pstep-lbl.act{color:#141210}
