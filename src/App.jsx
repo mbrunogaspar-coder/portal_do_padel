@@ -25,14 +25,14 @@ const REGIONS = [
   {id:"madeira",label:"Madeira",icon:"🌺"},
 ];
 const CLUBS = [
-  {id:1,name:"Padel Arena",amenities:["parking","showers"],city:"Lisboa",district:"Lisboa",region:"lvt",courts:4,indoor:2,outdoor:2,priceDay:3,priceNight:4,nightFrom:18,rating:4.8,reviews:124,tags:["Indoor","Balneários","Estac."],open:"08–22h",desc:"4 campos premium no centro de Lisboa. Balneários equipados e estacionamento privativo."},
-  {id:2,name:"Norte Padel",amenities:["academy","shop"],city:"Porto",district:"Porto",region:"norte",courts:6,indoor:4,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.9,reviews:203,tags:["Indoor","Aulas","Loja"],open:"07–23h",desc:"O maior clube de padel do Porto. Academia com treinadores certificados e loja especializada."},
-  {id:3,name:"Algarve Padel",amenities:["pool","bar","lights"],city:"Faro",district:"Faro",region:"alg",courts:8,indoor:2,outdoor:6,priceDay:3,priceNight:5,nightFrom:18,rating:4.7,reviews:89,tags:["Outdoor","Piscina","Bar"],open:"08–21h",desc:"Clube com vista para a Ria Formosa. 6 campos outdoor iluminados e bar/restaurante."},
-  {id:4,name:"Setúbal Padel",amenities:["parking"],city:"Setúbal",district:"Setúbal",region:"lvt",courts:3,indoor:3,outdoor:0,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.5,reviews:67,tags:["Indoor","Estac."],open:"09–22h",desc:"Clube familiar com 3 campos cobertos. Ideal para jogar durante todo o ano."},
-  {id:5,name:"Coimbra Padel",amenities:["academy","showers"],city:"Coimbra",district:"Coimbra",region:"centro",courts:4,indoor:2,outdoor:2,priceDay:2,priceNight:3,nightFrom:18,rating:4.6,reviews:112,tags:["Indoor","Aulas"],open:"08–22h",desc:"Academia universitária com preços acessíveis. Programas para todos os níveis."},
-  {id:6,name:"Braga Padel Sport",amenities:["bar","lights"],city:"Braga",district:"Braga",region:"norte",courts:5,indoor:3,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.8,reviews:78,tags:["Indoor","Torneios","Bar"],open:"07:30–23h",desc:"Calendário activo de torneios e liga interna mensal para todos os níveis."},
-  {id:7,name:"Évora Padel",amenities:["academy"],city:"Évora",district:"Évora",region:"alent",courts:2,indoor:2,outdoor:0,priceDay:2,priceNight:3,nightFrom:18,rating:4.4,reviews:34,tags:["Indoor","Aulas"],open:"09–21h",desc:"O único clube de padel indoor do Alentejo Central. Moderno e acolhedor."},
-  {id:8,name:"Funchal Padel",amenities:["bar","lights"],city:"Funchal",district:"Funchal",region:"madeira",courts:3,indoor:1,outdoor:2,priceDay:3,priceNight:4.5,nightFrom:18,rating:4.9,reviews:56,tags:["Outdoor","Vista Mar","Bar"],open:"08–20h",desc:"Vista única para o Oceano Atlântico. Campos outdoor iluminados e bar com esplanada."},
+  {id:1,name:"Padel Arena",phone:"+351 210 000 001",amenities:["parking","showers"],city:"Lisboa",district:"Lisboa",region:"lvt",courts:4,indoor:2,outdoor:2,priceDay:3,priceNight:4,nightFrom:18,rating:4.8,reviews:124,tags:["Indoor","Balneários","Estac."],open:"08–22h",desc:"4 campos premium no centro de Lisboa. Balneários equipados e estacionamento privativo."},
+  {id:2,name:"Norte Padel",phone:"+351 220 000 001",amenities:["academy","shop"],city:"Porto",district:"Porto",region:"norte",courts:6,indoor:4,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.9,reviews:203,tags:["Indoor","Aulas","Loja"],open:"07–23h",desc:"O maior clube de padel do Porto. Academia com treinadores certificados e loja especializada."},
+  {id:3,name:"Algarve Padel",phone:"+351 289 000 001",amenities:["pool","bar","lights"],city:"Faro",district:"Faro",region:"alg",courts:8,indoor:2,outdoor:6,priceDay:3,priceNight:5,nightFrom:18,rating:4.7,reviews:89,tags:["Outdoor","Piscina","Bar"],open:"08–21h",desc:"Clube com vista para a Ria Formosa. 6 campos outdoor iluminados e bar/restaurante."},
+  {id:4,name:"Setúbal Padel",phone:"+351 265 000 001",amenities:["parking"],city:"Setúbal",district:"Setúbal",region:"lvt",courts:3,indoor:3,outdoor:0,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.5,reviews:67,tags:["Indoor","Estac."],open:"09–22h",desc:"Clube familiar com 3 campos cobertos. Ideal para jogar durante todo o ano."},
+  {id:5,name:"Coimbra Padel",phone:"+351 239 000 001",amenities:["academy","showers"],city:"Coimbra",district:"Coimbra",region:"centro",courts:4,indoor:2,outdoor:2,priceDay:2,priceNight:3,nightFrom:18,rating:4.6,reviews:112,tags:["Indoor","Aulas"],open:"08–22h",desc:"Academia universitária com preços acessíveis. Programas para todos os níveis."},
+  {id:6,name:"Braga Padel Sport",phone:"+351 253 000 001",amenities:["bar","lights"],city:"Braga",district:"Braga",region:"norte",courts:5,indoor:3,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.8,reviews:78,tags:["Indoor","Torneios","Bar"],open:"07:30–23h",desc:"Calendário activo de torneios e liga interna mensal para todos os níveis."},
+  {id:7,name:"Évora Padel",phone:"+351 266 000 001",amenities:["academy"],city:"Évora",district:"Évora",region:"alent",courts:2,indoor:2,outdoor:0,priceDay:2,priceNight:3,nightFrom:18,rating:4.4,reviews:34,tags:["Indoor","Aulas"],open:"09–21h",desc:"O único clube de padel indoor do Alentejo Central. Moderno e acolhedor."},
+  {id:8,name:"Funchal Padel",phone:"+351 291 000 001",amenities:["bar","lights"],city:"Funchal",district:"Funchal",region:"madeira",courts:3,indoor:1,outdoor:2,priceDay:3,priceNight:4.5,nightFrom:18,rating:4.9,reviews:56,tags:["Outdoor","Vista Mar","Bar"],open:"08–20h",desc:"Vista única para o Oceano Atlântico. Campos outdoor iluminados e bar com esplanada."},
 ];
 const BLOCK_CAT = {
   lessons:     {label:"Aulas"},
@@ -179,10 +179,10 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 @media(min-width:580px){.pt-grid{grid-template-columns:1fr 1fr}}
 @media(min-width:860px){.pt-grid{grid-template-columns:1fr 1fr 1fr}}
 
-.pt-card{background:#FFFFFF;border:1px solid rgba(0,0,0,0.08);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .22s cubic-bezier(.25,.46,.45,.94),box-shadow .22s cubic-bezier(.25,.46,.45,.94);-webkit-tap-highlight-color:transparent;animation:ptUp .4s ease both;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.pt-card{background:#FFFFFF;border:1px solid rgba(0,0,0,0.08);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .22s cubic-bezier(.25,.46,.45,.94),box-shadow .22s cubic-bezier(.25,.46,.45,.94);-webkit-tap-highlight-color:transparent;animation:ptUp .4s ease both;box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;flex-direction:column}
 .pt-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,0.09)}
 .pt-cbar{height:3px;background:#141210}
-.pt-ctop{padding:16px 16px 10px;display:flex;gap:12px;align-items:flex-start}
+.pt-ctop{padding:18px 18px 10px;display:flex;gap:12px;align-items:flex-start}
 .pt-cav{width:46px;height:46px;border-radius:11px;background:#141210;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#F4F0E8;flex-shrink:0}
 .pt-cname{font-weight:800;font-size:16px;color:#141210;letter-spacing:-.3px;line-height:1.1}
 .pt-cloc{font-size:12px;color:#7A766F;margin-top:3px;display:flex;align-items:center;gap:3px}
@@ -198,7 +198,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-cs:last-child::after{display:none}
 .pt-csv{font-weight:800;font-size:17px;color:#141210;letter-spacing:-.3px;line-height:1}
 .pt-csl{font-size:9px;color:#B5B0A8;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
-.pt-ctags{padding:10px 16px;display:flex;gap:6px;flex-wrap:wrap}
+.pt-ctags{padding:10px 16px;display:flex;gap:6px;flex-wrap:wrap;flex:1}
 .pt-ctag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:#F4F0E8;color:#7A766F}
 .pt-cfoot{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:#F9F7F3}
 .pt-cprice-v{font-weight:800;font-size:18px;color:#141210;letter-spacing:-.3px}
@@ -797,11 +797,10 @@ function ClubCard({ club, delay, onSelect }) {
     <div className="pt-card" style={{animationDelay:`${delay}s`}} onClick={onSelect}>
       <div className="pt-cbar"/>
       <div className="pt-ctop">
-        <div className="pt-cav">{ini(club.name)}</div>
         <div style={{flex:1,minWidth:0}}>
           <div className="pt-cname">{club.name}</div>
           <div className="pt-cloc"><I n="map" s={10} c="#B5B0A8"/> {club.city}, {club.district}</div>
-
+          {club.phone&&<div style={{fontSize:10,color:"#B5B0A8",marginTop:2,display:"flex",alignItems:"center",gap:4}}><I n="phone" s={9} c="#B5B0A8"/> {club.phone}</div>}
         </div>
 
       </div>
