@@ -1329,9 +1329,9 @@ function AdminAgenda({ cfg, bookings, blocks, onConfirm, onCancel, onAddBlock, o
             </div>
           );})}
           {showBM&&<BlockModal cfg={cfg} onSave={(b)=>{onAddBlock(b);setShowBM(false);}} onClose={()=>setShowBM(false)}/>}
-          {showNR&&<NewBookingModal cfg={cfg} day={day} bookings={bookings} blocks={blocks} onSave={(bk)=>{onAddBooking&&onAddBooking(bk);setShowNR(false);}} onClose={()=>setShowNR(false)}/>}
         </>
       )}
+      {showNR&&<NewBookingModal cfg={cfg} day={day} bookings={bookings} blocks={blocks} onSave={(bk)=>{onAddBooking&&onAddBooking(bk);setShowNR(false);}} onClose={()=>setShowNR(false)}/>}
     </>
   );
 }
