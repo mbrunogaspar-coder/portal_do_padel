@@ -786,8 +786,8 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
           </div>
         )}
       </div>
-    </div>
     </> /* end clubs tab */}
+    </div>
   );
 }
 
