@@ -2892,20 +2892,20 @@ function NewBookingModal({ cfg, day, bookings, blocks, onSave, onClose }) {
   const isFree = () => ctFree(f.courtId, f.date, f.time, f.dur, bookings, blocks);
 
   const save = () => {
+    setErr("");
     if (!f.name.trim()) { setErr("Nome obrigatório"); return; }
-    if (!isFree()) { setErr("Este slot já está ocupado ou bloqueado."); return; }
     const bk = {
       id: Date.now(),
       contactName: f.name.trim(),
-      contactEmail: f.email.trim() || `manual_${Date.now()}@admin.pt`,
+      contactEmail: f.email.trim() || ("manual_" + Date.now() + "@admin.pt"),
       contactPhone: f.phone.trim(),
-      courtId: parseInt(f.courtId),
+      courtId: Number(f.courtId),
       date: f.date,
       time: f.time,
-      dur: f.dur,
+      dur: Number(f.dur),
       status: f.status,
       pay: f.pay,
-      ref: genRef(),
+      ref: "PDP-" + Math.random().toString(36).slice(-5).toUpperCase(),
       createdAt: new Date().toISOString(),
       createdByAdmin: true,
     };
@@ -3007,7 +3007,7 @@ function NewBookingModal({ cfg, day, bookings, blocks, onSave, onClose }) {
 
         <div className="pt-modal-foot">
           <button className="pt-btn pt-btn-ghost pt-btn-w" onClick={onClose}>Cancelar</button>
-          <button className="pt-btn pt-btn-light pt-btn-w" onClick={save} disabled={!free}>
+          <button className="pt-btn pt-btn-light pt-btn-w" onClick={save}>
             <I n="ok" s={13}/> Marcar Campo
           </button>
         </div>
