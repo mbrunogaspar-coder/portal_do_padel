@@ -770,7 +770,7 @@ export default function App() {
         {/* Athlete profile */}
         {showProfile && currentUser?.type==="athlete" && <AthleteProfile athlete={currentUser.data} bookings={activeBookings} tournaments={activeTourneys} cfg={activeClubCfg} onEdit={()=>{}} onLogout={()=>{logout();setShowProfile(false);}} onBack={()=>setShowProfile(false)}/>}
 
-        {!authScreen && !showProfile && currentUser?.type!=="super" && <div style={{animation:"ptUp .25s ease both"}}>
+        {!authScreen && !showProfile && currentUser?.type!=="super" && <>
         {/* VIEWS */}
         {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}} allTournaments={[
       // Demo club tournaments
