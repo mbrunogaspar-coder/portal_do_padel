@@ -826,7 +826,7 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
       {/* HERO */}
       <section className="pt-hero">
         <div className="pt-eyebrow"><span className="pt-edot"/>Rede Nacional de Padel</div>
-        <h1 className="pt-h1">Encontra o<br/>teu <em>clube</em><br/>de padel</h1>
+        <h1 className="pt-h1">O teu jogo<br/>começa <em>aqui</em></h1>
         <p className="pt-sub">Reserva campos nos melhores clubes de padel de Portugal. Em segundos, sem chamadas.</p>
         <div className="pt-search">
           <span className="pt-search-ic"><I n="srch" s={16} c="#B5B0A8"/></span>
