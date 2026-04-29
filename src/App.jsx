@@ -141,7 +141,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-hero::before{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:600px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,0,0,0.1),transparent)}
 .pt-eyebrow{display:inline-flex;align-items:center;gap:7px;background:#141210;color:#F4F0E8;border-radius:99px;padding:5px 14px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;animation:ptUp .5s ease both}
 .pt-edot{width:5px;height:5px;border-radius:50%;background:#F4F0E8;flex-shrink:0;animation:ptPulse 2s infinite}
-.pt-h1{font-weight:800;font-size:clamp(48px,12vw,96px);line-height:.88;letter-spacing:-4px;color:#141210;margin-bottom:22px;animation:ptUp .5s .06s ease both;font-family:"DM Serif Display","DM Sans",system-ui,sans-serif}
+.pt-h1{font-weight:800;font-size:clamp(42px,11vw,96px);line-height:.88;letter-spacing:-3px;color:#141210;margin-bottom:22px;animation:ptUp .5s .06s ease both;font-family:"DM Serif Display","DM Sans",system-ui,sans-serif}
 .pt-h1 em{font-style:normal;color:#141210;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:3px}
 .pt-sub{font-size:16px;color:#7A766F;max-width:480px;margin:0 auto 40px;line-height:1.7;font-weight:400;animation:ptUp .5s .1s ease both}
 
@@ -770,7 +770,7 @@ export default function App() {
         {/* Athlete profile */}
         {showProfile && currentUser?.type==="athlete" && <AthleteProfile athlete={currentUser.data} bookings={activeBookings} tournaments={activeTourneys} cfg={activeClubCfg} onEdit={()=>{}} onLogout={()=>{logout();setShowProfile(false);}} onBack={()=>setShowProfile(false)}/>}
 
-        {!authScreen && !showProfile && currentUser?.type!=="super" && <>
+        {!authScreen && !showProfile && currentUser?.type!=="super" && <div style={{animation:"ptUp .25s ease both"}}>
         {/* VIEWS */}
         {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}} allTournaments={[
       // Demo club tournaments
@@ -827,7 +827,7 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
       <section className="pt-hero">
         <div className="pt-eyebrow"><span className="pt-edot"/>Rede Nacional de Padel</div>
         <h1 className="pt-h1">Encontra o<br/>teu <em>clube</em><br/>de padel</h1>
-        <p className="pt-sub">Reserva campo em qualquer clube parceiro Portal do Padel em segundos. Sem chamadas, sem complicações.</p>
+        <p className="pt-sub">Reserva campos nos melhores clubes de padel de Portugal. Em segundos, sem chamadas.</p>
         <div className="pt-search">
           <span className="pt-search-ic"><I n="srch" s={16} c="#B5B0A8"/></span>
           <input className="pt-si" placeholder="Clube ou cidade…" value={search} onChange={e=>setSearch(e.target.value)}/>
