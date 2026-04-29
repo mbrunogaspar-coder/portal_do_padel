@@ -56,9 +56,10 @@ const PAY = [{id:"mbway",label:"MB Way",icon:"📱"},{id:"multi",label:"Multiban
 const WD_SHORT = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 
 // ─── TIME ─────────────────────────────────────────────────────────────────────
-const TODAY  = "2026-04-25";
-const todayD = new Date(TODAY+"T12:00:00");
 const fmt    = (d) => d.toISOString().split("T")[0];
+const todayD = new Date();
+todayD.setHours(12, 0, 0, 0);
+const TODAY  = fmt(todayD);
 const PAST7  = Array.from({length:7},(_,i)=>{const d=new Date(todayD);d.setDate(todayD.getDate()-6+i);return fmt(d);});
 const FDAYS  = Array.from({length:14},(_,i)=>{const d=new Date(todayD.getTime()+i*86400000);return{date:fmt(d),wd:d.toLocaleDateString("pt-PT",{weekday:"short"}).replace(".","").toUpperCase(),day:d.getDate(),mon:d.toLocaleDateString("pt-PT",{month:"short"}).replace(".","").toUpperCase(),weekday:d.getDay(),isToday:i===0};});
 const SLOTS  = ["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00"];
