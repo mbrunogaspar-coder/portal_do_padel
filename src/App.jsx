@@ -815,7 +815,6 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
       priceDay:c.priceDay||3, priceNight:c.priceNight||4,
       nightFrom:c.nightFrom||"18", open:`${c.openFrom||"08"}–${c.openTo||"22"}h`,
       amenities:c.amenities||[], tags:[], highlight:false,
-      isRegistered:true,
     }))
   ];
   const filtered = allClubs.filter(c=>(region==="all"||c.region===region)&&(!search||c.name.toLowerCase().includes(search.toLowerCase())||c.city.toLowerCase().includes(search.toLowerCase())));
