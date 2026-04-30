@@ -126,7 +126,11 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 ::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.15);border-radius:99px}
 
 /* ── TOP MODESWITCH ── */
-.pt-top{position:sticky;top:0;z-index:200;background:rgba(244,240,232,0.95);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(0,0,0,0.09);height:52px;display:flex;align-items:center;padding:0 18px;gap:12px}
+.pt-top-wrap{position:sticky;top:0;z-index:200}
+.pt-club-strip{min-height:38px;background:#141210;color:#F4F0E8;display:flex;align-items:center;justify-content:center;gap:12px;padding:6px 18px;text-align:center;border-bottom:1px solid rgba(244,240,232,.12)}
+.pt-club-strip-copy{font-size:12px;font-weight:600;color:rgba(244,240,232,.82);letter-spacing:-.1px}
+.pt-club-strip-btn{border:1px solid rgba(244,240,232,.26);background:#F4F0E8;color:#141210;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap}
+.pt-top{background:rgba(244,240,232,0.95);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(0,0,0,0.09);height:52px;display:flex;align-items:center;padding:0 18px;gap:12px}
 .pt-top-brand{display:flex;align-items:center;gap:9px;flex:1;min-width:0}
 .pt-top-mark{width:30px;height:30px;border-radius:8px;background:#141210;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#F4F0E8;flex-shrink:0;letter-spacing:-.3px}
 .pt-top-name{font-weight:800;font-size:13px;color:#141210;letter-spacing:-.3px;line-height:1;display:block}
@@ -134,6 +138,8 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-modes{display:flex;background:rgba(0,0,0,0.06);border-radius:8px;padding:3px;gap:2px;flex-shrink:0}
 .pt-mode{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;color:#7A766F;transition:all .15s;white-space:nowrap;border:none;background:none;font-family:inherit;-webkit-tap-highlight-color:transparent}
 .pt-mode.on{background:#141210;color:#F4F0E8}
+.pt-club-mode{background:transparent!important;color:#7A766F!important;padding:5px 9px}
+.pt-login-btn{font-size:11px;font-weight:700;padding:7px 14px;border-radius:7px;background:#141210;color:#F4F0E8;border:none;cursor:pointer;font-family:inherit;flex-shrink:0}
 
 /* ── DISCOVERY ── */
 .pt-page{background:#F4F0E8;min-height:calc(100vh - 52px)}
@@ -575,6 +581,11 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 @media(max-width:767px){
   .pt-asb{display:none!important}
   :root{--bnav:62px}
+  .pt-club-strip{justify-content:space-between;text-align:left;gap:10px;padding:8px 12px}
+  .pt-club-strip-copy{font-size:11px;line-height:1.25}
+  .pt-club-strip-btn{font-size:11px;padding:7px 10px;border-radius:7px}
+  .pt-top{padding:0 12px;gap:8px}
+  .pt-mode{padding:5px 8px}
 }
 `;
 
@@ -731,40 +742,45 @@ export default function App() {
     <>
       <style>{CSS}</style>
       <div style={{minHeight:"100vh",background:mode==="admin"?"#0E0D0B":"#F4F0E8"}}>
-        {/* TOP MODESWITCH — hidden during auth screens */}
-        {!authScreen && !(currentUser?.type==="super" && mode==="admin") && <div className="pt-top">
-          <div className="pt-top-brand" style={{cursor:"pointer"}} onClick={()=>{setMode("discover");setClub(null);setAuthScreen(null);setShowProfile(false);}}>  
-            <div className="pt-top-mark">PP</div>
-            <div>
-              <span className="pt-top-name">Portal do Padel</span>
-              <span className="pt-top-sub">Clubes</span>
-            </div>
+        {/* TOP NAV — hidden during auth screens */}
+        {!authScreen && !(currentUser?.type==="super" && mode==="admin") && <div className="pt-top-wrap">
+          <div className="pt-club-strip">
+            <span className="pt-club-strip-copy">Tens um clube de padel?</span>
+            <button className="pt-club-strip-btn" onClick={()=>setAuthScreen("clubRegister")}>Registar clube</button>
           </div>
-          <div className="pt-modes">
-            <button className={`pt-mode ${mode==="discover"?"on":""}`} onClick={()=>{setMode("discover");setClub(null);}}>Descobrir</button>
-            <button className={`pt-mode ${mode==="portal"?"on":""}`} onClick={()=>setMode("portal")}>Reservar</button>
-            <button className={`pt-mode ${mode==="admin"?"on":""}`} onClick={()=>{
-              if(currentUser?.type==="club"||currentUser?.type==="super") setMode("admin");
-              else setAuthScreen("clubLogin");
-            }}>Clube</button>
-          </div>
-          {/* Auth user indicator */}
-          {currentUser&&(
-            <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
-              <span style={{fontSize:11,fontWeight:600,color:"#141210",maxWidth:90,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",cursor:"pointer",textDecoration:"underline",textDecorationColor:"rgba(0,0,0,.2)"}} onClick={()=>currentUser?.type==="athlete"&&setShowProfile(true)}>{currentUser.data?.name||currentUser.data?.email}</span>
-              <button onClick={logout} style={{fontSize:11,color:"#7A766F",background:"rgba(0,0,0,.06)",border:"none",cursor:"pointer",fontFamily:"inherit",padding:"4px 8px",borderRadius:6}}>Sair</button>
+          <div className="pt-top">
+            <div className="pt-top-brand" style={{cursor:"pointer"}} onClick={()=>{setMode("discover");setClub(null);setAuthScreen(null);setShowProfile(false);}}>
+              <div className="pt-top-mark">PP</div>
+              <div>
+                <span className="pt-top-name">Portal do Padel</span>
+                <span className="pt-top-sub">Reservas</span>
+              </div>
             </div>
-          )}
-          {!currentUser&&(
-            <button onClick={()=>setAuthScreen("athleteLogin")} style={{fontSize:11,fontWeight:600,padding:"5px 12px",borderRadius:7,background:"#141210",color:"#F4F0E8",border:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Entrar</button>
-          )}
+            <div className="pt-modes">
+              <button className={`pt-mode ${mode==="discover"?"on":""}`} onClick={()=>{setMode("discover");setClub(null);}}>Descobrir</button>
+              <button className={`pt-mode pt-club-mode ${mode==="admin"?"on":""}`} onClick={()=>{
+                if(currentUser?.type==="club"||currentUser?.type==="super") setMode("admin");
+                else setAuthScreen("clubLogin");
+              }}>Clubes</button>
+            </div>
+            {/* Auth user indicator */}
+            {currentUser&&(
+              <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
+                <span style={{fontSize:11,fontWeight:600,color:"#141210",maxWidth:90,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",cursor:"pointer",textDecoration:"underline",textDecorationColor:"rgba(0,0,0,.2)"}} onClick={()=>currentUser?.type==="athlete"&&setShowProfile(true)}>{currentUser.data?.name||currentUser.data?.email}</span>
+                <button onClick={logout} style={{fontSize:11,color:"#7A766F",background:"rgba(0,0,0,.06)",border:"none",cursor:"pointer",fontFamily:"inherit",padding:"4px 8px",borderRadius:6}}>Sair</button>
+              </div>
+            )}
+            {!currentUser&&(
+              <button className="pt-login-btn" onClick={()=>setAuthScreen("athleteLogin")}>Entrar</button>
+            )}
+          </div>
         </div>}
 
         {/* AUTH SCREENS */}
         {authScreen==="athleteLogin"    && <AthleteLogin  athletes={athletes} onLogin={a=>{setCurrentUser({type:"athlete",data:a});setAuthScreen(null);}} onGoRegister={()=>setAuthScreen("athleteRegister")} onBack={()=>setAuthScreen(null)}/>}
         {authScreen==="athleteRegister" && <AthleteRegister athletes={athletes} onRegister={a=>{setAthletes(p=>[...p,a]);setCurrentUser({type:"athlete",data:a});setAuthScreen(null);}} onGoLogin={()=>setAuthScreen("athleteLogin")} onBack={()=>setAuthScreen(null)}/>}
         {authScreen==="clubLogin"       && <ClubLogin clubs={regClubs} onLogin={c=>{setCurrentUser({type:"club",data:c});setAuthScreen(null);setMode("admin");}} onGoRegister={()=>setAuthScreen("clubRegister")} onSuperLogin={()=>{setCurrentUser({type:"super",data:{name:"Super Admin",email:SUPER_ADMIN.email}});setAuthScreen(null);setMode("admin");}} onBack={()=>setAuthScreen(null)}/>}
-        {authScreen==="clubRegister"    && <ClubRegister clubs={regClubs} onSubmit={c=>{setRegClubs(p=>[...p,c]);}} onGoLogin={()=>setAuthScreen("clubLogin")}/>}
+        {authScreen==="clubRegister"    && <ClubRegister clubs={regClubs} onSubmit={c=>{setRegClubs(p=>[...p,c]);}} onGoLogin={()=>setAuthScreen("clubLogin")} onBack={()=>setAuthScreen(null)}/>}
         {currentUser?.type==="super" && mode==="admin" && <SuperAdmin clubs={regClubs} onApprove={id=>setRegClubs(p=>p.map(c=>c.id===id?{...c,status:"approved"}:c))} onReject={id=>setRegClubs(p=>p.map(c=>c.id===id?{...c,status:"rejected"}:c))} onLogout={logout}/>}
 
         {/* MAIN VIEWS — only when no auth screen showing */}
@@ -3347,7 +3363,7 @@ function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin, onBack }) {
       <AuthBtn onClick={submit} disabled={loading}>{loading?"A entrar…":"Entrar"}</AuthBtn>
       <div style={{textAlign:"center",fontSize:13,color:"#7A766F",marginTop:8}}>
         Ainda não tens conta?{" "}
-        <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoRegister}>Pedir acesso</span>
+        <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoRegister}>Registar clube</span>
       </div>
       <div style={{textAlign:"center",marginTop:16,display:"flex",justifyContent:"center",gap:20}}>
         <span style={{fontSize:12,color:"#B5B0A8",cursor:"pointer"}} onClick={onBack}>← Voltar</span>
@@ -3358,7 +3374,7 @@ function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin, onBack }) {
 }
 
 // ── CLUB REGISTER ─────────────────────────────────────────────────────────────
-function ClubRegister({ clubs, onSubmit, onGoLogin }) {
+function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
   const [f,setF]=useState({name:"",email:"",phone:"",address:"",city:"",password:"",confirm:""});
   const [errs,setErrs]=useState({});
   const [loading,setLoading]=useState(false);
@@ -3414,7 +3430,7 @@ function ClubRegister({ clubs, onSubmit, onGoLogin }) {
   );
 
   return (
-    <AuthLayout title="Pedir acesso" subtitle="Regista o teu clube no Portal do Padel">
+    <AuthLayout title="Registar clube" subtitle="Pede a entrada do teu clube no Portal do Padel">
       <AuthInput label="Nome do clube" value={f.name} onChange={e=>set("name",e.target.value)} placeholder="Ex: Padel Arena Lisboa" error={errs.name}/>
       <AuthInput label="Email" type="email" value={f.email} onChange={e=>set("email",e.target.value)} placeholder="clube@email.pt" error={errs.email}/>
       <AuthInput label="Telefone" type="tel" value={f.phone} onChange={e=>set("phone",e.target.value)} placeholder="+351 2xx xxx xxx" error={errs.phone}/>
@@ -3425,11 +3441,14 @@ function ClubRegister({ clubs, onSubmit, onGoLogin }) {
       <div style={{fontSize:11,color:"#7A766F",marginBottom:16,padding:"10px 12px",background:"rgba(0,0,0,.04)",borderRadius:8,lineHeight:1.6}}>
         📋 O teu pedido será analisado pela equipa Portal do Padel. Receberás resposta por email.
       </div>
-      <AuthBtn onClick={submit} disabled={loading}>{loading?"A enviar…":"Submeter Pedido"}</AuthBtn>
+      <AuthBtn onClick={submit} disabled={loading}>{loading?"A enviar…":"Enviar pedido"}</AuthBtn>
       <div style={{textAlign:"center",fontSize:13,color:"#7A766F",marginTop:8}}>
         Já tens conta?{" "}
         <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoLogin}>Entrar</span>
       </div>
+      {onBack&&<div style={{textAlign:"center",marginTop:16}}>
+        <span style={{fontSize:12,color:"#B5B0A8",cursor:"pointer"}} onClick={onBack}>← Voltar</span>
+      </div>}
     </AuthLayout>
   );
 }
