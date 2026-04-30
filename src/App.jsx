@@ -151,20 +151,20 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 /* ── ENTRY GATE ── */
 .pt-gate{min-height:100vh;background:linear-gradient(180deg,#FBFAF7 0%,#F4F0E8 56%,#ECE7DE 100%);display:flex;align-items:center;justify-content:center;padding:28px 20px;color:#141210}
 .pt-gate-inner{width:100%;max-width:920px;text-align:center}
-.pt-gate-brand{display:inline-flex;align-items:center;gap:10px;margin-bottom:34px}
+.pt-gate-brand{display:inline-flex;align-items:center;gap:10px;margin-bottom:30px}
 .pt-gate-mark{width:38px;height:38px;border-radius:11px;background:#141210;color:#F4F0E8;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;letter-spacing:-.4px}
 .pt-gate-name{text-align:left}
 .pt-gate-name b{display:block;font-size:15px;letter-spacing:-.3px}
 .pt-gate-name span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:1.8px;color:#B5B0A8;font-weight:700}
-.pt-gate-kicker{display:inline-flex;align-items:center;gap:7px;background:#141210;color:#F4F0E8;border-radius:99px;padding:6px 14px;font-size:10px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;box-shadow:0 12px 28px rgba(20,18,16,.13)}
+.pt-gate-kicker{display:inline-flex;align-items:center;gap:7px;color:#7A766F;border-radius:99px;padding:0;font-size:10px;font-weight:900;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:18px}
 .pt-gate-title{font-family:'DM Serif Display','DM Sans',system-ui,sans-serif;font-size:clamp(44px,8vw,86px);line-height:.9;letter-spacing:-2.5px;margin-bottom:16px}
 .pt-gate-copy{font-size:16px;color:#7A766F;line-height:1.7;max-width:520px;margin:0 auto 34px}
 .pt-gate-options{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:720px;margin:0 auto}
-.pt-gate-card{background:rgba(255,255,255,.78);border:1px solid rgba(0,0,0,.08);border-radius:22px;padding:24px;text-align:left;cursor:pointer;box-shadow:0 18px 50px rgba(20,18,16,.07);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;font-family:inherit;color:#141210}
+.pt-gate-card{background:rgba(255,255,255,.78);border:1px solid rgba(0,0,0,.08);border-radius:22px;padding:26px 24px;text-align:center;cursor:pointer;box-shadow:0 18px 50px rgba(20,18,16,.07);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;font-family:inherit;color:#141210;display:flex;flex-direction:column;align-items:center}
 .pt-gate-card:hover{transform:translateY(-3px);box-shadow:0 24px 64px rgba(20,18,16,.11);border-color:rgba(0,0,0,.16)}
-.pt-gate-icon{width:44px;height:44px;border-radius:14px;background:#141210;color:#F4F0E8;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:18px}
+.pt-gate-icon{width:46px;height:46px;border-radius:15px;background:#141210;color:#F4F0E8;display:flex;align-items:center;justify-content:center;font-size:13px;margin-bottom:18px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}
 .pt-gate-card h2{font-size:24px;line-height:1;letter-spacing:-.7px;margin-bottom:8px}
-.pt-gate-card p{font-size:14px;color:#7A766F;line-height:1.6;margin-bottom:22px}
+.pt-gate-card p{font-size:14px;color:#7A766F;line-height:1.6;margin:0 auto 22px;max-width:300px}
 .pt-gate-action{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:900;border-radius:99px;background:#F4F0E8;border:1px solid rgba(0,0,0,.10);padding:9px 13px}
 .pt-gate-card.primary{background:#141210;color:#F4F0E8}
 .pt-gate-card.primary p{color:rgba(244,240,232,.62)}
@@ -923,18 +923,18 @@ function AudienceGate({onPlayer,onClub}){
           <div className="pt-gate-mark">PP</div>
           <div className="pt-gate-name"><b>Portal do Padel</b><span>Reservas e clubes</span></div>
         </div>
-        <div className="pt-gate-kicker">Escolhe a tua entrada</div>
         <h1 className="pt-gate-title">Como queres<br/>entrar?</h1>
+        <div className="pt-gate-kicker">Escolhe a tua entrada</div>
         <p className="pt-gate-copy">Uma experiência limpa para quem joga. Uma área simples para quem gere campos, reservas e torneios.</p>
         <div className="pt-gate-options">
           <button className="pt-gate-card primary" onClick={onPlayer}>
-            <div className="pt-gate-icon">🎾</div>
+            <div className="pt-gate-icon">J</div>
             <h2>Sou jogador</h2>
             <p>Encontrar clubes, reservar campos e inscrever-me em torneios perto de mim.</p>
             <span className="pt-gate-action">Entrar nas reservas →</span>
           </button>
           <button className="pt-gate-card" onClick={onClub}>
-            <div className="pt-gate-icon">🏟</div>
+            <div className="pt-gate-icon">C</div>
             <h2>Sou clube</h2>
             <p>Gerir campos, torneios e pedidos de reserva sem comissões por marcação.</p>
             <span className="pt-gate-action">Área de clubes →</span>
@@ -3762,22 +3762,6 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
 
   return (
     <AuthLayout title="Registar clube" subtitle="Pede a entrada do teu clube no Portal do Padel">
-      <div style={{textAlign:"center",margin:"0 auto 18px",maxWidth:420}}>
-        <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"5px 12px",borderRadius:99,background:"rgba(20,18,16,.06)",color:"#7A766F",fontSize:10,fontWeight:800,letterSpacing:"1.3px",textTransform:"uppercase",marginBottom:12}}>
-          <span style={{width:5,height:5,borderRadius:"50%",background:"#141210"}}/>Para clubes
-        </div>
-        <div style={{fontSize:20,fontWeight:800,color:"#141210",letterSpacing:"-.7px",lineHeight:1.05,marginBottom:8}}>
-          Gestão simples, mensalidade fixa.
-        </div>
-        <div style={{fontSize:13,color:"#7A766F",lineHeight:1.6}}>
-          Reservas, torneios e gestão de campos sem comissão por reserva e sem perder a relação com os teus jogadores.
-        </div>
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:18}}>
-        {["Zero comissões","Preço fixo","Torneios fáceis","Setup acompanhado"].map(x=>(
-          <div key={x} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.08)",borderRadius:12,padding:"11px 10px",fontSize:12,fontWeight:800,color:"#141210",textAlign:"center",boxShadow:"0 1px 6px rgba(0,0,0,.035)"}}>{x}</div>
-        ))}
-      </div>
       <AuthInput label="Nome do clube" value={f.name} onChange={e=>set("name",e.target.value)} placeholder="Ex: Padel Arena Lisboa" error={errs.name}/>
       <AuthInput label="Email" type="email" value={f.email} onChange={e=>set("email",e.target.value)} placeholder="clube@email.pt" error={errs.email}/>
       <AuthInput label="Telefone" type="tel" value={f.phone} onChange={e=>set("phone",e.target.value)} placeholder="+351 2xx xxx xxx" error={errs.phone}/>
