@@ -75,6 +75,8 @@ const fmtSh  = (ds)=>new Date(ds+"T12:00:00").toLocaleDateString("pt-PT",{day:"2
 const fmtFull= (ds)=>new Date(ds+"T12:00:00").toLocaleDateString("pt-PT",{day:"numeric",month:"long",year:"numeric"});
 const pad2   = (v)=>String(v).padStart(2,"0");
 const money2 = (v)=>Number(v||0).toFixed(2).replace(".",",");
+const dateRange = (a,b)=>a+(b&&b!==a?` -> ${b}`:"");
+const tariffLabel = (night)=>night?"Noturno":"Diurno";
 const getWD  = (ds)=>new Date(ds+"T12:00:00").getDay();
 const genRef = ()=>"PDP-"+Math.random().toString(36).slice(-5).toUpperCase();
 const ini    = (n)=>n.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
@@ -1062,7 +1064,7 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
       <div className="pt-clubs">
         {filtered.length===0 ? (
           <div className="pt-empty">
-            <span className="pt-empty-icon">🎾</span>
+            <span className="pt-empty-icon">PP</span>
             <div className="pt-empty-t">Sem clubes nesta região</div>
             <div className="pt-empty-s">Experimenta outra zona ou vê todos os clubes.</div>
             <button className="pt-empty-btn" onClick={()=>setRegion("all")}>Ver todos</button>
@@ -1085,7 +1087,7 @@ function ClubCard({ club, delay, onSelect }) {
       <div className="pt-ctop">
         <div style={{flex:1,minWidth:0}}>
           <div className="pt-cname">{club.name}</div>
-          <div className="pt-cloc">📍 {club.city}, {club.district}</div>
+          <div className="pt-cloc">{club.city}, {club.district}</div>
           {club.phone&&<div style={{fontSize:10,color:"#B5B0A8",marginTop:2}}>{club.phone}</div>}
         </div>
 
@@ -1097,11 +1099,11 @@ function ClubCard({ club, delay, onSelect }) {
         <div className="pt-cs"><div className="pt-csv">{club.outdoor}</div><div className="pt-csl">Outdoor</div></div>
       </div>
       <div className="pt-ctags">
-        {(club.amenities||[]).map(id=>{const a=AMENITIES.find(x=>x.id===id);return a?<span key={id} className="pt-ctag">{a.icon} {a.label}</span>:null;})}
-        <span className="pt-ctag">⏰ {club.open}</span>
+        {(club.amenities||[]).map(id=>{const a=AMENITIES.find(x=>x.id===id);return a?<span key={id} className="pt-ctag">{a.label}</span>:null;})}
+        <span className="pt-ctag">{club.open}</span>
       </div>
       <div className="pt-cfoot">
-        <div><span className="pt-cprice-v">{club.priceDay}€</span><span className="pt-cprice-r"> – {club.priceNight}€/jog.</span></div>
+        <div><span className="pt-cprice-v">{money2(club.priceDay)}€</span><span className="pt-cprice-r"> - {money2(club.priceNight)}€/jog.</span></div>
         <button className="pt-ccta" onClick={e=>{e.stopPropagation();onSelect();}}>Reservar →</button>
       </div>
     </div>
@@ -1190,8 +1192,8 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
             </a>
           )}
           <div className="pt-phero-info">
-            <span>☀️ Diurno <b>{money2(priceD)}€/jog.</b></span>
-            <span>🌙 Noturno <b>{money2(priceN)}€/jog.</b> <span style={{opacity:.5}}>a partir das {pad2(nf)}h</span></span>
+            <span>Diurno <b>{money2(priceD)}€/jog.</b></span>
+            <span>Noturno <b>{money2(priceN)}€/jog.</b> <span style={{opacity:.5}}>a partir das {pad2(nf)}h</span></span>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10,width:"100%",maxWidth:340,margin:"22px auto 0"}}>
             <div style={{background:"rgba(255,255,255,.72)",border:"1px solid rgba(0,0,0,.08)",borderRadius:14,padding:"15px 14px",boxShadow:"0 10px 26px rgba(0,0,0,.04)",textAlign:"center",display:"flex",flexDirection:"column",alignItems:"center"}}>
@@ -1219,7 +1221,7 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
             onClick={()=>setPortalTab("tournaments")}
             style={{width:"100%",border:"1px solid rgba(0,0,0,.10)",background:"#FFFFFF",borderRadius:16,padding:"14px 16px",margin:"0 0 24px",display:"flex",alignItems:"center",gap:13,textAlign:"left",cursor:"pointer",fontFamily:"inherit",boxShadow:"0 12px 34px rgba(20,18,16,.07)"}}
           >
-            <span style={{width:38,height:38,borderRadius:12,background:"#141210",color:"#F4F0E8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>🏆</span>
+            <span style={{width:38,height:38,borderRadius:12,background:"#141210",color:"#F4F0E8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:900,letterSpacing:".8px",flexShrink:0}}>TR</span>
             <span style={{flex:1,minWidth:0}}>
               <span style={{display:"block",fontSize:10,fontWeight:900,color:"#B5B0A8",textTransform:"uppercase",letterSpacing:"1.2px",marginBottom:2}}>
                 Inscrições abertas
@@ -1310,7 +1312,7 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
                   {freeCts(selTime).map(c=>(
                     <div key={c.id} className={`pt-court ${selCt?.id===c.id?"on":""}`} onClick={()=>setCt(c)}>
                       <div className="pt-court-name">{c.name}</div>
-                      <div className="pt-court-det">{c.indoor?"🏢 Interior":"☀️ Exterior"}</div>
+                      <div className="pt-court-det">{c.indoor?"Interior":"Exterior"}</div>
                     </div>
                   ))}
                 </div>
@@ -1363,7 +1365,7 @@ function BookSheet({ club, court, day, time, dur, priceD, priceN, nf, onClose, o
         <div className="pt-bcard">
           <div className="pt-bcard-l">
             <div className="pt-bcard-name">{court?.name} · {time}–{endH}</div>
-            <div className="pt-bcard-det">{fmtLong(day)}<br/>{durLbl(dur||60)} · {court?.indoor?"Interior":"Exterior"} · {night?"🌙 Noturno":"☀️ Diurno"}</div>
+            <div className="pt-bcard-det">{fmtLong(day)}<br/>{durLbl(dur||60)} · {court?.indoor?"Interior":"Exterior"} · {tariffLabel(night)}</div>
           {(club.address||club.city)&&(
             <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((club.address||club.city||"")+" padel")}`} target="_blank" rel="noreferrer"
               style={{display:"inline-flex",alignItems:"center",gap:5,marginTop:7,fontSize:11,color:"rgba(0,0,0,.5)",textDecoration:"none",background:"rgba(0,0,0,.05)",padding:"4px 10px",borderRadius:99,fontWeight:600}}>
@@ -1373,7 +1375,7 @@ function BookSheet({ club, court, day, time, dur, priceD, priceN, nf, onClose, o
             </a>
           )}
           </div>
-          <div className="pt-bcard-price"><div className="pt-bcard-val">{price}€</div><div className="pt-bcard-unit">por jogador</div></div>
+          <div className="pt-bcard-price"><div className="pt-bcard-val">{money2(price)}€</div><div className="pt-bcard-unit">por jogador</div></div>
         </div>
         <div className="pt-form">
           <div>
@@ -1398,14 +1400,14 @@ function BookSheet({ club, court, day, time, dur, priceD, priceN, nf, onClose, o
 function PortalSuccess({ data, onBack }) {
   const endH=addMins(data.time||"00:00",data.dur||60);
   const night=isNt(data.time,parseInt(data.club.nightFrom||18));
-  const msg=encodeURIComponent(`🎾 Reservei um campo no ${data.club.name}!\n📅 ${fmtLong(data.date)}\n⏰ ${data.time}–${endH} (${durLbl(data.dur||60)})\n🏟 ${data.court.name}\n💰 ${data.price}€/jogador\n\nFaltam jogadores! Juntam-se?`);
+  const msg=encodeURIComponent(`Reservei um campo no ${data.club.name}.\n${fmtLong(data.date)}\n${data.time}-${endH} (${durLbl(data.dur||60)})\n${data.court.name}\n${money2(data.price)}€/jogador\n\nFaltam jogadores. Juntam-se?`);
   return (
     <div className="pt-success">
       <div className="pt-sr-ring"><div style={{position:"absolute",inset:-8,borderRadius:"50%",border:"1px solid rgba(255,255,255,.1)",animation:"ptRingPulse 2.5s infinite"}}/><span className="pt-sr-check">✓</span></div>
       <div className="pt-s-title">{data.requireApproval?"Pedido\nEnviado!":"Reserva\nConfirmada!"}</div>
       <p className="pt-s-sub">Receberás confirmação por email. Até ao campo!</p>
       <div className="pt-s-card">
-        {[{k:"Ref.",v:data.ref},{k:"Campo",v:data.court.name},{k:"Data",v:fmtLong(data.date)},{k:"Horário",v:`${data.time}–${endH}`},{k:"Duração",v:durLbl(data.dur||60)},{k:"Tarifa",v:night?"🌙 Noturno":"☀️ Diurno"},{k:"Preço",v:`${data.price}€/jogador`},{k:"Pagamento",v:PAY.find(p=>p.id===data.payment)?.label}].map(r=>(
+        {[{k:"Ref.",v:data.ref},{k:"Campo",v:data.court.name},{k:"Data",v:fmtLong(data.date)},{k:"Horário",v:`${data.time}-${endH}`},{k:"Duração",v:durLbl(data.dur||60)},{k:"Tarifa",v:tariffLabel(night)},{k:"Preço",v:`${money2(data.price)}€/jogador`},{k:"Pagamento",v:PAY.find(p=>p.id===data.payment)?.label}].map(r=>(
           <div key={r.k} className="pt-s-row"><span className="pt-s-k">{r.k}</span><span className="pt-s-v" style={r.k==="Preço"?{fontWeight:800,fontSize:14}:{}}>{r.v}</span></div>
         ))}
       </div>
@@ -2898,7 +2900,7 @@ function TournamentRegistration({tournaments,onRegister,onBack}){
       <div style={{padding:"20px 18px 80px",maxWidth:640,margin:"0 auto"}}>
         {open.length===0?(
           <div style={{textAlign:"center",padding:"48px 0"}}>
-            <div style={{fontSize:40,marginBottom:12}}>🏆</div>
+            <div style={{fontSize:16,fontWeight:900,letterSpacing:"1px",marginBottom:12}}>TR</div>
             <div style={{fontSize:16,fontWeight:800,color:"#141210",marginBottom:6}}>Sem torneios abertos</div>
             <div style={{fontSize:14,color:"#7A766F"}}>Quando o clube abrir inscrições aparecerão aqui.</div>
           </div>
@@ -2909,7 +2911,7 @@ function TournamentRegistration({tournaments,onRegister,onBack}){
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
                 <div>
                   <div style={{fontSize:16,fontWeight:800,color:"#141210",letterSpacing:"-.3px"}}>{t.name}</div>
-                  <div style={{fontSize:12,color:"#7A766F",marginTop:3}}>📅 {t.startDate}{t.endDate&&t.endDate!==t.startDate?` → ${t.endDate}`:""}</div>
+                  <div style={{fontSize:12,color:"#7A766F",marginTop:3}}>{dateRange(t.startDate,t.endDate)}</div>
                 </div>
                 <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:99,background:"rgba(52,211,153,.12)",color:"#34D399",whiteSpace:"nowrap"}}>Inscrições Abertas</span>
               </div>
@@ -2992,7 +2994,7 @@ function MyBookings({bookings,cfg,onCancelBooking}){
         <div style={{padding:"20px 18px 80px",maxWidth:580,margin:"0 auto"}}>
           {myBk.length===0?(
             <div style={{textAlign:"center",padding:"48px 0"}}>
-              <div style={{fontSize:40,marginBottom:12}}>🎾</div>
+              <div style={{fontSize:16,fontWeight:900,letterSpacing:"1px",marginBottom:12}}>PP</div>
               <div style={{fontSize:16,fontWeight:800,color:"#141210",marginBottom:6}}>Sem reservas</div>
               <div style={{fontSize:14,color:"#7A766F"}}>Não encontrámos reservas com este email.</div>
             </div>
@@ -3050,11 +3052,11 @@ function BookingRow({b,cfg,canCancel,onCancel,past}){
       </div>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <div style={{display:"flex",gap:8}}>
-          <span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:99,background:"#F4F0E8",color:"#7A766F"}}>{night?"🌙 Noturno":"☀️ Diurno"}</span>
+          <span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:99,background:"#F4F0E8",color:"#7A766F"}}>{tariffLabel(night)}</span>
           <span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:99,background:"#F4F0E8",color:"#7A766F"}}>{PAY.find(p=>p.id===b.pay)?.icon} {PAY.find(p=>p.id===b.pay)?.label}</span>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:10}}>
-          <span style={{fontSize:14,fontWeight:800,color:"#141210"}}>{Math.round(price)}€</span>
+          <span style={{fontSize:14,fontWeight:800,color:"#141210"}}>{money2(price)}€</span>
           {canCancel&&<button onClick={onCancel} style={{fontSize:11,fontWeight:700,color:"#E53E3E",background:"rgba(229,62,62,.08)",border:"1px solid rgba(229,62,62,.15)",padding:"4px 10px",borderRadius:7,cursor:"pointer",fontFamily:"inherit"}}>Cancelar</button>}
         </div>
       </div>
@@ -3079,7 +3081,7 @@ function WaitlistModal({club,day,time,dur,onClose,onJoin}){
         <div style={{width:36,height:4,background:"rgba(0,0,0,.12)",borderRadius:99,margin:"12px auto 0"}}/>
         {done?(
           <div style={{padding:"32px 20px 40px",textAlign:"center"}}>
-            <div style={{fontSize:40,marginBottom:14}}>✅</div>
+            <div style={{fontSize:18,fontWeight:900,letterSpacing:"1px",marginBottom:14}}>OK</div>
             <div style={{fontSize:16,fontWeight:800,color:"#141210",marginBottom:6}}>Estás na lista!</div>
             <div style={{fontSize:14,color:"#7A766F",marginBottom:20}}>Avisamos-te por email se abrir uma vaga.</div>
             <button onClick={onClose} style={{padding:"12px 24px",borderRadius:10,background:"#141210",color:"#F4F0E8",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Fechar</button>
@@ -3121,7 +3123,7 @@ function TournamentPublicView({t,onBack,onRegister}){
         <TStatusBadgePub status={t.status}/>
       </div>
       <div style={{padding:"20px 18px 0",maxWidth:640,margin:"0 auto"}}>
-        <div style={{fontSize:12,color:"#7A766F",marginBottom:16}}>📅 {t.startDate}{t.endDate&&t.endDate!==t.startDate?` → ${t.endDate}`:""}</div>
+        <div style={{fontSize:12,color:"#7A766F",marginBottom:16}}>{dateRange(t.startDate,t.endDate)}</div>
         {t.categories.length>1&&(
           <div style={{display:"flex",gap:5,overflow:"auto",marginBottom:16,paddingBottom:2,scrollbarWidth:"none"}}>
             {t.categories.map(c=>(
@@ -3196,7 +3198,7 @@ function TournamentPublicView({t,onBack,onRegister}){
               const winner=finalRound?.matches[0]?.winner;
               return winner?(
                 <div style={{background:"#141210",borderRadius:12,padding:"24px 20px",textAlign:"center",marginBottom:12}}>
-                  <div style={{fontSize:32,marginBottom:8}}>🏆</div>
+                  <div style={{fontSize:16,fontWeight:900,letterSpacing:"1px",marginBottom:8,color:"#F4F0E8"}}>TR</div>
                   <div style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.4)",textTransform:"uppercase",letterSpacing:"1.5px",marginBottom:4}}>Vencedor {cat.id}</div>
                   <div style={{fontSize:18,fontWeight:800,color:"#F4F0E8"}}>{pn(winner)}</div>
                 </div>
@@ -3370,7 +3372,7 @@ function TournamentPortalView({tournaments,onRegister}){
                 <div style={{fontSize:15,fontWeight:800,color:"#141210",letterSpacing:"-.3px"}}>{t.name}</div>
                 <TStatusBadgePub status={t.status}/>
               </div>
-              <div style={{fontSize:12,color:"#7A766F",marginBottom:10}}>📅 {t.startDate}{t.endDate&&t.endDate!==t.startDate?` → ${t.endDate}`:""}</div>
+              <div style={{fontSize:12,color:"#7A766F",marginBottom:10}}>{dateRange(t.startDate,t.endDate)}</div>
               <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>{t.categories.map(c=><span key={c.id} style={{fontSize:11,fontWeight:700,padding:"3px 9px",borderRadius:99,background:"#F4F0E8",color:"#7A766F"}}>{c.id}</span>)}</div>
               <div style={{display:"flex",gap:8}}>
                 <button onClick={()=>setRegistering(t)} style={{flex:1,padding:"11px",borderRadius:9,background:"#141210",color:"#F4F0E8",border:"none",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Inscrever →</button>
@@ -3384,13 +3386,13 @@ function TournamentPortalView({tournaments,onRegister}){
             <div style={{padding:"14px 16px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
               <div>
                 <div style={{fontSize:14,fontWeight:800,color:"#141210",letterSpacing:"-.2px"}}>{t.name}</div>
-                <div style={{fontSize:11,color:"#7A766F",marginTop:3}}>📅 {t.startDate}{t.endDate&&t.endDate!==t.startDate?` → ${t.endDate}`:""}</div>
+                <div style={{fontSize:11,color:"#7A766F",marginTop:3}}>{dateRange(t.startDate,t.endDate)}</div>
               </div>
               <TStatusBadgePub status={t.status}/>
             </div>
           </div>
         ))}
-        {tournaments.length===0&&<div style={{textAlign:"center",padding:"48px 0"}}><div style={{fontSize:40,marginBottom:12}}>🏆</div><div style={{fontSize:16,fontWeight:800,color:"#141210",marginBottom:6}}>Sem torneios</div><div style={{fontSize:14,color:"#7A766F"}}>Quando o clube criar torneios aparecerão aqui.</div></div>}
+        {tournaments.length===0&&<div style={{textAlign:"center",padding:"48px 0"}}><div style={{fontSize:16,fontWeight:900,letterSpacing:"1px",marginBottom:12}}>TR</div><div style={{fontSize:16,fontWeight:800,color:"#141210",marginBottom:6}}>Sem torneios</div><div style={{fontSize:14,color:"#7A766F"}}>Quando o clube criar torneios aparecerão aqui.</div></div>}
       </div>
     </div>
   );
@@ -3994,7 +3996,7 @@ function AthleteProfile({ athlete, bookings, tournaments, cfg, onEdit, onLogout,
             )}
             {myBk.length===0 && (
               <div style={{textAlign:"center",padding:"40px 0",color:"#B5B0A8",fontSize:14}}>
-                <div style={{fontSize:36,marginBottom:10}}>🎾</div>
+                <div style={{fontSize:16,fontWeight:900,letterSpacing:"1px",marginBottom:10}}>PP</div>
                 Ainda não tens reservas.
               </div>
             )}
@@ -4005,7 +4007,7 @@ function AthleteProfile({ athlete, bookings, tournaments, cfg, onEdit, onLogout,
           <>
             {myTourneys.length===0 ? (
               <div style={{textAlign:"center",padding:"40px 0",color:"#B5B0A8",fontSize:14}}>
-                <div style={{fontSize:36,marginBottom:10}}>🏆</div>
+                <div style={{fontSize:16,fontWeight:900,letterSpacing:"1px",marginBottom:10}}>TR</div>
                 Ainda não estás inscrito em nenhum torneio.
               </div>
             ) : myTourneys.map((item,i) => (
@@ -4018,7 +4020,7 @@ function AthleteProfile({ athlete, bookings, tournaments, cfg, onEdit, onLogout,
                 </div>
                 <div style={{fontSize:12,color:"#7A766F"}}>Categoria: <b style={{color:"#141210"}}>{item.category}</b></div>
                 <div style={{fontSize:12,color:"#7A766F",marginTop:3}}>{item.pair.p1} / {item.pair.p2}</div>
-                <div style={{fontSize:11,color:"#B5B0A8",marginTop:3}}>📅 {item.tournament.startDate}{item.tournament.endDate&&item.tournament.endDate!==item.tournament.startDate?` → ${item.tournament.endDate}`:""}</div>
+                <div style={{fontSize:11,color:"#B5B0A8",marginTop:3}}>{dateRange(item.tournament.startDate,item.tournament.endDate)}</div>
               </div>
             ))}
           </>
@@ -4044,7 +4046,7 @@ function ProfileBookingRow({ b, cfg, past }) {
         </div>
         <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:99,background:sc+"22",color:sc}}>{sl}</span>
       </div>
-      <div style={{fontSize:13,fontWeight:700,color:"#141210"}}>{Math.round(price)}€ <span style={{fontSize:11,fontWeight:400,color:"#7A766F"}}>{night?"🌙 Noturno":"☀️ Diurno"}</span></div>
+      <div style={{fontSize:13,fontWeight:700,color:"#141210"}}>{money2(price)}€ <span style={{fontSize:11,fontWeight:400,color:"#7A766F"}}>{tariffLabel(night)}</span></div>
     </div>
   );
 }
@@ -4090,8 +4092,8 @@ function DiscoverTournaments({ allTournaments, onRegister, currentUser }) {
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
                     <div>
                       <div style={{fontSize:16,fontWeight:800,color:"#141210",letterSpacing:"-.3px"}}>{t.name}</div>
-                      <div style={{fontSize:12,color:"#7A766F",marginTop:3}}>🏟 {club?.name||"Clube"} · 📍 {club?.city||""}</div>
-                      <div style={{fontSize:12,color:"#7A766F",marginTop:2}}>📅 {t.startDate}{t.endDate&&t.endDate!==t.startDate?` → ${t.endDate}`:""}</div>
+                      <div style={{fontSize:12,color:"#7A766F",marginTop:3}}>{club?.name||"Clube"} · {club?.city||""}</div>
+                      <div style={{fontSize:12,color:"#7A766F",marginTop:2}}>{dateRange(t.startDate,t.endDate)}</div>
                     </div>
                     <span style={{fontSize:9,fontWeight:700,padding:"3px 9px",borderRadius:99,background:"rgba(52,211,153,.1)",color:"#065F46",whiteSpace:"nowrap",textTransform:"uppercase",letterSpacing:".5px"}}>Aberto</span>
                   </div>
@@ -4115,7 +4117,7 @@ function DiscoverTournaments({ allTournaments, onRegister, currentUser }) {
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                   <div>
                     <div style={{fontSize:14,fontWeight:800,color:"#141210",letterSpacing:"-.2px"}}>{t.name}</div>
-                    <div style={{fontSize:11,color:"#7A766F",marginTop:2}}>🏟 {club?.name||"Clube"} · {t.startDate}{t.endDate&&t.endDate!==t.startDate?` → ${t.endDate}`:""}</div>
+                    <div style={{fontSize:11,color:"#7A766F",marginTop:2}}>{club?.name||"Clube"} · {dateRange(t.startDate,t.endDate)}</div>
                   </div>
                   <TStatusBadgePub status={t.status}/>
                 </div>
