@@ -125,6 +125,9 @@ const CSS=`
 @keyframes ptRingPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.07);opacity:.2}}
 @keyframes ptCheckPop{from{transform:scale(0)}to{transform:scale(1)}}
 @keyframes ptPulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes ptGateTilt{0%,100%{transform:rotateX(66deg) rotateZ(-14deg) translate3d(0,0,0)}50%{transform:rotateX(62deg) rotateZ(-10deg) translate3d(0,-10px,22px)}}
+@keyframes ptGateDrift{0%,100%{transform:translate3d(0,0,0) rotateX(0) rotateY(-8deg)}50%{transform:translate3d(10px,-14px,38px) rotateX(3deg) rotateY(8deg)}}
+@keyframes ptGateReveal{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{min-height:100%;background:#F4F0E8}
@@ -151,8 +154,20 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-login-btn{font-size:11px;font-weight:700;padding:7px 14px;border-radius:7px;background:#141210;color:#F4F0E8;border:none;cursor:pointer;font-family:inherit;flex-shrink:0}
 
 /* ── ENTRY GATE ── */
-.pt-gate{min-height:100vh;background:linear-gradient(180deg,#FBFAF7 0%,#F4F0E8 56%,#ECE7DE 100%);display:flex;align-items:center;justify-content:center;padding:28px 20px;color:#141210}
-.pt-gate-inner{width:100%;max-width:920px;text-align:center}
+.pt-gate{min-height:100vh;background:linear-gradient(180deg,#FBFAF7 0%,#F4F0E8 56%,#ECE7DE 100%);display:flex;align-items:center;justify-content:center;padding:28px 20px;color:#141210;position:relative;overflow:hidden;perspective:1200px}
+.pt-gate::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,18,16,.035) 1px,transparent 1px),linear-gradient(180deg,rgba(20,18,16,.028) 1px,transparent 1px);background-size:58px 58px;mask-image:linear-gradient(180deg,transparent 0%,#000 20%,#000 72%,transparent 100%);pointer-events:none}
+.pt-gate-scene{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d;opacity:.92}
+.pt-gate-court{position:absolute;left:50%;top:48%;width:min(760px,96vw);height:420px;border:1px solid rgba(20,18,16,.12);border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.64),rgba(255,255,255,.18));box-shadow:0 42px 120px rgba(20,18,16,.12);transform-origin:center;animation:ptGateTilt 9s ease-in-out infinite}
+.pt-gate-court::before,.pt-gate-court::after{content:'';position:absolute;inset:32px;border:1px solid rgba(20,18,16,.16);border-radius:18px}
+.pt-gate-court::after{inset:32px auto 32px 50%;width:1px;border:none;background:rgba(20,18,16,.18)}
+.pt-gate-net{position:absolute;left:50%;top:28px;bottom:28px;width:8px;transform:translateX(-50%);background:repeating-linear-gradient(180deg,rgba(20,18,16,.24) 0 2px,transparent 2px 9px);opacity:.42}
+.pt-gate-line{position:absolute;left:14%;right:14%;height:1px;background:linear-gradient(90deg,transparent,rgba(20,18,16,.16),transparent)}
+.pt-gate-line.a{top:35%}.pt-gate-line.b{bottom:35%}
+.pt-gate-panel{position:absolute;width:148px;min-height:96px;border:1px solid rgba(20,18,16,.10);border-radius:22px;background:rgba(255,255,255,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 24px 70px rgba(20,18,16,.10);animation:ptGateDrift 7s ease-in-out infinite}
+.pt-gate-panel.one{left:13%;top:21%;animation-delay:-1s}.pt-gate-panel.two{right:12%;top:27%;animation-delay:-3s}.pt-gate-panel.three{right:20%;bottom:18%;animation-delay:-5s}
+.pt-gate-panel b{display:block;font-family:'DM Serif Display','DM Sans',system-ui,sans-serif;font-size:30px;line-height:1;padding:18px 18px 2px;color:#141210;letter-spacing:-1px}
+.pt-gate-panel span{display:block;padding:0 18px 18px;font-size:10px;color:#7A766F;text-transform:uppercase;letter-spacing:1.2px;font-weight:800}
+.pt-gate-inner{width:100%;max-width:920px;text-align:center;position:relative;z-index:2;animation:ptGateReveal .65s ease both}
 .pt-gate-brand{display:inline-flex;align-items:center;gap:10px;margin-bottom:30px}
 .pt-gate-mark{width:38px;height:38px;border-radius:11px;background:#141210;color:#F4F0E8;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;letter-spacing:-.4px}
 .pt-gate-name{text-align:left}
@@ -163,7 +178,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-gate-copy{font-size:16px;color:#7A766F;line-height:1.7;max-width:520px;margin:0 auto 34px}
 .pt-gate-options{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:720px;margin:0 auto}
 .pt-gate-card{background:rgba(255,255,255,.78);border:1px solid rgba(0,0,0,.08);border-radius:22px;padding:26px 24px;text-align:center;cursor:pointer;box-shadow:0 18px 50px rgba(20,18,16,.07);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;font-family:inherit;color:#141210;display:flex;flex-direction:column;align-items:center}
-.pt-gate-card:hover{transform:translateY(-3px);box-shadow:0 24px 64px rgba(20,18,16,.11);border-color:rgba(0,0,0,.16)}
+.pt-gate-card:hover{transform:translateY(-4px) rotateX(2deg);box-shadow:0 28px 76px rgba(20,18,16,.14);border-color:rgba(0,0,0,.16)}
 .pt-gate-icon{display:none}
 .pt-gate-card h2{font-size:30px;line-height:.95;letter-spacing:-1px;margin-bottom:12px}
 .pt-gate-card p{font-size:14px;color:#7A766F;line-height:1.6;margin:0 auto 22px;max-width:300px}
@@ -172,6 +187,8 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-gate-card.primary p{color:rgba(244,240,232,.62)}
 .pt-gate-card.primary .pt-gate-icon{background:#F4F0E8;color:#141210}
 .pt-gate-card.primary .pt-gate-action{background:#F4F0E8;color:#141210}
+@media(max-width:760px){.pt-gate{align-items:flex-start;padding-top:70px}.pt-gate-scene{opacity:.55}.pt-gate-court{top:42%;width:680px;height:360px}.pt-gate-panel{display:none}.pt-gate-options{grid-template-columns:1fr;max-width:420px}.pt-gate-title{font-size:58px}.pt-gate-copy{font-size:15px;margin-bottom:26px}}
+@media(prefers-reduced-motion:reduce){.pt-gate-court,.pt-gate-panel,.pt-gate-inner{animation:none}}
 .pt-club-gateway{min-height:calc(100vh - 52px);background:linear-gradient(180deg,#FBFAF7 0%,#F4F0E8 62%,#ECE7DE 100%);display:flex;align-items:center;justify-content:center;padding:56px 20px}
 .pt-club-gateway-inner{width:100%;max-width:860px;text-align:center}
 .pt-club-gateway-title{font-family:'DM Serif Display','DM Sans',system-ui,sans-serif;font-size:clamp(42px,8vw,78px);line-height:.9;letter-spacing:-2.2px;margin-bottom:16px}
@@ -929,6 +946,16 @@ export default function App() {
 function AudienceGate({onPlayer,onClub}){
   return(
     <div className="pt-gate">
+      <div className="pt-gate-scene" aria-hidden="true">
+        <div className="pt-gate-court">
+          <div className="pt-gate-net"/>
+          <div className="pt-gate-line a"/>
+          <div className="pt-gate-line b"/>
+        </div>
+        <div className="pt-gate-panel one"><b>01</b><span>Reserva</span></div>
+        <div className="pt-gate-panel two"><b>02</b><span>Torneio</span></div>
+        <div className="pt-gate-panel three"><b>03</b><span>Clube</span></div>
+      </div>
       <div className="pt-gate-inner">
         <div className="pt-gate-brand">
           <div className="pt-gate-mark">PP</div>
