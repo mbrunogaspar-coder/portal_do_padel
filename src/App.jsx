@@ -925,7 +925,7 @@ function AudienceGate({onPlayer,onClub}){
         </div>
         <h1 className="pt-gate-title">Como queres<br/>entrar?</h1>
         <div className="pt-gate-kicker">Escolhe a tua entrada</div>
-        <p className="pt-gate-copy">Uma experiência limpa para quem joga. Uma área simples para quem gere campos, reservas e torneios.</p>
+        <p className="pt-gate-copy">Uma experiência única para quem joga. Uma experiência eficaz para quem gere.</p>
         <div className="pt-gate-options">
           <button className="pt-gate-card primary" onClick={onPlayer}>
             <h2>Sou jogador</h2>
