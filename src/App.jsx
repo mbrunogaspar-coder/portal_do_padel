@@ -858,30 +858,26 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
             <div key={s.l} className="pt-stat"><div className="pt-sv">{s.v}</div><div className="pt-sl">{s.l}</div></div>
           ))}
         </div>
-        <div style={{display:"flex",justifyContent:"center",gap:10,flexWrap:"wrap",marginTop:22}}>
-          <button onClick={()=>setDiscoverTab("clubs")} style={{padding:"12px 20px",borderRadius:11,border:"none",background:"#141210",color:"#F4F0E8",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Encontrar clube</button>
-          <button onClick={()=>setDiscoverTab("tournaments")} style={{padding:"12px 20px",borderRadius:11,border:"1.5px solid rgba(0,0,0,.12)",background:"#FFFFFF",color:"#141210",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Ver torneios</button>
-        </div>
       </section>
 
-      <section style={{maxWidth:1040,margin:"-20px auto 0",padding:"0 20px",position:"relative",zIndex:2}}>
-        <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:16,padding:"18px",display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:14,boxShadow:"0 8px 28px rgba(0,0,0,.06)"}}>
+      <section style={{maxWidth:1040,margin:"-34px auto 0",padding:"0 20px",position:"relative",zIndex:2,textAlign:"center"}}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:18}}>
           {[
             {t:"Marca em segundos",s:"Escolhe dia, hora e campo sem telefonemas."},
             {t:"Torneios perto de ti",s:"Encontra inscrições abertas e acompanha quadros."},
             {t:"Os teus jogos",s:"Consulta reservas e inscrições no mesmo sítio."},
             {t:"Clubes de confiança",s:"Informação clara sobre preços, horários e contactos."},
           ].map(x=>(
-            <div key={x.t}>
-              <div style={{fontSize:13,fontWeight:800,color:"#141210",marginBottom:3}}>{x.t}</div>
-              <div style={{fontSize:12,color:"#7A766F",lineHeight:1.45}}>{x.s}</div>
+            <div key={x.t} style={{padding:"8px 10px"}}>
+              <div style={{fontSize:13,fontWeight:800,color:"#141210",marginBottom:4}}>{x.t}</div>
+              <div style={{fontSize:12,color:"#7A766F",lineHeight:1.45,maxWidth:190,margin:"0 auto"}}>{x.s}</div>
             </div>
           ))}
         </div>
       </section>
 
       {/* DISCOVER TABS */}
-      <div style={{maxWidth:1040,margin:"0 auto",padding:"28px 20px 0",display:"flex",justifyContent:"center"}}>
+      <div style={{maxWidth:1040,margin:"0 auto",padding:"14px 20px 0",display:"flex",justifyContent:"center"}}>
         <div style={{display:"inline-flex",gap:2,background:"rgba(0,0,0,.06)",borderRadius:12,padding:4}}>
           <button onClick={()=>setDiscoverTab("clubs")} style={{padding:"10px 32px",borderRadius:9,border:"none",background:discoverTab==="clubs"?"#141210":"transparent",color:discoverTab==="clubs"?"#F4F0E8":"#7A766F",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",transition:"all .18s",letterSpacing:"-.2px"}}>Clubes</button>
           <button onClick={()=>setDiscoverTab("tournaments")} style={{padding:"10px 32px",borderRadius:9,border:"none",background:discoverTab==="tournaments"?"#141210":"transparent",color:discoverTab==="tournaments"?"#F4F0E8":"#7A766F",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",transition:"all .18s",letterSpacing:"-.2px"}}>Torneios</button>
@@ -2637,8 +2633,9 @@ function TournamentSchedulePublic({schedule=[]}){
 // ═══════════════════════════════════════════════════════════════════════════════
 function TournamentRegistration({tournaments,onRegister,onBack}){
   const open = tournaments.filter(t=>t.status==="open");
-  const [sel, setSel] = useState(null);
-  const [form, setForm] = useState({p1:"",p2:"",contact:"",catId:""});
+  const [sel, setSel] = useState(open.length===1?open[0]:null);
+  const firstCat = open.length===1&&open[0].categories.length===1 ? open[0].categories[0].id : "";
+  const [form, setForm] = useState({p1:"",p2:"",contact:"",catId:firstCat});
   const [done, setDone] = useState(false);
   const [err, setErr] = useState("");
   const set=(k,v)=>setForm(p=>({...p,[k]:v}));
@@ -2655,14 +2652,14 @@ function TournamentRegistration({tournaments,onRegister,onBack}){
       <div style={{fontSize:48,marginBottom:16}}>✅</div>
       <div style={{fontSize:20,fontWeight:800,color:"#141210",letterSpacing:"-.5px",marginBottom:8}}>Inscrição enviada!</div>
       <div style={{fontSize:14,color:"#7A766F",maxWidth:280,margin:"0 auto",lineHeight:1.65}}>A tua inscrição foi submetida. O clube irá confirmar em breve.</div>
-      <button style={{marginTop:24,padding:"11px 24px",borderRadius:10,background:"#141210",color:"#F4F0E8",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>{setDone(false);setSel(null);setForm({p1:"",p2:"",contact:"",catId:""});}}>← Ver Torneios</button>
+        <button style={{marginTop:24,padding:"11px 24px",borderRadius:10,background:"#141210",color:"#F4F0E8",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>{setDone(false);if(open.length===1){onBack();return;}setSel(null);setForm({p1:"",p2:"",contact:"",catId:""});}}>← Ver Torneios</button>
     </div>
   );
 
   if(sel) return(
     <div style={{background:"#F4F0E8",minHeight:"calc(100vh - 52px)"}}>
       <div style={{position:"sticky",top:52,background:"rgba(244,240,232,.95)",backdropFilter:"blur(16px)",borderBottom:"1px solid rgba(0,0,0,.09)",padding:"0 18px",height:48,display:"flex",alignItems:"center",gap:10}}>
-        <button style={{display:"flex",alignItems:"center",gap:6,color:"#7A766F",background:"none",border:"none",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>setSel(null)}>← Torneios</button>
+        <button style={{display:"flex",alignItems:"center",gap:6,color:"#7A766F",background:"none",border:"none",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>open.length===1?onBack():setSel(null)}>← Torneios</button>
         <span style={{fontWeight:800,fontSize:14,color:"#141210",flex:1}}>Inscrição</span>
       </div>
       <div style={{maxWidth:540,margin:"0 auto",padding:"20px 18px 80px"}}>
