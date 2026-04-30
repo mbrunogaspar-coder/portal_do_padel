@@ -162,8 +162,8 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-gate-options{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:720px;margin:0 auto}
 .pt-gate-card{background:rgba(255,255,255,.78);border:1px solid rgba(0,0,0,.08);border-radius:22px;padding:26px 24px;text-align:center;cursor:pointer;box-shadow:0 18px 50px rgba(20,18,16,.07);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;font-family:inherit;color:#141210;display:flex;flex-direction:column;align-items:center}
 .pt-gate-card:hover{transform:translateY(-3px);box-shadow:0 24px 64px rgba(20,18,16,.11);border-color:rgba(0,0,0,.16)}
-.pt-gate-icon{width:46px;height:46px;border-radius:15px;background:#141210;color:#F4F0E8;display:flex;align-items:center;justify-content:center;font-size:13px;margin-bottom:18px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}
-.pt-gate-card h2{font-size:24px;line-height:1;letter-spacing:-.7px;margin-bottom:8px}
+.pt-gate-icon{display:none}
+.pt-gate-card h2{font-size:30px;line-height:.95;letter-spacing:-1px;margin-bottom:12px}
 .pt-gate-card p{font-size:14px;color:#7A766F;line-height:1.6;margin:0 auto 22px;max-width:300px}
 .pt-gate-action{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:900;border-radius:99px;background:#F4F0E8;border:1px solid rgba(0,0,0,.10);padding:9px 13px}
 .pt-gate-card.primary{background:#141210;color:#F4F0E8}
@@ -928,13 +928,11 @@ function AudienceGate({onPlayer,onClub}){
         <p className="pt-gate-copy">Uma experiência limpa para quem joga. Uma área simples para quem gere campos, reservas e torneios.</p>
         <div className="pt-gate-options">
           <button className="pt-gate-card primary" onClick={onPlayer}>
-            <div className="pt-gate-icon">J</div>
             <h2>Sou jogador</h2>
             <p>Encontrar clubes, reservar campos e inscrever-me em torneios perto de mim.</p>
             <span className="pt-gate-action">Entrar nas reservas →</span>
           </button>
           <button className="pt-gate-card" onClick={onClub}>
-            <div className="pt-gate-icon">C</div>
             <h2>Sou clube</h2>
             <p>Gerir campos, torneios e pedidos de reserva sem comissões por marcação.</p>
             <span className="pt-gate-action">Área de clubes →</span>
