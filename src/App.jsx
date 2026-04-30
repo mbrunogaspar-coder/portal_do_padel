@@ -130,9 +130,11 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 
 /* ── TOP MODESWITCH ── */
 .pt-top-wrap{position:sticky;top:0;z-index:200}
-.pt-club-strip{min-height:38px;background:#141210;color:#F4F0E8;display:flex;align-items:center;justify-content:center;gap:12px;padding:6px 18px;text-align:center;border-bottom:1px solid rgba(244,240,232,.12)}
-.pt-club-strip-copy{font-size:12px;font-weight:600;color:rgba(244,240,232,.82);letter-spacing:-.1px}
-.pt-club-strip-btn{border:1px solid rgba(244,240,232,.26);background:#F4F0E8;color:#141210;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap}
+.pt-club-strip{min-height:50px;background:#141210;color:#F4F0E8;display:flex;align-items:center;justify-content:center;gap:18px;padding:9px 18px;text-align:center;border-bottom:1px solid rgba(244,240,232,.12);box-shadow:0 12px 30px rgba(0,0,0,.12)}
+.pt-club-strip-copy{font-size:14px;font-weight:800;color:#F4F0E8;letter-spacing:-.15px;line-height:1.1}
+.pt-club-strip-copy small{display:block;margin-top:2px;font-size:11px;font-weight:500;color:rgba(244,240,232,.62);letter-spacing:0}
+.pt-club-strip-btn{border:1px solid rgba(244,240,232,.34);background:#F4F0E8;color:#141210;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.22);transition:transform .15s ease,box-shadow .15s ease}
+.pt-club-strip-btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(0,0,0,.28)}
 .pt-top{background:rgba(244,240,232,0.95);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(0,0,0,0.09);height:52px;display:flex;align-items:center;padding:0 18px;gap:12px}
 .pt-top-brand{display:flex;align-items:center;gap:9px;flex:1;min-width:0}
 .pt-top-mark{width:30px;height:30px;border-radius:8px;background:#141210;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#F4F0E8;flex-shrink:0;letter-spacing:-.3px}
@@ -584,9 +586,10 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 @media(max-width:767px){
   .pt-asb{display:none!important}
   :root{--bnav:62px}
-  .pt-club-strip{justify-content:space-between;text-align:left;gap:10px;padding:8px 12px}
-  .pt-club-strip-copy{font-size:11px;line-height:1.25}
-  .pt-club-strip-btn{font-size:11px;padding:7px 10px;border-radius:7px}
+  .pt-club-strip{min-height:58px;justify-content:space-between;text-align:left;gap:12px;padding:9px 12px}
+  .pt-club-strip-copy{font-size:13px;line-height:1.15}
+  .pt-club-strip-copy small{font-size:10px;line-height:1.25}
+  .pt-club-strip-btn{font-size:12px;padding:9px 12px;border-radius:9px}
   .pt-top{padding:0 12px;gap:8px}
   .pt-mode{padding:5px 8px}
   .pt-hero{padding:46px 18px 44px}
@@ -758,7 +761,7 @@ export default function App() {
         {/* TOP NAV — hidden during auth screens */}
         {!authScreen && !(currentUser?.type==="super" && mode==="admin") && <div className="pt-top-wrap">
           <div className="pt-club-strip">
-            <span className="pt-club-strip-copy">Tens um clube de padel?</span>
+            <span className="pt-club-strip-copy">Tens um clube de padel?<small>Entra com mensalidade fixa e zero comissões.</small></span>
             <button className="pt-club-strip-btn" onClick={()=>setAuthScreen("clubRegister")}>Registar clube</button>
           </div>
           <div className="pt-top">
@@ -984,6 +987,7 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
     ? club.courts.filter(c=>c.active!==false)
     : Array.from({length:club.courts||4},(_,i)=>({id:i+1,name:`Court ${i+1}`,indoor:i<(club.indoor||2),active:true}));
   const days   = FDAYS.slice(0, club.advanceDays||14);
+  const openTourneys = (tournaments||[]).filter(t=>t.status==="open");
 
   useEffect(()=>{ setTime(null); setCt(null); },[selDay,selDur]);
   useEffect(()=>{ setCt(null); },[selTime]);
@@ -1015,7 +1019,7 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
         <div style={{display:"flex",background:"rgba(0,0,0,.07)",borderRadius:7,padding:"2px",gap:"2px"}}>
           <button onClick={()=>setPortalTab("reserve")} style={{padding:"4px 10px",borderRadius:5,fontSize:11,fontWeight:600,border:"none",background:portalTab==="reserve"?"#141210":"transparent",color:portalTab==="reserve"?"#F4F0E8":"#7A766F",cursor:"pointer",fontFamily:"inherit"}}>Reservar</button>
           <button onClick={()=>setPortalTab("mybookings")} style={{padding:"4px 10px",borderRadius:5,fontSize:11,fontWeight:600,border:"none",background:portalTab==="mybookings"?"#141210":"transparent",color:portalTab==="mybookings"?"#F4F0E8":"#7A766F",cursor:"pointer",fontFamily:"inherit"}}>As Minhas</button>
-          <button onClick={()=>setPortalTab("tournaments")} style={{padding:"4px 10px",borderRadius:5,fontSize:11,fontWeight:600,border:"none",background:portalTab==="tournaments"?"#141210":"transparent",color:portalTab==="tournaments"?"#F4F0E8":"#7A766F",cursor:"pointer",fontFamily:"inherit"}}>Torneios</button>
+          <button onClick={()=>setPortalTab("tournaments")} style={{padding:"4px 10px",borderRadius:5,fontSize:11,fontWeight:600,border:"none",background:portalTab==="tournaments"?"#141210":openTourneys.length?"#DDF7E7":"transparent",color:portalTab==="tournaments"?"#F4F0E8":openTourneys.length?"#0F6B3A":"#7A766F",cursor:"pointer",fontFamily:"inherit"}}>Torneios{openTourneys.length?` (${openTourneys.length})`:""}</button>
         </div>
       </div>
 
@@ -1059,6 +1063,23 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
 
       {/* BOOKING FLOW */}
       <div className="pt-pbody">
+        {openTourneys.length>0&&(
+          <button
+            onClick={()=>setPortalTab("tournaments")}
+            style={{width:"100%",border:"1.5px solid rgba(15,107,58,.18)",background:"#EAFBF0",borderRadius:14,padding:"14px 16px",margin:"0 0 18px",display:"flex",alignItems:"center",gap:12,textAlign:"left",cursor:"pointer",fontFamily:"inherit",boxShadow:"0 8px 24px rgba(15,107,58,.08)"}}
+          >
+            <span style={{width:34,height:34,borderRadius:10,background:"#0F6B3A",color:"#FFFFFF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>🏆</span>
+            <span style={{flex:1,minWidth:0}}>
+              <span style={{display:"block",fontSize:13,fontWeight:900,color:"#0F6B3A",letterSpacing:"-.15px"}}>
+                {openTourneys.length===1?"Torneio com inscrições abertas":"Torneios com inscrições abertas"}
+              </span>
+              <span style={{display:"block",fontSize:12,color:"#527861",marginTop:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                {openTourneys.length===1?openTourneys[0].name:`${openTourneys.length} torneios disponíveis neste clube`}
+              </span>
+            </span>
+            <span style={{fontSize:12,fontWeight:900,color:"#0F6B3A",whiteSpace:"nowrap"}}>Ver →</span>
+          </button>
+        )}
 
         {/* 1 — DAY */}
         <div className="pt-psec">
@@ -2167,7 +2188,7 @@ function TournamentDetail({t,cfg,onBack,onUpdate}){
 
   // Advance tournament status
   const advanceStatus=()=>{
-    let next={draft:"open",open:"closed",closed:format==="normal"?"knockouts":"groups",groups:"finished",knockouts:"finished"}[t.status];
+    let next={draft:"open",open:format==="normal"?"knockouts":"groups",closed:format==="normal"?"knockouts":"groups",groups:"finished",knockouts:"finished"}[t.status];
     if(!next)return;
     let extra={};
     if((next==="groups"||next==="knockouts")&&t.categories.some(cat=>approvedPairs(cat).length<2)){
@@ -2744,7 +2765,7 @@ function TournamentRegistration({tournaments,onRegister,onBack}){
                 ))}
               </div>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                <div style={{fontSize:12,color:"#B5B0A8"}}>{t.categories.reduce((s,c)=>s+c.pairs.filter(p=>p.status==="approved").length,0)} pares inscritos</div>
+                <div style={{fontSize:12,color:"#B5B0A8"}}>Inscrição rápida</div>
                 <button style={{padding:"8px 16px",borderRadius:9,background:"#141210",color:"#F4F0E8",border:"none",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Inscrever →</button>
               </div>
             </div>
@@ -2933,7 +2954,7 @@ function WaitlistModal({club,day,time,dur,onClose,onJoin}){
 }
 
 // ── PUBLIC TOURNAMENT BRACKET ─────────────────────────────────────────────────
-function TournamentPublicView({t,onBack}){
+function TournamentPublicView({t,onBack,onRegister}){
   const [selCat,setSelCat]=useState(t.categories[0]?.id||null);
   const cat=t.categories.find(c=>c.id===selCat);
   const pn=(pid)=>pairNameFromT(t,pid);
@@ -2956,21 +2977,16 @@ function TournamentPublicView({t,onBack}){
             ))}
           </div>
         )}
-        <TournamentSchedulePublic schedule={t.schedule||[]}/>
+        {t.status!=="open"&&<TournamentSchedulePublic schedule={t.schedule||[]}/>}
         {cat&&(
           <>
             {t.status==="open"&&(
-              <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,padding:"16px",marginBottom:12}}>
-                <div style={{fontSize:14,fontWeight:800,color:"#141210",marginBottom:6}}>Inscrições abertas</div>
-                <div style={{fontSize:13,color:"#7A766F",lineHeight:1.55,marginBottom:12}}>
-                  {TOURNAMENT_FORMATS[t.format||"normal"]?.label||"Torneio"} · {cat.pairs.filter(p=>p.status==="approved").length} dupla{cat.pairs.filter(p=>p.status==="approved").length!==1?"s":""} confirmada{cat.pairs.filter(p=>p.status==="approved").length!==1?"s":""}
+              <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:14,padding:"20px",marginBottom:12,textAlign:"center"}}>
+                <div style={{fontSize:15,fontWeight:800,color:"#141210",marginBottom:6}}>Inscrições abertas</div>
+                <div style={{fontSize:13,color:"#7A766F",lineHeight:1.55,margin:"0 auto 16px",maxWidth:360}}>
+                  Garante a tua dupla nesta categoria. O quadro e o calendário ficam visíveis quando o clube encerrar as inscrições.
                 </div>
-                <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-                  {cat.pairs.slice(0,8).map(p=>(
-                    <span key={p.id} style={{fontSize:11,fontWeight:700,padding:"4px 9px",borderRadius:99,background:"#F4F0E8",color:"#7A766F"}}>{p.p1} / {p.p2}</span>
-                  ))}
-                  {cat.pairs.length===0&&<span style={{fontSize:12,color:"#B5B0A8"}}>Ainda sem inscrições nesta categoria.</span>}
-                </div>
+                {onRegister&&<button onClick={()=>onRegister(t)} style={{width:"100%",padding:"13px",borderRadius:10,background:"#141210",color:"#F4F0E8",border:"none",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Inscrever →</button>}
               </div>
             )}
 
@@ -3032,9 +3048,9 @@ function TournamentPublicView({t,onBack}){
                 </div>
               ):null;
             })()}
-            {(t.status==="open"||t.status==="draft"||t.status==="closed")&&(
+            {(t.status==="draft"||t.status==="closed")&&(
               <div style={{textAlign:"center",padding:"32px 0",color:"#B5B0A8",fontSize:13}}>
-                {t.status==="open"?"Inscrições abertas. Fase de grupos ainda não iniciada.":t.status==="closed"?"Inscrições encerradas. Aguarda início dos grupos.":"Torneio em preparação."}
+                {t.status==="closed"?"Inscrições encerradas. Aguarda geração do quadro e calendário.":"Torneio em preparação."}
               </div>
             )}
           </>
@@ -3180,7 +3196,7 @@ function TournamentPortalView({tournaments,onRegister}){
   const [viewing,setViewing]=useState(null);
   const [registering,setRegistering]=useState(null); // tournament object to register in
   const t=viewing?tournaments.find(x=>x.id===viewing):null;
-  if(t) return <TournamentPublicView t={t} onBack={()=>setViewing(null)}/>;
+  if(t) return <TournamentPublicView t={t} onBack={()=>setViewing(null)} onRegister={(tour)=>{setViewing(null);setRegistering(tour);}}/>;
   if(registering) return <TournamentRegistration tournaments={[registering]} onRegister={onRegister} onBack={()=>setRegistering(null)}/>;
   const open=tournaments.filter(t=>t.status==="open");
   const active=tournaments.filter(t=>["groups","knockouts","finished","scheduling","closed"].includes(t.status));
@@ -3203,8 +3219,7 @@ function TournamentPortalView({tournaments,onRegister}){
               <div style={{fontSize:12,color:"#7A766F",marginBottom:10}}>📅 {t.startDate}{t.endDate&&t.endDate!==t.startDate?` → ${t.endDate}`:""}</div>
               <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>{t.categories.map(c=><span key={c.id} style={{fontSize:11,fontWeight:700,padding:"3px 9px",borderRadius:99,background:"#F4F0E8",color:"#7A766F"}}>{c.id}</span>)}</div>
               <div style={{display:"flex",gap:8}}>
-                <button onClick={()=>setViewing(t.id)} style={{flex:1,padding:"9px",borderRadius:9,background:"transparent",color:"#141210",border:"1.5px solid rgba(0,0,0,.12)",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Ver quadro</button>
-                <button onClick={()=>setRegistering(t)} style={{flex:1,padding:"9px",borderRadius:9,background:"#141210",color:"#F4F0E8",border:"none",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Inscrever →</button>
+                <button onClick={()=>setRegistering(t)} style={{flex:1,padding:"11px",borderRadius:9,background:"#141210",color:"#F4F0E8",border:"none",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Inscrever →</button>
               </div>
             </div>
           </div>
@@ -3908,7 +3923,7 @@ function DiscoverTournaments({ allTournaments, onRegister, currentUser }) {
   const filtered = (list) => region==="all" ? list :
     list.filter(({club}) => club?.region===region || (club?.city||"").toLowerCase().includes(region));
 
-  if(selT) return <TournamentPublicView t={selT.tournament} onBack={()=>setSelT(null)}/>;
+  if(selT) return <TournamentPublicView t={selT.tournament} onBack={()=>setSelT(null)} onRegister={(tour)=>onRegister({tournament:tour,club:selT.club})}/>;
 
   return (
     <div style={{background:"#F4F0E8", minHeight:"calc(100vh - 52px)"}}>
@@ -3944,8 +3959,7 @@ function DiscoverTournaments({ allTournaments, onRegister, currentUser }) {
                     {t.categories.map(c=><span key={c.id} style={{fontSize:11,fontWeight:700,padding:"3px 9px",borderRadius:99,background:"#F4F0E8",color:"#7A766F"}}>{c.id}</span>)}
                   </div>
                   <div style={{display:"flex",gap:8}}>
-                    <button onClick={()=>setSelT({tournament:t,club})} style={{flex:1,padding:"9px",borderRadius:9,background:"transparent",color:"#141210",border:"1.5px solid rgba(0,0,0,.12)",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Ver quadro</button>
-                    <button onClick={()=>onRegister({tournament:t,club})} style={{flex:1,padding:"9px",borderRadius:9,background:"#141210",color:"#F4F0E8",border:"none",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Inscrever →</button>
+                    <button onClick={()=>onRegister({tournament:t,club})} style={{flex:1,padding:"11px",borderRadius:9,background:"#141210",color:"#F4F0E8",border:"none",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Inscrever →</button>
                   </div>
                 </div>
               </div>
