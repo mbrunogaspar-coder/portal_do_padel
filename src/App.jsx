@@ -3593,13 +3593,20 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
 
   return (
     <AuthLayout title="Registar clube" subtitle="Pede a entrada do teu clube no Portal do Padel">
-      <div style={{background:"#141210",color:"#F4F0E8",borderRadius:14,padding:"16px",marginBottom:16}}>
-        <div style={{fontSize:16,fontWeight:800,letterSpacing:"-.4px",marginBottom:6}}>Mensalidade fixa. Zero comissões.</div>
-        <div style={{fontSize:12,color:"rgba(244,240,232,.72)",lineHeight:1.55}}>Reservas, torneios e gestão de campos sem taxa por reserva, sem comissão por torneio e sem perder a relação com os teus jogadores.</div>
+      <div style={{textAlign:"center",margin:"0 auto 18px",maxWidth:420}}>
+        <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"5px 12px",borderRadius:99,background:"rgba(20,18,16,.06)",color:"#7A766F",fontSize:10,fontWeight:800,letterSpacing:"1.3px",textTransform:"uppercase",marginBottom:12}}>
+          <span style={{width:5,height:5,borderRadius:"50%",background:"#141210"}}/>Para clubes
+        </div>
+        <div style={{fontSize:20,fontWeight:800,color:"#141210",letterSpacing:"-.7px",lineHeight:1.05,marginBottom:8}}>
+          Gestão simples, mensalidade fixa.
+        </div>
+        <div style={{fontSize:13,color:"#7A766F",lineHeight:1.6}}>
+          Reservas, torneios e gestão de campos sem comissão por reserva e sem perder a relação com os teus jogadores.
+        </div>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
-        {["Reservas ilimitadas","Torneios ilimitados","Clientes do clube","Setup acompanhado"].map(x=>(
-          <div key={x} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.08)",borderRadius:10,padding:"10px 11px",fontSize:12,fontWeight:700,color:"#141210"}}>{x}</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:18}}>
+        {["Zero comissões","Preço fixo","Torneios fáceis","Setup acompanhado"].map(x=>(
+          <div key={x} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.08)",borderRadius:12,padding:"11px 10px",fontSize:12,fontWeight:800,color:"#141210",textAlign:"center",boxShadow:"0 1px 6px rgba(0,0,0,.035)"}}>{x}</div>
         ))}
       </div>
       <AuthInput label="Nome do clube" value={f.name} onChange={e=>set("name",e.target.value)} placeholder="Ex: Padel Arena Lisboa" error={errs.name}/>
