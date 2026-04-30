@@ -148,6 +148,41 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-club-mode{background:transparent!important;color:#7A766F!important;padding:5px 9px}
 .pt-login-btn{font-size:11px;font-weight:700;padding:7px 14px;border-radius:7px;background:#141210;color:#F4F0E8;border:none;cursor:pointer;font-family:inherit;flex-shrink:0}
 
+/* ── ENTRY GATE ── */
+.pt-gate{min-height:100vh;background:linear-gradient(180deg,#FBFAF7 0%,#F4F0E8 56%,#ECE7DE 100%);display:flex;align-items:center;justify-content:center;padding:28px 20px;color:#141210}
+.pt-gate-inner{width:100%;max-width:920px;text-align:center}
+.pt-gate-brand{display:inline-flex;align-items:center;gap:10px;margin-bottom:34px}
+.pt-gate-mark{width:38px;height:38px;border-radius:11px;background:#141210;color:#F4F0E8;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;letter-spacing:-.4px}
+.pt-gate-name{text-align:left}
+.pt-gate-name b{display:block;font-size:15px;letter-spacing:-.3px}
+.pt-gate-name span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:1.8px;color:#B5B0A8;font-weight:700}
+.pt-gate-kicker{display:inline-flex;align-items:center;gap:7px;background:#141210;color:#F4F0E8;border-radius:99px;padding:6px 14px;font-size:10px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;box-shadow:0 12px 28px rgba(20,18,16,.13)}
+.pt-gate-title{font-family:'DM Serif Display','DM Sans',system-ui,sans-serif;font-size:clamp(44px,8vw,86px);line-height:.9;letter-spacing:-2.5px;margin-bottom:16px}
+.pt-gate-copy{font-size:16px;color:#7A766F;line-height:1.7;max-width:520px;margin:0 auto 34px}
+.pt-gate-options{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:720px;margin:0 auto}
+.pt-gate-card{background:rgba(255,255,255,.78);border:1px solid rgba(0,0,0,.08);border-radius:22px;padding:24px;text-align:left;cursor:pointer;box-shadow:0 18px 50px rgba(20,18,16,.07);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;font-family:inherit;color:#141210}
+.pt-gate-card:hover{transform:translateY(-3px);box-shadow:0 24px 64px rgba(20,18,16,.11);border-color:rgba(0,0,0,.16)}
+.pt-gate-icon{width:44px;height:44px;border-radius:14px;background:#141210;color:#F4F0E8;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:18px}
+.pt-gate-card h2{font-size:24px;line-height:1;letter-spacing:-.7px;margin-bottom:8px}
+.pt-gate-card p{font-size:14px;color:#7A766F;line-height:1.6;margin-bottom:22px}
+.pt-gate-action{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:900;border-radius:99px;background:#F4F0E8;border:1px solid rgba(0,0,0,.10);padding:9px 13px}
+.pt-gate-card.primary{background:#141210;color:#F4F0E8}
+.pt-gate-card.primary p{color:rgba(244,240,232,.62)}
+.pt-gate-card.primary .pt-gate-icon{background:#F4F0E8;color:#141210}
+.pt-gate-card.primary .pt-gate-action{background:#F4F0E8;color:#141210}
+.pt-club-gateway{min-height:calc(100vh - 52px);background:linear-gradient(180deg,#FBFAF7 0%,#F4F0E8 62%,#ECE7DE 100%);display:flex;align-items:center;justify-content:center;padding:56px 20px}
+.pt-club-gateway-inner{width:100%;max-width:860px;text-align:center}
+.pt-club-gateway-title{font-family:'DM Serif Display','DM Sans',system-ui,sans-serif;font-size:clamp(42px,8vw,78px);line-height:.9;letter-spacing:-2.2px;margin-bottom:16px}
+.pt-club-gateway-copy{font-size:16px;color:#7A766F;line-height:1.7;max-width:560px;margin:0 auto 28px}
+.pt-club-gateway-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.pt-club-gateway-primary,.pt-club-gateway-secondary{border:none;border-radius:14px;padding:14px 22px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit}
+.pt-club-gateway-primary{background:#141210;color:#F4F0E8;box-shadow:0 14px 34px rgba(20,18,16,.18)}
+.pt-club-gateway-secondary{background:#FFFFFF;color:#141210;border:1px solid rgba(0,0,0,.10)}
+.pt-club-gateway-points{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:720px;margin:0 auto}
+.pt-club-gateway-point{background:rgba(255,255,255,.72);border:1px solid rgba(0,0,0,.08);border-radius:16px;padding:18px 16px;box-shadow:0 12px 34px rgba(20,18,16,.05)}
+.pt-club-gateway-point b{display:block;font-size:15px;letter-spacing:-.2px;margin-bottom:5px}
+.pt-club-gateway-point span{display:block;font-size:12px;color:#7A766F;line-height:1.45}
+
 /* ── DISCOVERY ── */
 .pt-page{background:#F4F0E8;min-height:calc(100vh - 52px)}
 
@@ -595,6 +630,19 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
   .pt-club-strip-btn{font-size:12px;padding:9px 12px;border-radius:9px}
   .pt-top{padding:0 12px;gap:8px}
   .pt-mode{padding:5px 8px}
+  .pt-gate{align-items:flex-start;padding-top:46px}
+  .pt-gate-brand{margin-bottom:28px}
+  .pt-gate-title{font-size:48px;letter-spacing:-1.7px}
+  .pt-gate-copy{font-size:15px;margin-bottom:24px}
+  .pt-gate-options{grid-template-columns:1fr;gap:10px}
+  .pt-gate-card{border-radius:18px;padding:20px;text-align:center}
+  .pt-gate-icon{margin:0 auto 14px}
+  .pt-club-gateway{align-items:flex-start;padding:46px 18px}
+  .pt-club-gateway-title{font-size:46px;letter-spacing:-1.7px}
+  .pt-club-gateway-copy{font-size:15px}
+  .pt-club-gateway-actions{flex-direction:column}
+  .pt-club-gateway-primary,.pt-club-gateway-secondary{width:100%}
+  .pt-club-gateway-points{grid-template-columns:1fr}
   .pt-hero{padding:46px 18px 44px}
   .pt-h1{font-size:48px;letter-spacing:-1.8px;margin-bottom:18px}
   .pt-sub{font-size:15px;line-height:1.55;margin-bottom:28px}
@@ -666,6 +714,7 @@ function usePersist(key, defaultValue) {
 export default function App() {
   const [mode,    setMode]   = useState("discover");
   const [club,    setClub]   = useState(null);
+  const [audience,setAudience] = usePersist("audience", null); // "player" | "club"
 
   // ── AUTH STATE ──
   const [athletes,    setAthletes]     = usePersist("athletes",    []);
@@ -676,6 +725,13 @@ export default function App() {
   const [pendingTournamentReg, setPendingTournamentReg] = useState(null);
 
   const logout = () => { setCurrentUser(null); setAuthScreen(null); setMode("discover"); };      // selected club (portal)
+  const chooseAudience = (kind) => {
+    setAudience(kind);
+    setAuthScreen(null);
+    setShowProfile(false);
+    setClub(null);
+    setMode("discover");
+  };
   const [adminCfg,setAdmin]  = usePersist("cfg",       DEF_CLUB);
   const [bookings,setBook]   = usePersist("bookings",  INIT_B);
   const [contacts,setConts]  = usePersist("contacts",  INIT_C);
@@ -779,26 +835,19 @@ export default function App() {
     <>
       <style>{CSS}</style>
       <div style={{minHeight:"100vh",background:mode==="admin"?"#0E0D0B":"#F4F0E8"}}>
+        {!audience && !authScreen && !currentUser && (
+          <AudienceGate onPlayer={()=>chooseAudience("player")} onClub={()=>chooseAudience("club")}/>
+        )}
+
         {/* TOP NAV — hidden during auth screens */}
-        {!authScreen && !(currentUser?.type==="super" && mode==="admin") && <div className="pt-top-wrap">
-          <div className="pt-club-strip">
-            <span className="pt-club-strip-copy">Tens um clube de padel?<small>Entra com mensalidade fixa e zero comissões.</small></span>
-            <button className="pt-club-strip-btn" onClick={()=>setAuthScreen("clubRegister")}>Registar clube</button>
-          </div>
+        {audience && !authScreen && !(currentUser?.type==="super" && mode==="admin") && <div className="pt-top-wrap">
           <div className="pt-top">
             <div className="pt-top-brand" style={{cursor:"pointer"}} onClick={()=>{setMode("discover");setClub(null);setAuthScreen(null);setShowProfile(false);}}>
               <div className="pt-top-mark">PP</div>
               <div>
                 <span className="pt-top-name">Portal do Padel</span>
-                <span className="pt-top-sub">Reservas</span>
+                <span className="pt-top-sub">{audience==="club"?"Clubes":"Reservas"}</span>
               </div>
-            </div>
-            <div className="pt-modes">
-              <button className={`pt-mode ${mode==="discover"?"on":""}`} onClick={()=>{setMode("discover");setClub(null);}}>Descobrir</button>
-              <button className={`pt-mode pt-club-mode ${mode==="admin"?"on":""}`} onClick={()=>{
-                if(currentUser?.type==="club"||currentUser?.type==="super") setMode("admin");
-                else setAuthScreen("clubLogin");
-              }}>Clubes</button>
             </div>
             {/* Auth user indicator */}
             {currentUser&&(
@@ -807,8 +856,18 @@ export default function App() {
                 <button onClick={logout} style={{fontSize:11,color:"#7A766F",background:"rgba(0,0,0,.06)",border:"none",cursor:"pointer",fontFamily:"inherit",padding:"4px 8px",borderRadius:6}}>Sair</button>
               </div>
             )}
-            {!currentUser&&(
-              <button className="pt-login-btn" onClick={()=>setAuthScreen("athleteLogin")}>Entrar</button>
+            {!currentUser&&audience==="player"&&(
+              <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
+                <button className="pt-mode" onClick={()=>setAudience(null)}>Mudar</button>
+                <button className="pt-login-btn" onClick={()=>setAuthScreen("athleteLogin")}>Entrar</button>
+              </div>
+            )}
+            {!currentUser&&audience==="club"&&(
+              <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
+                <button className="pt-mode" onClick={()=>setAudience(null)}>Mudar</button>
+                <button className="pt-mode" onClick={()=>setAuthScreen("clubLogin")}>Entrar</button>
+                <button className="pt-login-btn" onClick={()=>setAuthScreen("clubRegister")}>Registar</button>
+              </div>
             )}
           </div>
         </div>}
@@ -824,7 +883,11 @@ export default function App() {
         {/* Athlete profile */}
         {showProfile && currentUser?.type==="athlete" && <AthleteProfile athlete={currentUser.data} bookings={activeBookings} tournaments={activeTourneys} cfg={activeClubCfg} onEdit={()=>{}} onLogout={()=>{logout();setShowProfile(false);}} onBack={()=>setShowProfile(false)}/>}
 
-        {!authScreen && !showProfile && currentUser?.type!=="super" && <>
+        {audience==="club" && !authScreen && !showProfile && !currentUser && (
+          <ClubGateway onRegister={()=>setAuthScreen("clubRegister")} onLogin={()=>setAuthScreen("clubLogin")} onPlayer={()=>chooseAudience("player")}/>
+        )}
+
+        {audience==="player" && !authScreen && !showProfile && currentUser?.type!=="super" && <>
         {/* VIEWS */}
         {mode==="discover" && <DiscoverView onSelectClub={(c)=>{setClub(c);setMode("portal");}} allTournaments={[
       // Demo club tournaments
@@ -846,8 +909,61 @@ export default function App() {
         {/* addBooking defined in App scope */}
         {mode==="admin"    && <AdminView cfg={activeClubCfg} setCfg={setActiveClubCfg} bookings={activeBookings} contacts={activeContacts} blocks={activeBlocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={activeTourneys} setTournaments={setActiveTourneys} onAddBooking={addBooking}/>}
         </>}
+        {currentUser?.type==="club" && !authScreen && !showProfile && mode==="admin" && <AdminView cfg={activeClubCfg} setCfg={setActiveClubCfg} bookings={activeBookings} contacts={activeContacts} blocks={activeBlocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={activeTourneys} setTournaments={setActiveTourneys} onAddBooking={addBooking}/>}
       </div>
     </>
+  );
+}
+
+function AudienceGate({onPlayer,onClub}){
+  return(
+    <div className="pt-gate">
+      <div className="pt-gate-inner">
+        <div className="pt-gate-brand">
+          <div className="pt-gate-mark">PP</div>
+          <div className="pt-gate-name"><b>Portal do Padel</b><span>Reservas e clubes</span></div>
+        </div>
+        <div className="pt-gate-kicker">Escolhe a tua entrada</div>
+        <h1 className="pt-gate-title">Como queres<br/>entrar?</h1>
+        <p className="pt-gate-copy">Uma experiência limpa para quem joga. Uma área simples para quem gere campos, reservas e torneios.</p>
+        <div className="pt-gate-options">
+          <button className="pt-gate-card primary" onClick={onPlayer}>
+            <div className="pt-gate-icon">🎾</div>
+            <h2>Sou jogador</h2>
+            <p>Encontrar clubes, reservar campos e inscrever-me em torneios perto de mim.</p>
+            <span className="pt-gate-action">Entrar nas reservas →</span>
+          </button>
+          <button className="pt-gate-card" onClick={onClub}>
+            <div className="pt-gate-icon">🏟</div>
+            <h2>Sou clube</h2>
+            <p>Gerir campos, torneios e pedidos de reserva sem comissões por marcação.</p>
+            <span className="pt-gate-action">Área de clubes →</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ClubGateway({onRegister,onLogin,onPlayer}){
+  return(
+    <div className="pt-club-gateway">
+      <div className="pt-club-gateway-inner">
+        <div className="pt-gate-kicker">Para clubes</div>
+        <h1 className="pt-club-gateway-title">Gestão simples.<br/>Zero comissões.</h1>
+        <p className="pt-club-gateway-copy">Reservas, torneios e gestão de campos com mensalidade fixa. O clube mantém a relação com os jogadores e controla a operação sem complicar.</p>
+        <div className="pt-club-gateway-actions">
+          <button className="pt-club-gateway-primary" onClick={onRegister}>Registar clube</button>
+          <button className="pt-club-gateway-secondary" onClick={onLogin}>Entrar no backoffice</button>
+          <button className="pt-club-gateway-secondary" onClick={onPlayer}>Ver como jogador</button>
+        </div>
+        <div className="pt-club-gateway-points">
+          <div className="pt-club-gateway-point"><b>Preço fixo</b><span>Sem comissão por reserva ou torneio.</span></div>
+          <div className="pt-club-gateway-point"><b>Torneios</b><span>Inscrições, quadros e calendário editável.</span></div>
+          <div className="pt-club-gateway-point"><b>Reservas</b><span>Campos, horários e pedidos no mesmo sítio.</span></div>
+        </div>
+      </div>
+    </div>
   );
 }
 
