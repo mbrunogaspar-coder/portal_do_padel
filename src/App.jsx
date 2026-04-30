@@ -1049,10 +1049,17 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
             <span>☀️ Diurno <b>{priceD}€/jog.</b></span>
             <span>🌙 Noturno <b>{priceN}€/jog.</b> <span style={{opacity:.5}}>a partir das {nf}h</span></span>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,maxWidth:420,margin:"20px auto 0"}}>
-            <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,padding:"10px 8px"}}><div style={{fontSize:18,fontWeight:800,color:"#141210"}}>{courts.length}</div><div style={{fontSize:10,color:"#7A766F"}}>Campos</div></div>
-            <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,padding:"10px 8px"}}><div style={{fontSize:18,fontWeight:800,color:"#141210"}}>{club.openFrom||"08"}–{club.openTo||"22"}</div><div style={{fontSize:10,color:"#7A766F"}}>Horário</div></div>
-            <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,padding:"10px 8px"}}><div style={{fontSize:18,fontWeight:800,color:"#141210"}}>{(tournaments||[]).length}</div><div style={{fontSize:10,color:"#7A766F"}}>Torneios</div></div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10,maxWidth:360,margin:"22px auto 0"}}>
+            <div style={{background:"rgba(255,255,255,.72)",border:"1px solid rgba(0,0,0,.08)",borderRadius:14,padding:"13px 14px",boxShadow:"0 10px 26px rgba(0,0,0,.04)",textAlign:"left"}}>
+              <div style={{fontSize:10,fontWeight:800,color:"#B5B0A8",textTransform:"uppercase",letterSpacing:"1px",marginBottom:3}}>Campos</div>
+              <div style={{fontSize:24,fontWeight:900,color:"#141210",letterSpacing:"-.8px",lineHeight:1}}>{courts.length}</div>
+              <div style={{fontSize:11,color:"#7A766F",marginTop:4}}>disponíveis online</div>
+            </div>
+            <div style={{background:"rgba(255,255,255,.72)",border:"1px solid rgba(0,0,0,.08)",borderRadius:14,padding:"13px 14px",boxShadow:"0 10px 26px rgba(0,0,0,.04)",textAlign:"left"}}>
+              <div style={{fontSize:10,fontWeight:800,color:"#B5B0A8",textTransform:"uppercase",letterSpacing:"1px",marginBottom:3}}>Horário</div>
+              <div style={{fontSize:24,fontWeight:900,color:"#141210",letterSpacing:"-.8px",lineHeight:1}}>{club.openFrom||"08"}–{club.openTo||"22"}</div>
+              <div style={{fontSize:11,color:"#7A766F",marginTop:4}}>reservas abertas</div>
+            </div>
           </div>
           <div style={{display:"flex",justifyContent:"center",gap:8,flexWrap:"wrap",marginTop:14}}>
             {club.phone&&<a href={`tel:${club.phone}`} style={{fontSize:12,fontWeight:700,color:"#141210",textDecoration:"none",background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:99,padding:"7px 12px"}}>{club.phone}</a>}
@@ -1066,18 +1073,21 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
         {openTourneys.length>0&&(
           <button
             onClick={()=>setPortalTab("tournaments")}
-            style={{width:"100%",border:"1.5px solid rgba(15,107,58,.18)",background:"#EAFBF0",borderRadius:14,padding:"14px 16px",margin:"0 0 18px",display:"flex",alignItems:"center",gap:12,textAlign:"left",cursor:"pointer",fontFamily:"inherit",boxShadow:"0 8px 24px rgba(15,107,58,.08)"}}
+            style={{width:"100%",border:"1px solid rgba(0,0,0,.10)",background:"#FFFFFF",borderRadius:16,padding:"14px 16px",margin:"0 0 24px",display:"flex",alignItems:"center",gap:13,textAlign:"left",cursor:"pointer",fontFamily:"inherit",boxShadow:"0 12px 34px rgba(20,18,16,.07)"}}
           >
-            <span style={{width:34,height:34,borderRadius:10,background:"#0F6B3A",color:"#FFFFFF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>🏆</span>
+            <span style={{width:38,height:38,borderRadius:12,background:"#141210",color:"#F4F0E8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>🏆</span>
             <span style={{flex:1,minWidth:0}}>
-              <span style={{display:"block",fontSize:13,fontWeight:900,color:"#0F6B3A",letterSpacing:"-.15px"}}>
+              <span style={{display:"block",fontSize:10,fontWeight:900,color:"#B5B0A8",textTransform:"uppercase",letterSpacing:"1.2px",marginBottom:2}}>
+                Inscrições abertas
+              </span>
+              <span style={{display:"block",fontSize:14,fontWeight:900,color:"#141210",letterSpacing:"-.2px",lineHeight:1.15}}>
                 {openTourneys.length===1?"Torneio com inscrições abertas":"Torneios com inscrições abertas"}
               </span>
-              <span style={{display:"block",fontSize:12,color:"#527861",marginTop:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+              <span style={{display:"block",fontSize:12,color:"#7A766F",marginTop:3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
                 {openTourneys.length===1?openTourneys[0].name:`${openTourneys.length} torneios disponíveis neste clube`}
               </span>
             </span>
-            <span style={{fontSize:12,fontWeight:900,color:"#0F6B3A",whiteSpace:"nowrap"}}>Ver →</span>
+            <span style={{fontSize:12,fontWeight:900,color:"#141210",whiteSpace:"nowrap",border:"1px solid rgba(0,0,0,.12)",borderRadius:99,padding:"7px 11px",background:"#F4F0E8"}}>Ver →</span>
           </button>
         )}
 
