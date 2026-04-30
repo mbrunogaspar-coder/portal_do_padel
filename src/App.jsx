@@ -725,6 +725,15 @@ export default function App() {
   const [pendingTournamentReg, setPendingTournamentReg] = useState(null);
 
   const logout = () => { setCurrentUser(null); setAuthScreen(null); setMode("discover"); };      // selected club (portal)
+  const goHome = () => {
+    setCurrentUser(null);
+    setAuthScreen(null);
+    setShowProfile(false);
+    setClub(null);
+    setPendingTournamentReg(null);
+    setMode("discover");
+    setAudience(null);
+  };
   const chooseAudience = (kind) => {
     setAudience(kind);
     setAuthScreen(null);
@@ -842,7 +851,7 @@ export default function App() {
         {/* TOP NAV — hidden during auth screens */}
         {audience && !authScreen && !(currentUser?.type==="super" && mode==="admin") && <div className="pt-top-wrap">
           <div className="pt-top">
-            <div className="pt-top-brand" style={{cursor:"pointer"}} onClick={()=>{setMode("discover");setClub(null);setAuthScreen(null);setShowProfile(false);}}>
+            <div className="pt-top-brand" style={{cursor:"pointer"}} onClick={goHome}>
               <div className="pt-top-mark">PP</div>
               <div>
                 <span className="pt-top-name">Portal do Padel</span>
@@ -873,11 +882,11 @@ export default function App() {
         </div>}
 
         {/* AUTH SCREENS */}
-        {authScreen==="athleteLogin"    && <AthleteLogin  athletes={athletes} onLogin={a=>{setCurrentUser({type:"athlete",data:a});setAuthScreen(null);}} onGoRegister={()=>setAuthScreen("athleteRegister")} onBack={()=>setAuthScreen(null)}/>}
-        {authScreen==="athleteRegister" && <AthleteRegister athletes={athletes} onRegister={a=>{setAthletes(p=>[...p,a]);setCurrentUser({type:"athlete",data:a});setAuthScreen(null);}} onGoLogin={()=>setAuthScreen("athleteLogin")} onBack={()=>setAuthScreen(null)}/>}
-        {authScreen==="clubLogin"       && <ClubLogin clubs={regClubs} onLogin={c=>{setCurrentUser({type:"club",data:c});setAuthScreen(null);setMode("admin");}} onGoRegister={()=>setAuthScreen("clubRegister")} onSuperLogin={()=>{setCurrentUser({type:"super",data:{name:"Super Admin",email:SUPER_ADMIN.email}});setAuthScreen(null);setMode("admin");}} onBack={()=>setAuthScreen(null)}/>}
-        {authScreen==="clubRegister"    && <ClubRegister clubs={regClubs} onSubmit={c=>{setRegClubs(p=>[...p,c]);}} onGoLogin={()=>setAuthScreen("clubLogin")} onBack={()=>setAuthScreen(null)}/>}
-        {currentUser?.type==="super" && mode==="admin" && <SuperAdmin clubs={regClubs} onApprove={id=>setRegClubs(p=>p.map(c=>c.id===id?{...c,status:"approved"}:c))} onReject={id=>setRegClubs(p=>p.map(c=>c.id===id?{...c,status:"rejected"}:c))} onLogout={logout}/>}
+        {authScreen==="athleteLogin"    && <AthleteLogin  athletes={athletes} onLogin={a=>{setCurrentUser({type:"athlete",data:a});setAuthScreen(null);}} onGoRegister={()=>setAuthScreen("athleteRegister")} onBack={()=>setAuthScreen(null)} onHome={goHome}/>}
+        {authScreen==="athleteRegister" && <AthleteRegister athletes={athletes} onRegister={a=>{setAthletes(p=>[...p,a]);setCurrentUser({type:"athlete",data:a});setAuthScreen(null);}} onGoLogin={()=>setAuthScreen("athleteLogin")} onBack={()=>setAuthScreen(null)} onHome={goHome}/>}
+        {authScreen==="clubLogin"       && <ClubLogin clubs={regClubs} onLogin={c=>{setCurrentUser({type:"club",data:c});setAuthScreen(null);setMode("admin");}} onGoRegister={()=>setAuthScreen("clubRegister")} onSuperLogin={()=>{setCurrentUser({type:"super",data:{name:"Super Admin",email:SUPER_ADMIN.email}});setAuthScreen(null);setMode("admin");}} onBack={()=>setAuthScreen(null)} onHome={goHome}/>}
+        {authScreen==="clubRegister"    && <ClubRegister clubs={regClubs} onSubmit={c=>{setRegClubs(p=>[...p,c]);}} onGoLogin={()=>setAuthScreen("clubLogin")} onBack={()=>setAuthScreen(null)} onHome={goHome}/>}
+        {currentUser?.type==="super" && mode==="admin" && <SuperAdmin clubs={regClubs} onApprove={id=>setRegClubs(p=>p.map(c=>c.id===id?{...c,status:"approved"}:c))} onReject={id=>setRegClubs(p=>p.map(c=>c.id===id?{...c,status:"rejected"}:c))} onLogout={logout} onHome={goHome}/>}
 
         {/* MAIN VIEWS — only when no auth screen showing */}
         {/* Athlete profile */}
@@ -907,9 +916,9 @@ export default function App() {
       else setClubsData(prev=>({...prev,[pid]:{...(prev[pid]||{}),tournaments:updater((prev[pid]||{}).tournaments||[])}}));
     }} />}
         {/* addBooking defined in App scope */}
-        {mode==="admin"    && <AdminView cfg={activeClubCfg} setCfg={setActiveClubCfg} bookings={activeBookings} contacts={activeContacts} blocks={activeBlocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={activeTourneys} setTournaments={setActiveTourneys} onAddBooking={addBooking}/>}
+        {mode==="admin"    && <AdminView cfg={activeClubCfg} setCfg={setActiveClubCfg} bookings={activeBookings} contacts={activeContacts} blocks={activeBlocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={activeTourneys} setTournaments={setActiveTourneys} onAddBooking={addBooking} onHome={goHome}/>}
         </>}
-        {currentUser?.type==="club" && !authScreen && !showProfile && mode==="admin" && <AdminView cfg={activeClubCfg} setCfg={setActiveClubCfg} bookings={activeBookings} contacts={activeContacts} blocks={activeBlocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={activeTourneys} setTournaments={setActiveTourneys} onAddBooking={addBooking}/>}
+        {currentUser?.type==="club" && !authScreen && !showProfile && mode==="admin" && <AdminView cfg={activeClubCfg} setCfg={setActiveClubCfg} bookings={activeBookings} contacts={activeContacts} blocks={activeBlocks} notifs={notifs} onConfirm={confirmBk} onCancel={cancelBk} onUpdateCt={updateCt} onDeleteCt={deleteCt} onAddBlock={addBlock} onDelBlock={delBlock} showToast={showToast} toast={toast} tournaments={activeTourneys} setTournaments={setActiveTourneys} onAddBooking={addBooking} onHome={goHome}/>}
       </div>
     </>
   );
@@ -925,17 +934,17 @@ function AudienceGate({onPlayer,onClub}){
         </div>
         <h1 className="pt-gate-title">Como queres<br/>entrar?</h1>
         <div className="pt-gate-kicker">Escolhe a tua entrada</div>
-        <p className="pt-gate-copy">Uma experiência única para quem joga. Uma experiência eficaz para quem gere.</p>
+        <p className="pt-gate-copy">Uma experiência única para quem joga.<br/>Uma experiência eficaz para quem gere.</p>
         <div className="pt-gate-options">
           <button className="pt-gate-card primary" onClick={onPlayer}>
             <h2>Sou jogador</h2>
             <p>Encontrar clubes, reservar campos e inscrever-me em torneios perto de mim.</p>
-            <span className="pt-gate-action">Entrar nas reservas →</span>
+            <span className="pt-gate-action">Entrar →</span>
           </button>
           <button className="pt-gate-card" onClick={onClub}>
             <h2>Sou clube</h2>
             <p>Gerir campos, torneios e pedidos de reserva sem comissões por marcação.</p>
-            <span className="pt-gate-action">Área de clubes →</span>
+            <span className="pt-gate-action">Gerir →</span>
           </button>
         </div>
       </div>
@@ -1421,7 +1430,7 @@ function PortalSuccess({ data, onBack }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 // ADMIN VIEW
 // ═══════════════════════════════════════════════════════════════════════════════
-function AdminView({cfg,setCfg,bookings,contacts,blocks,notifs,onConfirm,onCancel,onUpdateCt,onDeleteCt,onAddBlock,onDelBlock,showToast,toast,tournaments,setTournaments,onAddBooking}) {
+function AdminView({cfg,setCfg,bookings,contacts,blocks,notifs,onConfirm,onCancel,onUpdateCt,onDeleteCt,onAddBlock,onDelBlock,showToast,toast,tournaments,setTournaments,onAddBooking,onHome}) {
   const [view,setView]=useState("dash");
   const [showN,setShowN]=useState(false);
   const [srch,setSrch]=useState("");
@@ -1436,7 +1445,7 @@ function AdminView({cfg,setCfg,bookings,contacts,blocks,notifs,onConfirm,onCance
     <div className="pt-admin">
       {/* SIDEBAR */}
       <aside className="pt-asb">
-        <div className="pt-asbl">
+        <div className="pt-asbl" style={{cursor:"pointer"}} onClick={onHome}>
           <div className="pt-asbl-av">{cfg.name.slice(0,2).toUpperCase()}</div>
           <div><div className="pt-asbl-name">{cfg.name}</div><div className="pt-asbl-role">Admin</div></div>
         </div>
@@ -3544,10 +3553,10 @@ const SUPER_ADMIN = { email: "admin@portaldopadel.pt", password: "pdp2026super" 
 
 // ── AUTH SCREENS ──────────────────────────────────────────────────────────────
 
-function AuthLayout({ children, title, subtitle }) {
+function AuthLayout({ children, title, subtitle, onHome }) {
   return (
     <div style={{minHeight:"100vh",background:"#F4F0E8",display:"flex",flexDirection:"column"}}>
-      <div style={{padding:"20px 22px",borderBottom:"1px solid rgba(0,0,0,.08)",display:"flex",alignItems:"center",gap:9,background:"rgba(244,240,232,.95)"}}>
+      <div style={{padding:"20px 22px",borderBottom:"1px solid rgba(0,0,0,.08)",display:"flex",alignItems:"center",gap:9,background:"rgba(244,240,232,.95)",cursor:onHome?"pointer":"default"}} onClick={onHome}>
         <div style={{width:30,height:30,borderRadius:8,background:"#141210",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:"#F4F0E8"}}>PP</div>
         <div>
           <div style={{fontWeight:800,fontSize:13,color:"#141210",letterSpacing:"-.2px"}}>Portal do Padel</div>
@@ -3592,7 +3601,7 @@ function AuthBtn({ children, onClick, secondary, disabled }) {
 }
 
 // ── ATHLETE LOGIN ─────────────────────────────────────────────────────────────
-function AthleteLogin({ athletes, onLogin, onGoRegister, onBack }) {
+function AthleteLogin({ athletes, onLogin, onGoRegister, onBack, onHome }) {
   const [email,setEmail]=useState("");
   const [pass,setPass]=useState("");
   const [err,setErr]=useState("");
@@ -3609,7 +3618,7 @@ function AthleteLogin({ athletes, onLogin, onGoRegister, onBack }) {
   };
 
   return (
-    <AuthLayout title="Bem-vindo de volta" subtitle="Entra na tua conta de atleta">
+    <AuthLayout title="Bem-vindo de volta" subtitle="Entra na tua conta de atleta" onHome={onHome}>
       <AuthInput label="Email" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="o.teu@email.pt" error={err&&!email.trim()?"Obrigatório":""}/>
       <AuthInput label="Password" type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••" error={err&&!pass.trim()?"Obrigatório":""}/>
       {err&&<div style={{fontSize:12,color:"#E53E3E",padding:"9px 12px",background:"rgba(229,62,62,.07)",borderRadius:8,marginBottom:12}}>{err}</div>}
@@ -3626,7 +3635,7 @@ function AthleteLogin({ athletes, onLogin, onGoRegister, onBack }) {
 }
 
 // ── ATHLETE REGISTER ──────────────────────────────────────────────────────────
-function AthleteRegister({ athletes, onRegister, onGoLogin, onBack }) {
+function AthleteRegister({ athletes, onRegister, onGoLogin, onBack, onHome }) {
   const [f,setF]=useState({name:"",email:"",phone:"",password:"",confirm:""});
   const [errs,setErrs]=useState({});
   const [loading,setLoading]=useState(false);
@@ -3648,7 +3657,7 @@ function AthleteRegister({ athletes, onRegister, onGoLogin, onBack }) {
   };
 
   return (
-    <AuthLayout title="Criar conta" subtitle="Junta-te ao Portal do Padel">
+    <AuthLayout title="Criar conta" subtitle="Junta-te ao Portal do Padel" onHome={onHome}>
       <AuthInput label="Nome completo" value={f.name} onChange={e=>set("name",e.target.value)} placeholder="O teu nome" error={errs.name}/>
       <AuthInput label="Email" type="email" value={f.email} onChange={e=>set("email",e.target.value)} placeholder="o.teu@email.pt" error={errs.email}/>
       <AuthInput label="Telemóvel (opcional)" type="tel" value={f.phone} onChange={e=>set("phone",e.target.value)} placeholder="+351 9xx xxx xxx"/>
@@ -3667,7 +3676,7 @@ function AthleteRegister({ athletes, onRegister, onGoLogin, onBack }) {
 }
 
 // ── CLUB LOGIN ────────────────────────────────────────────────────────────────
-function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin, onBack }) {
+function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin, onBack, onHome }) {
   const [email,setEmail]=useState("");
   const [pass,setPass]=useState("");
   const [err,setErr]=useState("");
@@ -3688,7 +3697,7 @@ function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin, onBack }) {
   };
 
   return (
-    <AuthLayout title="Área do Clube" subtitle="Entra no backoffice do teu clube">
+    <AuthLayout title="Área do Clube" subtitle="Entra no backoffice do teu clube" onHome={onHome}>
       <AuthInput label="Email do clube" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="clube@email.pt" error={err&&!email.trim()?"Obrigatório":""}/>
       <AuthInput label="Password" type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••" error={err&&!pass.trim()?"Obrigatório":""}/>
       {err&&<div style={{fontSize:12,color:"#E53E3E",padding:"9px 12px",background:"rgba(229,62,62,.07)",borderRadius:8,marginBottom:12}}>{err}</div>}
@@ -3706,7 +3715,7 @@ function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin, onBack }) {
 }
 
 // ── CLUB REGISTER ─────────────────────────────────────────────────────────────
-function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
+function ClubRegister({ clubs, onSubmit, onGoLogin, onBack, onHome }) {
   const [f,setF]=useState({name:"",email:"",phone:"",address:"",city:"",password:"",confirm:""});
   const [errs,setErrs]=useState({});
   const [loading,setLoading]=useState(false);
@@ -3741,7 +3750,7 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
   };
 
   if(done) return(
-    <AuthLayout title="Pedido enviado!" subtitle="">
+    <AuthLayout title="Pedido enviado!" subtitle="" onHome={onHome}>
       <div style={{textAlign:"center",padding:"8px 0 24px"}}>
         <div style={{fontSize:48,marginBottom:16}}>✅</div>
         <p style={{fontSize:14,color:"#7A766F",lineHeight:1.65,marginBottom:16}}>O teu pedido foi submetido. Aguarda aprovação pela equipa Portal do Padel.</p>
@@ -3759,7 +3768,7 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
   );
 
   return (
-    <AuthLayout title="Registar clube" subtitle="Pede a entrada do teu clube no Portal do Padel">
+    <AuthLayout title="Registar clube" subtitle="Pede a entrada do teu clube no Portal do Padel" onHome={onHome}>
       <AuthInput label="Nome do clube" value={f.name} onChange={e=>set("name",e.target.value)} placeholder="Ex: Padel Arena Lisboa" error={errs.name}/>
       <AuthInput label="Email" type="email" value={f.email} onChange={e=>set("email",e.target.value)} placeholder="clube@email.pt" error={errs.email}/>
       <AuthInput label="Telefone" type="tel" value={f.phone} onChange={e=>set("phone",e.target.value)} placeholder="+351 2xx xxx xxx" error={errs.phone}/>
@@ -3780,7 +3789,7 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
 }
 
 // ── SUPER ADMIN PANEL ─────────────────────────────────────────────────────────
-function SuperAdmin({ clubs, onApprove, onReject, onLogout }) {
+function SuperAdmin({ clubs, onApprove, onReject, onLogout, onHome }) {
   const [filter,setFilter]=useState("pending");
   const [search,setSearch]=useState("");
 
@@ -3804,10 +3813,12 @@ function SuperAdmin({ clubs, onApprove, onReject, onLogout }) {
     <div style={{minHeight:"100vh",background:"#F4F0E8"}}>
       {/* Header */}
       <div style={{background:"#141210",padding:"0 20px",height:54,display:"flex",alignItems:"center",gap:12}}>
-        <div style={{width:28,height:28,borderRadius:7,background:"#F4F0E8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:800,color:"#141210"}}>PP</div>
-        <div style={{flex:1}}>
+        <div onClick={onHome} style={{display:"flex",alignItems:"center",gap:12,cursor:"pointer",flex:1}}>
+          <div style={{width:28,height:28,borderRadius:7,background:"#F4F0E8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:800,color:"#141210"}}>PP</div>
+          <div>
           <div style={{fontSize:13,fontWeight:800,color:"#F4F0E8",letterSpacing:"-.2px"}}>Super Admin</div>
           <div style={{fontSize:9,color:"rgba(255,255,255,.4)",letterSpacing:"1px",textTransform:"uppercase"}}>Portal do Padel</div>
+          </div>
         </div>
         <button onClick={onLogout} style={{fontSize:12,color:"rgba(255,255,255,.5)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Sair</button>
       </div>
