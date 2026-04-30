@@ -1226,7 +1226,7 @@ function BookSheet({ club, court, day, time, dur, priceD, priceN, nf, onClose, o
         </div>
         <div className="pt-foot">
           <button className="pt-submit" style={{background:"rgba(0,0,0,0.08)",color:"#7A766F",border:"1px solid rgba(0,0,0,0.1)"}} onClick={onClose}>Cancelar</button>
-          <button className="pt-submit" style={{background:"#141210",color:"#F4F0E8"}} onClick={submit} disabled={ld}>{ld?<><Spin/> A processar…</>:"Confirmar Reserva"}</button>
+          <button className="pt-submit" style={{background:"#16C784",color:"#0D2B1D",fontWeight:800}} onClick={submit} disabled={ld}>{ld?<><Spin/> A processar…</>:"Confirmar Reserva"}</button>
         </div>
       </div>
     </div>
@@ -1239,7 +1239,7 @@ function PortalSuccess({ data, onBack }) {
   const msg=encodeURIComponent(`🎾 Reservei um campo no ${data.club.name}!\n📅 ${fmtLong(data.date)}\n⏰ ${data.time}–${endH} (${durLbl(data.dur||60)})\n🏟 ${data.court.name}\n💰 ${data.price}€/jogador\n\nFaltam jogadores! Juntam-se?`);
   return (
     <div className="pt-success">
-      <div className="pt-sr-ring"><div style={{position:"absolute",inset:-8,borderRadius:"50%",border:"1px solid rgba(255,255,255,.1)",animation:"ptRingPulse 2.5s infinite"}}/><span className="pt-sr-check">✓</span></div>
+      <div className="pt-sr-ring" style={{border:"2px solid rgba(22,199,132,.5)"}}><div style={{position:"absolute",inset:-8,borderRadius:"50%",border:"1px solid rgba(22,199,132,.15)",animation:"ptRingPulse 2.5s infinite"}}/><span className="pt-sr-check" style={{color:"#16C784"}}>✓</span></div>
       <div className="pt-s-title">{data.requireApproval?"Pedido\nEnviado!":"Reserva\nConfirmada!"}</div>
       <p className="pt-s-sub">Receberás confirmação por email. Até ao campo!</p>
       <div className="pt-s-card">
@@ -2807,10 +2807,10 @@ function MyBookings({bookings,cfg,onCancelBooking}){
   return(
     <div style={{background:"#F4F0E8",minHeight:"calc(100vh - 52px)"}}>
       <div style={{padding:"36px 20px 24px",borderBottom:"1px solid rgba(0,0,0,.08)"}}>
-        <div style={{fontSize:11,fontWeight:700,background:"#141210",color:"#F4F0E8",display:"inline-flex",alignItems:"center",gap:6,padding:"4px 12px",borderRadius:99,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:14}}>
-          <span style={{width:5,height:5,borderRadius:"50%",background:"#F4F0E8"}}/>As Minhas Reservas
+        <div style={{fontSize:11,fontWeight:700,background:"rgba(22,199,132,.12)",color:"#16C784",border:"1px solid rgba(22,199,132,.28)",display:"inline-flex",alignItems:"center",gap:6,padding:"5px 14px",borderRadius:99,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:14}}>
+          <span style={{width:5,height:5,borderRadius:"50%",background:"#16C784"}}/>As Minhas Reservas
         </div>
-        <h2 style={{fontSize:"clamp(28px,7vw,48px)",fontWeight:800,color:"#141210",letterSpacing:"-2px",lineHeight:.95,marginBottom:12}}>Consulta<br/>as tuas reservas</h2>
+        <h2 style={{fontSize:"clamp(28px,7vw,48px)",fontWeight:800,color:"#141210",letterSpacing:"-2px",lineHeight:.95,marginBottom:12,fontFamily:'"DM Serif Display","DM Sans",system-ui,sans-serif'}}>Consulta<br/>as tuas reservas</h2>
         <p style={{fontSize:14,color:"#7A766F",lineHeight:1.65,marginBottom:20}}>Introduz o email que usaste na reserva.</p>
         <div style={{display:"flex",gap:8,maxWidth:480}}>
           <input
@@ -2820,7 +2820,7 @@ function MyBookings({bookings,cfg,onCancelBooking}){
             value={email} onChange={e=>setEmail(e.target.value)}
             onKeyDown={e=>e.key==="Enter"&&search()}
           />
-          <button onClick={search} style={{padding:"12px 20px",borderRadius:10,background:"#141210",color:"#F4F0E8",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>
+          <button onClick={search} style={{padding:"12px 20px",borderRadius:10,background:"#16C784",color:"#0D2B1D",border:"none",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>
             {loading?<Spin/>:"Pesquisar"}
           </button>
         </div>
@@ -3400,17 +3400,17 @@ const SUPER_ADMIN = { email: "admin@portaldopadel.pt", password: "pdp2026super" 
 function AuthLayout({ children, title, subtitle }) {
   return (
     <div style={{minHeight:"100vh",background:"#F4F0E8",display:"flex",flexDirection:"column"}}>
-      <div style={{padding:"20px 22px",borderBottom:"1px solid rgba(0,0,0,.08)",display:"flex",alignItems:"center",gap:9,background:"rgba(244,240,232,.95)"}}>
-        <div style={{width:30,height:30,borderRadius:8,background:"#141210",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:"#F4F0E8"}}>PP</div>
+      <div style={{padding:"16px 22px",borderBottom:"1px solid rgba(0,0,0,.08)",display:"flex",alignItems:"center",gap:9,background:"#141210"}}>
+        <div style={{width:30,height:30,borderRadius:8,background:"#16C784",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:"#0D2B1D"}}>PP</div>
         <div>
-          <div style={{fontWeight:800,fontSize:13,color:"#141210",letterSpacing:"-.2px"}}>Portal do Padel</div>
-          <div style={{fontSize:9,color:"#B5B0A8",letterSpacing:"1.5px",textTransform:"uppercase"}}>Clubes</div>
+          <div style={{fontWeight:800,fontSize:13,color:"#F4F0E8",letterSpacing:"-.2px"}}>Portal do Padel</div>
+          <div style={{fontSize:9,color:"rgba(244,240,232,.4)",letterSpacing:"1.5px",textTransform:"uppercase"}}>Reservas & Clubes</div>
         </div>
       </div>
       <div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"24px 20px"}}>
         <div style={{width:"100%",maxWidth:400}}>
           <div style={{textAlign:"center",marginBottom:28}}>
-            <h1 style={{fontSize:32,fontWeight:800,color:"#141210",letterSpacing:"-1.5px",lineHeight:.95,marginBottom:10,fontFamily:'"DM Serif Display","DM Sans",system-ui,sans-serif'}}>{title}</h1>
+            <h1 style={{fontSize:34,fontWeight:800,color:"#141210",letterSpacing:"-1.5px",lineHeight:.95,marginBottom:10,fontFamily:'"DM Serif Display","DM Sans",system-ui,sans-serif'}}>{title}</h1>
             {subtitle&&<p style={{fontSize:14,color:"#7A766F",lineHeight:1.6}}>{subtitle}</p>}
           </div>
           {children}
@@ -3428,7 +3428,7 @@ function AuthInput({ label, type="text", value, onChange, placeholder, error }) 
         type={type} inputMode={type==="email"?"email":type==="tel"?"tel":undefined}
         value={value} onChange={onChange} placeholder={placeholder}
         style={{width:"100%",background:"#FFFFFF",border:`1.5px solid ${error?"#E53E3E":"rgba(0,0,0,.12)"}`,borderRadius:10,padding:"13px 14px",fontSize:14,outline:"none",fontFamily:"inherit",color:"#141210",transition:"border-color .2s"}}
-        onFocus={e=>e.target.style.borderColor="#141210"}
+        onFocus={e=>e.target.style.borderColor="#16C784"}
         onBlur={e=>e.target.style.borderColor=error?"#E53E3E":"rgba(0,0,0,.12)"}
       />
       {error&&<div style={{fontSize:11,color:"#E53E3E",marginTop:4}}>{error}</div>}
@@ -3438,7 +3438,7 @@ function AuthInput({ label, type="text", value, onChange, placeholder, error }) 
 
 function AuthBtn({ children, onClick, secondary, disabled }) {
   return (
-    <button onClick={onClick} disabled={disabled} style={{width:"100%",padding:"14px",borderRadius:10,border:secondary?"1.5px solid rgba(0,0,0,.15)":"none",background:secondary?"transparent":"#141210",color:secondary?"#7A766F":"#F4F0E8",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",opacity:disabled?.5:1,marginBottom:8}}>
+    <button onClick={onClick} disabled={disabled} style={{width:"100%",padding:"14px",borderRadius:10,border:secondary?"1.5px solid rgba(0,0,0,.15)":"none",background:secondary?"transparent":"#16C784",color:secondary?"#7A766F":"#0D2B1D",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",opacity:disabled?.5:1,marginBottom:8}}>
       {children}
     </button>
   );
@@ -3469,7 +3469,7 @@ function AthleteLogin({ athletes, onLogin, onGoRegister, onBack }) {
       <AuthBtn onClick={submit} disabled={loading}>{loading?"A entrar…":"Entrar"}</AuthBtn>
       <div style={{textAlign:"center",fontSize:13,color:"#7A766F",marginTop:8}}>
         Ainda não tens conta?{" "}
-        <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoRegister}>Regista-te</span>
+        <span style={{color:"#16C784",fontWeight:700,cursor:"pointer"}} onClick={onGoRegister}>Regista-te</span>
       </div>
       <div style={{textAlign:"center",marginTop:16}}>
         <span style={{fontSize:12,color:"#B5B0A8",cursor:"pointer"}} onClick={onBack}>← Voltar</span>
@@ -3510,7 +3510,7 @@ function AthleteRegister({ athletes, onRegister, onGoLogin, onBack }) {
       <AuthBtn onClick={submit} disabled={loading}>{loading?"A criar conta…":"Criar Conta"}</AuthBtn>
       <div style={{textAlign:"center",fontSize:13,color:"#7A766F",marginTop:8}}>
         Já tens conta?{" "}
-        <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoLogin}>Entrar</span>
+        <span style={{color:"#16C784",fontWeight:700,cursor:"pointer"}} onClick={onGoLogin}>Entrar</span>
       </div>
       <div style={{textAlign:"center",marginTop:16}}>
         <span style={{fontSize:12,color:"#B5B0A8",cursor:"pointer"}} onClick={onBack}>← Voltar</span>
@@ -3548,7 +3548,7 @@ function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin, onBack }) {
       <AuthBtn onClick={submit} disabled={loading}>{loading?"A entrar…":"Entrar"}</AuthBtn>
       <div style={{textAlign:"center",fontSize:13,color:"#7A766F",marginTop:8}}>
         Ainda não tens conta?{" "}
-        <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoRegister}>Registar clube</span>
+        <span style={{color:"#16C784",fontWeight:700,cursor:"pointer"}} onClick={onGoRegister}>Registar clube</span>
       </div>
       <div style={{textAlign:"center",marginTop:16,display:"flex",justifyContent:"center",gap:20}}>
         <span style={{fontSize:12,color:"#B5B0A8",cursor:"pointer"}} onClick={onBack}>← Voltar</span>
@@ -3614,8 +3614,8 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
   return (
     <AuthLayout title="Registar clube" subtitle="Pede a entrada do teu clube no Portal do Padel">
       <div style={{textAlign:"center",margin:"0 auto 18px",maxWidth:420}}>
-        <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"5px 12px",borderRadius:99,background:"rgba(20,18,16,.06)",color:"#7A766F",fontSize:10,fontWeight:800,letterSpacing:"1.3px",textTransform:"uppercase",marginBottom:12}}>
-          <span style={{width:5,height:5,borderRadius:"50%",background:"#141210"}}/>Para clubes
+        <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",borderRadius:99,background:"rgba(22,199,132,.12)",color:"#16C784",border:"1px solid rgba(22,199,132,.28)",fontSize:10,fontWeight:800,letterSpacing:"1.3px",textTransform:"uppercase",marginBottom:12}}>
+          <span style={{width:5,height:5,borderRadius:"50%",background:"#16C784"}}/>Para clubes
         </div>
         <div style={{fontSize:20,fontWeight:800,color:"#141210",letterSpacing:"-.7px",lineHeight:1.05,marginBottom:8}}>
           Gestão simples, mensalidade fixa.
@@ -3625,8 +3625,10 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
         </div>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:18}}>
-        {["Zero comissões","Preço fixo","Torneios fáceis","Setup acompanhado"].map(x=>(
-          <div key={x} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.08)",borderRadius:12,padding:"11px 10px",fontSize:12,fontWeight:800,color:"#141210",textAlign:"center",boxShadow:"0 1px 6px rgba(0,0,0,.035)"}}>{x}</div>
+        {[{t:"Zero comissões",i:"✓"},{t:"Preço fixo",i:"✓"},{t:"Torneios fáceis",i:"✓"},{t:"Setup acompanhado",i:"✓"}].map(x=>(
+          <div key={x.t} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.08)",borderRadius:12,padding:"11px 10px",fontSize:12,fontWeight:800,color:"#141210",textAlign:"center",boxShadow:"0 1px 6px rgba(0,0,0,.035)",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
+            <span style={{color:"#16C784",fontWeight:800}}>{x.i}</span>{x.t}
+          </div>
         ))}
       </div>
       <AuthInput label="Nome do clube" value={f.name} onChange={e=>set("name",e.target.value)} placeholder="Ex: Padel Arena Lisboa" error={errs.name}/>
@@ -3639,7 +3641,7 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
       <AuthBtn onClick={submit} disabled={loading}>{loading?"A enviar…":"Enviar pedido"}</AuthBtn>
       <div style={{textAlign:"center",fontSize:13,color:"#7A766F",marginTop:8}}>
         Já tens conta?{" "}
-        <span style={{color:"#141210",fontWeight:700,cursor:"pointer"}} onClick={onGoLogin}>Entrar</span>
+        <span style={{color:"#16C784",fontWeight:700,cursor:"pointer"}} onClick={onGoLogin}>Entrar</span>
       </div>
       {onBack&&<div style={{textAlign:"center",marginTop:16}}>
         <span style={{fontSize:12,color:"#B5B0A8",cursor:"pointer"}} onClick={onBack}>← Voltar</span>
