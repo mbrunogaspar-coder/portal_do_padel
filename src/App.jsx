@@ -91,6 +91,9 @@ const INIT_C=[{id:1,name:"Sofia Martins",email:"sofia@m.pt",phone:"+351 912 345 
 const INIT_BLOCKS=[{id:1,type:"recurring",weekdays:[1,3,5],courtIds:[1,2],startTime:"09",endTime:"11",reason:"Aulas de Padel Adultos",category:"lessons"},{id:2,type:"recurring",weekdays:[6],courtIds:"all",startTime:"08",endTime:"10",reason:"Manutenção Semanal",category:"maintenance"},{id:3,type:"single",date:"2026-04-28",courtIds:[3,4],startTime:"14",endTime:"18",reason:"Torneio Interno",category:"event"}];
 const INIT_N=[{id:1,type:"booking",msg:"João Ferreira reservou Court 1 · Hoje 14:00",time:"Há 2h",read:false},{id:2,type:"booking",msg:"Carla Lopes reservou Court 3 · Hoje 16:00",time:"Há 3h",read:false},{id:3,type:"client",msg:"Nova cliente: Ana Costa via portal",time:"Há 1 dia",read:true}];
 const DEF_CLUB={amenities:["showers","parking"],name:"Padel Arena",tagline:"O teu campo. À tua hora.",priceDay:3,priceNight:4,nightFrom:"18",openFrom:"08",openTo:"22",durations:[60,90,120],playersPerCourt:4,courts:[{id:1,name:"Court 1",indoor:true,active:true},{id:2,name:"Court 2",indoor:true,active:true},{id:3,name:"Court 3",indoor:false,active:true},{id:4,name:"Court 4",indoor:false,active:true}],requireApproval:true,allowCancel:true,cancelHours:24,showOccupancy:true,advanceDays:14,phone:"+351 210 000 000",email:"info@padelarena.pt",address:"Rua do Padel 123, Lisboa"};
+const INIT_T=[
+  {id:9001,name:"Torneio Social Padel Arena",format:"normal",startDate:TODAY,endDate:TODAY,courtIds:[1,2,3,4],slotMinutes:90,groupSize:4,advanceCount:2,superTb:true,status:"open",schedule:[],categories:[{id:"M3",g:"M",groups:[],bracket:[],pairs:[{id:1,p1:"Miguel Sousa",p2:"João Ferreira",contact:"miguel@m.pt",status:"approved"},{id:2,p1:"Pedro Lima",p2:"Tiago Rocha",contact:"912000001",status:"approved"},{id:3,p1:"Rui Alves",p2:"Nuno Matos",contact:"913000002",status:"approved"},{id:4,p1:"Carlos Neves",p2:"André Lopes",contact:"914000003",status:"pending"}]},{id:"MX4",g:"MX",groups:[],bracket:[],pairs:[{id:5,p1:"Sofia Martins",p2:"Miguel Sousa",contact:"sofia@m.pt",status:"approved"},{id:6,p1:"Ana Costa",p2:"João Ferreira",contact:"ana@m.pt",status:"pending"}]}]},
+];
 
 // ─── PHOSPHOR ICONS WRAPPER ───────────────────────────────────────────────────
 const ICON_MAP = {
@@ -644,7 +647,7 @@ export default function App() {
   const [contacts,setConts]  = usePersist("contacts",  INIT_C);
   const [blocks,  setBlocks] = usePersist("blocks",    INIT_BLOCKS);
   const [notifs,  setNotifs] = usePersist("notifs",    INIT_N);
-  const [tournaments,setTournaments] = usePersist("tournaments", []);
+  const [tournaments,setTournaments] = usePersist("tournaments", INIT_T);
   const [waitlist,setWaitlist]       = usePersist("waitlist",    []);
   const [clubsData, setClubsData]    = usePersist("clubsData",   {});
 
@@ -797,7 +800,7 @@ export default function App() {
         const cTourneys = (clubsData[String(c.id)]||{}).tournaments||[];
         return cTourneys.map(t=>({tournament:t,club:{...c,isRegistered:true}}));
       })
-    ]} currentUser={currentUser} onRegisterTournament={(item)=>{setClub(item.club);setMode("portal");setPendingTournamentReg(item.tournament.id);}} regClubs={regClubs.filter(c=>c.status==="approved")} />}
+    ]} currentUser={currentUser} onRegisterTournament={(item)=>{setClub(item.club);setMode("portal");setPendingTournamentReg(item.tournament.id);}} onRegisterClub={()=>setAuthScreen("clubRegister")} regClubs={regClubs.filter(c=>c.status==="approved")} />}
         {mode==="portal"   && <PortalView club={club||CLUBS[0]} bookings={portalBookings(club)} blocks={portalBlocks(club)} onBook={portalBook} onBack={()=>{setMode("discover");setClub(null);}} tournaments={portalTournaments(club)} bookingsAll={bookings} onCancelBooking={cancelPortalBk} onJoinWaitlist={addWaitlist} currentUser={currentUser} pendingTournamentReg={pendingTournamentReg} onClearPendingReg={()=>setPendingTournamentReg(null)} onRegisterTournament={(tid,catId,pair)=>{
       const c = club||CLUBS[0];
       const pid = portalClubId(c);
@@ -817,7 +820,7 @@ export default function App() {
 // ═══════════════════════════════════════════════════════════════════════════════
 // DISCOVER VIEW
 // ═══════════════════════════════════════════════════════════════════════════════
-function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegisterTournament, regClubs=[] }) {
+function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegisterTournament, onRegisterClub, regClubs=[] }) {
   const [region, setRegion] = useState("all");
   const [search, setSearch] = useState("");
   const [discoverTab, setDiscoverTab] = useState("clubs");
@@ -841,9 +844,9 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
     <div className="pt-page">
       {/* HERO */}
       <section className="pt-hero">
-        <div className="pt-eyebrow"><span className="pt-edot"/>Rede Nacional de Padel</div>
+        <div className="pt-eyebrow"><span className="pt-edot"/>Padel perto de ti</div>
         <h1 className="pt-h1">O teu jogo<br/>começa <em>aqui</em></h1>
-        <p className="pt-sub">Reserva campos nos melhores clubes de padel de Portugal. Em segundos, sem chamadas.</p>
+        <p className="pt-sub">Descobre clubes, reserva campos e inscreve-te em torneios de forma rápida, simples e sem complicações.</p>
         <div className="pt-search">
           <span className="pt-search-ic"><I n="srch" s={16} c="#B5B0A8"/></span>
           <input className="pt-si" placeholder="Clube ou cidade…" value={search} onChange={e=>setSearch(e.target.value)}/>
@@ -853,6 +856,26 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
         <div className="pt-stats">
           {[{v:"47",l:"Clubes"},{v:"312",l:"Campos"},{v:"28k",l:"Jogadores"},{v:"18",l:"Distritos"}].map(s=>(
             <div key={s.l} className="pt-stat"><div className="pt-sv">{s.v}</div><div className="pt-sl">{s.l}</div></div>
+          ))}
+        </div>
+        <div style={{display:"flex",justifyContent:"center",gap:10,flexWrap:"wrap",marginTop:22}}>
+          <button onClick={()=>setDiscoverTab("clubs")} style={{padding:"12px 20px",borderRadius:11,border:"none",background:"#141210",color:"#F4F0E8",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Encontrar clube</button>
+          <button onClick={()=>setDiscoverTab("tournaments")} style={{padding:"12px 20px",borderRadius:11,border:"1.5px solid rgba(0,0,0,.12)",background:"#FFFFFF",color:"#141210",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Ver torneios</button>
+        </div>
+      </section>
+
+      <section style={{maxWidth:1040,margin:"-20px auto 0",padding:"0 20px",position:"relative",zIndex:2}}>
+        <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:16,padding:"18px",display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:14,boxShadow:"0 8px 28px rgba(0,0,0,.06)"}}>
+          {[
+            {t:"Marca em segundos",s:"Escolhe dia, hora e campo sem telefonemas."},
+            {t:"Torneios perto de ti",s:"Encontra inscrições abertas e acompanha quadros."},
+            {t:"Os teus jogos",s:"Consulta reservas e inscrições no mesmo sítio."},
+            {t:"Clubes de confiança",s:"Informação clara sobre preços, horários e contactos."},
+          ].map(x=>(
+            <div key={x.t}>
+              <div style={{fontSize:13,fontWeight:800,color:"#141210",marginBottom:3}}>{x.t}</div>
+              <div style={{fontSize:12,color:"#7A766F",lineHeight:1.45}}>{x.s}</div>
+            </div>
           ))}
         </div>
       </section>
@@ -1015,6 +1038,15 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
           <div className="pt-phero-info">
             <span>☀️ Diurno <b>{priceD}€/jog.</b></span>
             <span>🌙 Noturno <b>{priceN}€/jog.</b> <span style={{opacity:.5}}>a partir das {nf}h</span></span>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,maxWidth:420,margin:"20px auto 0"}}>
+            <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,padding:"10px 8px"}}><div style={{fontSize:18,fontWeight:800,color:"#141210"}}>{courts.length}</div><div style={{fontSize:10,color:"#7A766F"}}>Campos</div></div>
+            <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,padding:"10px 8px"}}><div style={{fontSize:18,fontWeight:800,color:"#141210"}}>{club.openFrom||"08"}–{club.openTo||"22"}</div><div style={{fontSize:10,color:"#7A766F"}}>Horário</div></div>
+            <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,padding:"10px 8px"}}><div style={{fontSize:18,fontWeight:800,color:"#141210"}}>{(tournaments||[]).length}</div><div style={{fontSize:10,color:"#7A766F"}}>Torneios</div></div>
+          </div>
+          <div style={{display:"flex",justifyContent:"center",gap:8,flexWrap:"wrap",marginTop:14}}>
+            {club.phone&&<a href={`tel:${club.phone}`} style={{fontSize:12,fontWeight:700,color:"#141210",textDecoration:"none",background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:99,padding:"7px 12px"}}>{club.phone}</a>}
+            {club.email&&<a href={`mailto:${club.email}`} style={{fontSize:12,fontWeight:700,color:"#141210",textDecoration:"none",background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:99,padding:"7px 12px"}}>{club.email}</a>}
           </div>
         </div>
       </div>
@@ -1326,9 +1358,21 @@ function AdminDash({ cfg, bookings, contacts, onSetView }) {
   const rev7=calc(b7);
   const pend=bookings.filter(b=>b.status==="pending").length;
   const todB=bookings.filter(b=>b.date===TODAY).sort((a,b)=>a.time.localeCompare(b.time));
+  const nextB=bookings.filter(b=>b.date>=TODAY&&b.status!=="cancelled").sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time)).slice(0,4);
+  const freeToday=Math.max(0,(ac.length*slots.length)-bookings.filter(b=>b.date===TODAY&&b.status!=="cancelled").length);
 
   return (
     <>
+      <div className="pt-acard" style={{padding:"16px",marginBottom:14,background:"#201F1C"}}>
+        <div className="row g2" style={{alignItems:"flex-start",gap:14}}>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:18,fontWeight:800,color:"#EDE9E1",letterSpacing:"-.5px",marginBottom:4}}>Hoje no clube</div>
+            <div style={{fontSize:12,color:"#7A766F",lineHeight:1.5}}>{todB.length} reserva{todB.length!==1?"s":""} hoje · {freeToday} horários livres · {pend} pendente{pend!==1?"s":""}</div>
+          </div>
+          <button className="pt-btn pt-btn-light pt-btn-sm" onClick={()=>onSetView("agenda")}>Abrir agenda</button>
+        </div>
+      </div>
+
       <div className="pt-akpi-grid">
         {[
           {lbl:"Receita Hoje",val:`${revT.toFixed(0)}€`,sub:`Semana: ${rev7.toFixed(0)}€`,ic:"trn"},
@@ -1343,17 +1387,31 @@ function AdminDash({ cfg, bookings, contacts, onSetView }) {
         ))}
       </div>
 
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:10,marginBottom:14}}>
+        {[
+          {t:"Confirmar pendentes",s:`${pend} por tratar`,v:"agenda"},
+          {t:"Nova reserva",s:"Marcar manualmente",v:"agenda"},
+          {t:"Criar torneio",s:"Quadro ou sinetas",v:"torneiros"},
+          {t:"Configurar campos",s:"Horários e preços",v:"config"},
+        ].map(a=>(
+          <button key={a.t} onClick={()=>onSetView(a.v)} style={{textAlign:"left",padding:"13px 14px",borderRadius:11,border:"1px solid rgba(255,255,255,.07)",background:"rgba(255,255,255,.04)",cursor:"pointer",fontFamily:"inherit"}}>
+            <div style={{fontSize:12,fontWeight:800,color:"#EDE9E1",marginBottom:3}}>{a.t}</div>
+            <div style={{fontSize:10,color:"#7A766F"}}>{a.s}</div>
+          </button>
+        ))}
+      </div>
+
       <div className="pt-2col" style={{display:"flex",flexDirection:"column",gap:12}}>
         <div className="pt-acard mb10">
-          <div className="pt-ash"><span className="pt-ash-t">Agenda de Hoje</span><span className="pt-ash-a" onClick={()=>onSetView("agenda")}>Ver tudo →</span></div>
-          {todB.length===0?<div style={{padding:"18px 16px",textAlign:"center",fontSize:12,color:"#3D3A35"}}>Sem reservas hoje</div>
-          :todB.map(b=>{const court=cfg.courts.find(c=>c.id===b.courtId);return(
+          <div className="pt-ash"><span className="pt-ash-t">Próximas reservas</span><span className="pt-ash-a" onClick={()=>onSetView("agenda")}>Ver tudo →</span></div>
+          {nextB.length===0?<div style={{padding:"18px 16px",textAlign:"center",fontSize:12,color:"#3D3A35"}}>Sem reservas próximas</div>
+          :nextB.map(b=>{const court=cfg.courts.find(c=>c.id===b.courtId);return(
             <div key={b.id} className="pt-arow">
               <span className="pt-arow-time">{b.time}</span>
               <div className="pt-aav" style={{width:32,height:32,fontSize:11,marginRight:2}}>{ini(b.contactName)}</div>
               <div className="pt-arow-body">
                 <div className="pt-arow-name">{b.contactName}</div>
-                <div className="pt-arow-sub"><span className="pt-cdot" style={{background:"rgba(255,255,255,.2)"}}/>{court?.name} · {durLbl(b.dur||60)}</div>
+                <div className="pt-arow-sub"><span className="pt-cdot" style={{background:"rgba(255,255,255,.2)"}}/>{fmtSh(b.date)} · {court?.name} · {durLbl(b.dur||60)}</div>
               </div>
               <span className={`pt-badge ${b.status==="confirmed"?"pt-ba":"pt-bw"}`}>{b.status==="confirmed"?"✓":"Pend."}</span>
             </div>
@@ -1797,8 +1855,11 @@ function AdminConfig({ cfg, setCfg, showToast }) {
 // TOURNAMENT MODULE
 // ═══════════════════════════════════════════════════════════════════════════════
 const CAT_OPT=[{id:"M1",g:"M"},{id:"M2",g:"M"},{id:"M3",g:"M"},{id:"M4",g:"M"},{id:"M5",g:"M"},{id:"M6",g:"M"},{id:"F1",g:"F"},{id:"F2",g:"F"},{id:"F3",g:"F"},{id:"F4",g:"F"},{id:"F5",g:"F"},{id:"F6",g:"F"},{id:"MX1",g:"MX"},{id:"MX2",g:"MX"},{id:"MX3",g:"MX"},{id:"MX4",g:"MX"},{id:"MX5",g:"MX"},{id:"MX6",g:"MX"}];
-const T_SL={draft:"Rascunho",open:"Inscrições Abertas",closed:"Insc. Encerradas",scheduling:"A Calendarizar",groups:"Fase de Grupos",knockouts:"Eliminatórias",finished:"Terminado"};
-const T_AL={draft:"Abrir Inscrições",open:"Encerrar Inscrições",closed:"Calendarizar Jogos",scheduling:"Iniciar Fase de Grupos",groups:"Iniciar Eliminatórias",knockouts:"Terminar"};
+const T_SL={draft:"Rascunho",open:"Inscrições Abertas",closed:"Insc. Encerradas",scheduling:"A Calendarizar",groups:"Sinetas",knockouts:"Quadro",finished:"Terminado"};
+const TOURNAMENT_FORMATS={
+  normal:{label:"Quadro normal",short:"Quadro",desc:"Eliminatórias: quartos, meias e final."},
+  sinetas:{label:"Sinetas",short:"Sinetas",desc:"Todos contra todos, por grupos/categorias."},
+};
 
 const genRR=(pairs)=>{const m=[];let id=1;for(let i=0;i<pairs.length;i++)for(let j=i+1;j<pairs.length;j++)m.push({id:id++,p1:pairs[i],p2:pairs[j],sets:[],winner:null});return m;};
 
@@ -1818,8 +1879,18 @@ const genBracket=(qualifiers)=>{
   const n=Math.pow(2,Math.ceil(Math.log2(Math.max(qualifiers.length,2))));
   const padded=[...qualifiers,...Array(n-qualifiers.length).fill(null)];
   const matches=[];
-  for(let i=0;i<padded.length;i+=2){const p1=padded[i],p2=padded[i+1];matches.push({id:i/2+1,p1,p2,sets:[],winner:p2===null?p1:null});}
-  return [{name:roundName(n/2),matches,done:false}];
+  for(let i=0;i<padded.length;i+=2){const p1=padded[i],p2=padded[i+1];matches.push({id:i/2+1,p1,p2,sets:[],winner:p2===null?p1:null,source1:null,source2:null});}
+  const rounds=[{name:roundName(n),matches,done:false}];
+  let prevCount=matches.length;
+  while(prevCount>1){
+    const next=[];
+    for(let i=0;i<prevCount;i+=2){
+      next.push({id:i/2+1,p1:null,p2:null,sets:[],winner:null,source1:`Vencedor ${rounds[rounds.length-1].name} ${i+1}`,source2:`Vencedor ${rounds[rounds.length-1].name} ${i+2}`});
+    }
+    rounds.push({name:roundName(prevCount),matches:next,done:false});
+    prevCount=next.length;
+  }
+  return propagateBracketByes(rounds);
 };
 
 const advanceBracket=(rounds)=>{
@@ -1830,7 +1901,69 @@ const advanceBracket=(rounds)=>{
   const padded=[...winners,...Array(n-winners.length).fill(null)];
   const next=[];
   for(let i=0;i<padded.length;i+=2){const p1=padded[i],p2=padded[i+1];next.push({id:i/2+1,p1,p2,sets:[],winner:p2===null?p1:null});}
-  return[...rounds.slice(0,-1),{...last,done:true},{name:roundName(n/2),matches:next,done:false}];
+  return[...rounds.slice(0,-1),{...last,done:true},{name:roundName(n),matches:next,done:false}];
+};
+
+const propagateBracketByes=(rounds)=>{
+  const out=rounds.map(r=>({...r,matches:r.matches.map(m=>({...m}))}));
+  for(let ri=0;ri<out.length-1;ri++){
+    out[ri].matches.forEach((m,mi)=>{
+      if(!m.winner)return;
+      const next=out[ri+1].matches[Math.floor(mi/2)];
+      if(!next)return;
+      if(mi%2===0&&!next.p1)next.p1=m.winner;
+      if(mi%2===1&&!next.p2)next.p2=m.winner;
+    });
+    out[ri].done=out[ri].matches.every(m=>m.winner);
+  }
+  return out;
+};
+
+const collectTournamentMatches=(t)=>{
+  const matches=[];
+  t.categories.forEach(cat=>{
+    (cat.groups||[]).forEach((g,gi)=>{
+      g.matches.forEach(m=>matches.push({key:`${cat.id}-g${gi}-m${m.id}`,label:`${cat.id} · Grupo ${g.id}`,p1:pairNameFromT(t,m.p1),p2:pairNameFromT(t,m.p2)}));
+    });
+    (cat.bracket||[]).forEach((r,ri)=>{
+      r.matches.forEach(m=>{
+        const p1=m.p1?pairNameFromT(t,m.p1):(m.source1||"Vencedor anterior");
+        const p2=m.p2?pairNameFromT(t,m.p2):(m.source2||"Vencedor anterior");
+        if(m.p2===null&&m.winner)return;
+        matches.push({key:`${cat.id}-r${ri}-m${m.id}`,label:`${cat.id} · ${r.name}`,p1,p2});
+      });
+    });
+  });
+  return matches;
+};
+
+const generateTournamentSchedule=(t,cfg)=>{
+  const courts=cfg.courts.filter(c=>c.active&&(t.courtIds.length===0||t.courtIds.includes(c.id)));
+  const useCourts=courts.length?courts:cfg.courts.filter(c=>c.active);
+  if(useCourts.length===0)return[];
+  const matches=collectTournamentMatches(t);
+  const slotMin=t.slotMinutes||90;
+  const open=parseInt(cfg.openFrom||"08");
+  const close=parseInt(cfg.openTo||"22");
+  const wavesPerDay=Math.max(1,Math.floor(((close-open)*60)/slotMin));
+  const firstDate=new Date((t.startDate||TODAY)+"T12:00:00");
+  return matches.map((m,i)=>{
+    const wave=Math.floor(i/useCourts.length);
+    const dayOffset=Math.floor(wave/wavesPerDay);
+    const waveInDay=wave%wavesPerDay;
+    const d=new Date(firstDate);d.setDate(firstDate.getDate()+dayOffset);
+    const mins=open*60+(waveInDay*slotMin);
+    const court=useCourts[i%useCourts.length];
+    return {id:i+1,matchKey:m.key,label:m.label,p1:m.p1,p2:m.p2,date:fmt(d),time:`${String(Math.floor(mins/60)).padStart(2,"0")}:${String(mins%60).padStart(2,"0")}`,courtId:court.id,courtName:court.name};
+  });
+};
+
+const syncTournamentSchedule=(t,cfg,oldSchedule=[])=>{
+  const generated=generateTournamentSchedule(t,cfg);
+  return generated.map(s=>{
+    const old=oldSchedule.find(o=>o.matchKey===s.matchKey);
+    return old?{...s,date:old.date,time:old.time,courtId:old.courtId,courtName:old.courtName}:s;
+  });
 };
 
 // ── TOURNAMENT LIST ──────────────────────────────────────────────────────────
@@ -1894,7 +2027,7 @@ function TStatusBadge({status}){
 
 // ── TOURNAMENT CREATE ────────────────────────────────────────────────────────
 function TournamentCreate({cfg,onSave,onClose}){
-  const [f,setF]=useState({name:"",startDate:TODAY,endDate:TODAY,courtIds:[],groupSize:4,advanceCount:2,slotMinutes:90,superTb:true,categories:[]});
+  const [f,setF]=useState({name:"",format:"normal",startDate:TODAY,endDate:TODAY,courtIds:[],groupSize:4,advanceCount:2,slotMinutes:90,superTb:true,categories:[]});
   const [err,setErr]=useState("");
   const set=(k,v)=>setF(p=>({...p,[k]:v}));
   const toggleCat=(id)=>setF(p=>({...p,categories:p.categories.includes(id)?p.categories.filter(c=>c!==id):[...p.categories,id]}));
@@ -1906,7 +2039,7 @@ function TournamentCreate({cfg,onSave,onClose}){
     if(f.categories.length===0){setErr("Selecciona pelo menos uma categoria");return;}
     const t={
       id:Date.now(),name:f.name,startDate:f.startDate,endDate:f.endDate,courtIds:f.courtIds,slotMinutes:f.slotMinutes,
-      groupSize:f.groupSize,advanceCount:f.advanceCount,superTb:f.superTb,
+      format:f.format,groupSize:f.groupSize,advanceCount:f.advanceCount,superTb:f.superTb,
       status:"draft",
       categories:f.categories.map(id=>({
         id,g:CAT_OPT.find(c=>c.id===id)?.g,
@@ -1927,6 +2060,17 @@ function TournamentCreate({cfg,onSave,onClose}){
           {err&&<div style={{fontSize:11,color:"#FF6B6B",padding:"7px 10px",background:"rgba(255,107,107,.08)",borderRadius:8}}>{err}</div>}
 
           <div className="pt-sfg"><SFL>Nome do torneio</SFL><input className="pt-mfi" placeholder="Ex: Torneio de Verão 2026" value={f.name} onChange={e=>set("name",e.target.value)}/></div>
+          <div className="pt-sfg">
+            <SFL>Formato</SFL>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+              {Object.entries(TOURNAMENT_FORMATS).map(([key,opt])=>(
+                <div key={key} onClick={()=>set("format",key)} style={{padding:"11px 12px",borderRadius:10,border:`1.5px solid ${f.format===key?"rgba(255,255,255,.32)":"rgba(255,255,255,.08)"}`,background:f.format===key?"rgba(255,255,255,.08)":"rgba(255,255,255,.03)",cursor:"pointer"}}>
+                  <div style={{fontSize:13,fontWeight:800,color:f.format===key?"#EDE9E1":"#7A766F"}}>{opt.label}</div>
+                  <div style={{fontSize:10,color:"#7A766F",marginTop:3,lineHeight:1.35}}>{opt.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
             <div className="pt-sfg"><SFL>Data de início</SFL><input type="date" className="pt-mfi" value={f.startDate} onChange={e=>set("startDate",e.target.value)}/></div>
             <div className="pt-sfg"><SFL>Data de fim</SFL><input type="date" className="pt-mfi" value={f.endDate} onChange={e=>set("endDate",e.target.value)}/></div>
@@ -1948,7 +2092,7 @@ function TournamentCreate({cfg,onSave,onClose}){
             </div>
           </div>
 
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          {f.format==="sinetas"&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
             <div className="pt-sfg"><SFL>Equipas por grupo</SFL>
               <select className="pt-mfi" value={f.groupSize} onChange={e=>set("groupSize",parseInt(e.target.value))}>
                 <option value={3}>3 pares</option><option value={4}>4 pares</option><option value={5}>5 pares</option>
@@ -1959,7 +2103,7 @@ function TournamentCreate({cfg,onSave,onClose}){
                 <option value={1}>Só o 1.º</option><option value={2}>1.º e 2.º</option>
               </select>
             </div>
-          </div>
+          </div>}
           <div className="pt-sfg"><SFL>Duração por jogo (min)</SFL>
             <select className="pt-mfi" value={f.slotMinutes} onChange={e=>set("slotMinutes",parseInt(e.target.value))}>
               <option value={60}>60 min</option><option value={75}>75 min</option><option value={90}>90 min</option><option value={120}>120 min</option>
@@ -2004,35 +2148,53 @@ function TournamentDetail({t,cfg,onBack,onUpdate}){
   const update=(updated)=>onUpdate({...t,...updated});
   const updateCat=(catId,changes)=>update({categories:t.categories.map(c=>c.id===catId?{...c,...changes}:c)});
 
+  const format=t.format||"normal";
+  const approvedPairs=(cat)=>cat.pairs.filter(p=>p.status==="approved").map(p=>p.id);
+  const nextLabel=()=>{
+    if(t.status==="draft")return"Abrir Inscrições";
+    if(t.status==="open")return"Encerrar Inscrições";
+    if(t.status==="closed")return format==="normal"?"Gerar Quadro":"Gerar Sinetas";
+    if(t.status==="knockouts")return"Terminar";
+    if(t.status==="groups")return"Terminar";
+    return null;
+  };
+
   // Advance tournament status
   const advanceStatus=()=>{
-    const next={draft:"open",open:"closed",closed:"scheduling",scheduling:"groups",groups:"knockouts",knockouts:"finished"}[t.status];
+    let next={draft:"open",open:"closed",closed:format==="normal"?"knockouts":"groups",groups:"finished",knockouts:"finished"}[t.status];
     if(!next)return;
     let extra={};
-    if(next==="groups"&&t.status==="scheduling"){
-      // Generate groups for each category
+    if((next==="groups"||next==="knockouts")&&t.categories.some(cat=>approvedPairs(cat).length<2)){
+      window.alert("Aprova pelo menos 2 duplas por categoria antes de gerar jogos.");
+      return;
+    }
+    if(next==="groups"&&format==="sinetas"){
       extra={categories:t.categories.map(cat=>{
-        const approved=cat.pairs.filter(p=>p.status==="approved");
+        const approved=approvedPairs(cat);
         const groups=[];
-        for(let i=0;i<approved.length;i+=t.groupSize){
-          const gPairs=approved.slice(i,i+t.groupSize).map(p=>p.id);
+        for(let i=0;i<approved.length;i+=(t.groupSize||4)){
+          const gPairs=approved.slice(i,i+(t.groupSize||4));
           groups.push({id:groups.length+1,pairs:gPairs,matches:genRR(gPairs)});
         }
         return{...cat,groups};
       })};
     }
-    if(next==="knockouts"){
-      // Generate bracket for each category from group qualifiers
+    if(next==="knockouts"&&format==="normal"){
+      extra={categories:t.categories.map(cat=>({...cat,bracket:genBracket(approvedPairs(cat))}))};
+    }
+    if(next==="knockouts"&&format!=="normal"){
       extra={categories:t.categories.map(cat=>{
         const qualifiers=[];
-        cat.groups.forEach(g=>{
+        (cat.groups||[]).forEach(g=>{
           const ranked=calcStandings(g);
           ranked.slice(0,t.advanceCount).forEach(pid=>qualifiers.push(pid));
         });
         return{...cat,bracket:genBracket(qualifiers)};
       })};
     }
-    update({status:next,...extra});
+    const nextTournament={...t,status:next,...extra};
+    const shouldSchedule=next==="groups"||next==="knockouts";
+    update({...extra,status:next,schedule:shouldSchedule?syncTournamentSchedule(nextTournament,cfg,t.schedule||[]):t.schedule});
   };
 
   // Add pair to category
@@ -2051,26 +2213,31 @@ function TournamentDetail({t,cfg,onBack,onUpdate}){
   // Save group match result
   const saveGroupResult=(catId,groupIdx,matchId,sets,winner)=>{
     const cat=t.categories.find(c=>c.id===catId);
-    const groups=cat.groups.map((g,gi)=>gi!==groupIdx?g:{...g,matches:g.matches.map(m=>m.id===matchId?{...m,sets,winner}:m)});
+    const groups=(cat.groups||[]).map((g,gi)=>gi!==groupIdx?g:{...g,matches:g.matches.map(m=>m.id===matchId?{...m,sets,winner}:m)});
     updateCat(catId,{groups});
   };
 
   // Save knockout match result
   const saveKOResult=(catId,roundIdx,matchId,sets,winner)=>{
     const cat=t.categories.find(c=>c.id===catId);
-    let bracket=cat.bracket.map((r,ri)=>ri!==roundIdx?r:{...r,matches:r.matches.map(m=>m.id===matchId?{...m,sets,winner}:m)});
-    // Check if all matches in this round are done
+    let bracket=(cat.bracket||[]).map((r,ri)=>ri!==roundIdx?r:{...r,matches:r.matches.map(m=>m.id===matchId?{...m,sets,winner}:m)});
     const round=bracket[roundIdx];
-    const allDone=round.matches.every(m=>m.winner);
-    if(allDone&&roundIdx===bracket.length-1&&round.matches.length>1){
-      bracket=advanceBracket(bracket);
+    const matchIdx=round.matches.findIndex(m=>m.id===matchId);
+    if(winner&&bracket[roundIdx+1]){
+      bracket=bracket.map((r,ri)=>ri!==roundIdx+1?r:{...r,matches:r.matches.map((m,mi)=>{
+        if(mi!==Math.floor(matchIdx/2))return m;
+        return matchIdx%2===0?{...m,p1:winner}:{...m,p2:winner};
+      })});
     }
-    updateCat(catId,{bracket});
+    bracket=bracket.map((r,ri)=>ri===roundIdx?{...r,done:r.matches.every(m=>m.winner)}:r);
+    const categories=t.categories.map(c=>c.id===catId?{...c,bracket}:c);
+    const updated={...t,categories};
+    update({categories,schedule:syncTournamentSchedule(updated,cfg,t.schedule||[])});
   };
 
   const pairName=(pairId)=>pairNameFromT(t,pairId);
 
-  const hasNext=!!{draft:"open",open:"closed",closed:"scheduling",scheduling:"groups",groups:"knockouts",knockouts:"finished"}[t.status];
+  const hasNext=!!nextLabel();
 
   return(
     <div style={{animation:"ptUp .2s ease both"}}>
@@ -2080,13 +2247,13 @@ function TournamentDetail({t,cfg,onBack,onUpdate}){
         <div className="row g2" style={{marginBottom:8}}>
           <div style={{flex:1,minWidth:0}}>
             <div style={{fontSize:16,fontWeight:800,color:"#EDE9E1",letterSpacing:"-.3px"}}>{t.name}</div>
-            <div style={{fontSize:11,color:"#7A766F",marginTop:2}}>{t.startDate}{t.endDate&&t.endDate!==t.startDate?` → ${t.endDate}`:""}{t.courtIds.length>0&&` · ${t.courtIds.length} campo${t.courtIds.length>1?"s":""}`}</div>
+            <div style={{fontSize:11,color:"#7A766F",marginTop:2}}>{TOURNAMENT_FORMATS[format]?.label||"Torneio"} · {t.startDate}{t.endDate&&t.endDate!==t.startDate?` → ${t.endDate}`:""}{t.courtIds.length>0&&` · ${t.courtIds.length} campo${t.courtIds.length>1?"s":""}`}</div>
           </div>
           <TStatusBadge status={t.status}/>
         </div>
         {t.status!=="finished"&&hasNext&&(
           <button className="pt-btn pt-btn-light pt-btn-w" style={{marginTop:4}} onClick={advanceStatus}>
-            {T_AL[t.status]}
+            {nextLabel()}
           </button>
         )}
       </div>
@@ -2100,6 +2267,10 @@ function TournamentDetail({t,cfg,onBack,onUpdate}){
             </button>
           ))}
         </div>
+      )}
+
+      {(t.status==="groups"||t.status==="knockouts")&&(
+        <SchedulingView t={t} cfg={cfg} onUpdate={onUpdate}/>
       )}
 
       {cat&&(
@@ -2133,11 +2304,8 @@ function TournamentDetail({t,cfg,onBack,onUpdate}){
             </div>
           )}
 
-          {/* SCHEDULING PHASE */}
-          {t.status==="scheduling"&&<SchedulingView t={t} cfg={cfg} onUpdate={onUpdate}/>}
-
           {/* GROUP PHASE */}
-          {t.status==="groups"&&cat.groups.map((group,gi)=>(
+          {t.status==="groups"&&(cat.groups||[]).map((group,gi)=>(
             <div key={group.id} className="pt-acard" style={{padding:0,marginBottom:12}}>
               <div className="pt-ash"><span className="pt-ash-t">Grupo {group.id}</span></div>
               {/* Standings */}
@@ -2173,7 +2341,7 @@ function TournamentDetail({t,cfg,onBack,onUpdate}){
           ))}
 
           {/* KNOCKOUT PHASE */}
-          {t.status==="knockouts"&&cat.bracket.map((round,ri)=>(
+          {t.status==="knockouts"&&(cat.bracket||[]).map((round,ri)=>(
             <div key={ri} className="pt-acard" style={{padding:0,marginBottom:12}}>
               <div className="pt-ash"><span className="pt-ash-t">{round.name}</span>{round.done&&<span style={{fontSize:10,color:"#34D399"}}>✓ Concluído</span>}</div>
               {round.matches.map(m=>(
@@ -2201,7 +2369,7 @@ function TournamentDetail({t,cfg,onBack,onUpdate}){
             <div className="pt-acard" style={{padding:"28px 20px",textAlign:"center"}}>
               <div style={{fontSize:40,marginBottom:12}}>🏆</div>
               <div style={{fontSize:15,fontWeight:800,color:"#EDE9E1",marginBottom:4}}>Torneio concluído</div>
-              {cat.bracket.length>0&&(()=>{const final=cat.bracket[cat.bracket.length-1];const winner=final?.matches[0]?.winner;return winner?<div style={{fontSize:13,color:"#7A766F"}}>Vencedor {cat.id}: <b style={{color:"#EDE9E1"}}>{pairName(winner)}</b></div>:null;})()}
+              {(cat.bracket||[]).length>0&&(()=>{const br=cat.bracket||[];const final=br[br.length-1];const winner=final?.matches[0]?.winner;return winner?<div style={{fontSize:13,color:"#7A766F"}}>Vencedor {cat.id}: <b style={{color:"#EDE9E1"}}>{pairName(winner)}</b></div>:null;})()}
             </div>
           )}
         </>
@@ -2348,47 +2516,20 @@ function ResultModal({info,t,superTb,pairName,onSave,onClose}){
 function SchedulingView({t,cfg,onUpdate}){
   const courts = cfg.courts.filter(c=>c.active && (t.courtIds.length===0||t.courtIds.includes(c.id)));
   const [schedule, setSchedule] = useState(t.schedule||[]);
-  const [selDate,  setSelDate]  = useState(t.startDate||TODAY);
-  const [startH,   setStartH]   = useState("09");
   const [generating, setGen]    = useState(false);
-
-  // Collect all matches needing scheduling across all categories
-  const allMatches = [];
-  t.categories.forEach(cat=>{
-    cat.groups.forEach((g,gi)=>{
-      g.matches.forEach(m=>{
-        allMatches.push({key:`${cat.id}-g${gi}-m${m.id}`,label:`${cat.id} · Grupo ${g.id}`,p1:pairNameFromT(t,m.p1),p2:pairNameFromT(t,m.p2)});
-      });
-    });
-    (cat.bracket||[]).forEach((r,ri)=>{
-      r.matches.forEach(m=>{
-        allMatches.push({key:`${cat.id}-r${ri}-m${m.id}`,label:`${cat.id} · ${r.name}`,p1:pairNameFromT(t,m.p1),p2:pairNameFromT(t,m.p2)});
-      });
-    });
-  });
+  const allMatches = collectTournamentMatches(t);
+  useEffect(()=>setSchedule(t.schedule||[]),[t.schedule]);
 
   const autoGenerate = () => {
     setGen(true);
-    const slotMin = t.slotMinutes||90;
-    const generated = [];
-    let courtIdx=0, slotIdx=0;
-    const baseH = parseInt(startH);
-    allMatches.forEach((m,i)=>{
-      const courtId = courts[courtIdx%courts.length]?.id||1;
-      const h = baseH + Math.floor(slotIdx/courts.length)*Math.ceil(slotMin/60);
-      const min = (slotIdx%2===1&&slotMin===90)?30:0;
-      const timeStr = `${String(h).padStart(2,"0")}:${String(min).padStart(2,"0")}`;
-      generated.push({id:i+1,matchKey:m.key,label:m.label,p1:m.p1,p2:m.p2,date:selDate,time:timeStr,courtId,courtName:courts[courtIdx%courts.length]?.name||"Court"});
-      courtIdx++;
-      if(courtIdx%courts.length===0) slotIdx++;
-    });
+    const generated = generateTournamentSchedule(t,cfg);
     setSchedule(generated);
     onUpdate({...t,schedule:generated});
     setTimeout(()=>setGen(false),400);
   };
 
-  const updateSlot=(id,field,val)=>{
-    const updated=schedule.map(s=>s.id===id?{...s,[field]:val}:s);
+  const updateSlot=(id,changes)=>{
+    const updated=schedule.map(s=>s.id===id?{...s,...changes}:s);
     setSchedule(updated);
     onUpdate({...t,schedule:updated});
   };
@@ -2405,35 +2546,19 @@ function SchedulingView({t,cfg,onUpdate}){
   const SLOT_OPTS=[];
   SLOTS_H.forEach(h=>{SLOT_OPTS.push(`${h}:00`);SLOT_OPTS.push(`${h}:30`);});
 
-  // Days between start and end
-  const days=[];
-  if(t.startDate){
-    let d=new Date(t.startDate+"T12:00:00");
-    const end=new Date((t.endDate||t.startDate)+"T12:00:00");
-    while(d<=end){days.push(d.toISOString().split("T")[0]);d.setDate(d.getDate()+1);}
-  }
-
   return(
-    <div>
+    <div style={{marginBottom:14}}>
       {/* AUTO GENERATE */}
       <div className="pt-acard" style={{padding:"14px 16px",marginBottom:12}}>
-        <div style={{fontSize:13,fontWeight:800,color:"#EDE9E1",marginBottom:10}}>Geração Automática</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
-          <div><div style={{fontSize:10,fontWeight:700,color:"#7A766F",textTransform:"uppercase",letterSpacing:".8px",marginBottom:6}}>Data de início</div>
-            <select className="pt-sfi" value={selDate} onChange={e=>setSelDate(e.target.value)}>
-              {days.map(d=><option key={d} value={d}>{d}</option>)}
-            </select>
+        <div className="row g2" style={{alignItems:"flex-start"}}>
+          <div style={{flex:1}}>
+            <div style={{fontSize:13,fontWeight:800,color:"#EDE9E1",marginBottom:4}}>Calendário automático</div>
+            <div style={{fontSize:11,color:"#7A766F",lineHeight:1.45}}>{courts.length} campo{courts.length!==1?"s":""} · {t.slotMinutes||90} min/jogo · {allMatches.length} jogo{allMatches.length!==1?"s":""}</div>
           </div>
-          <div><div style={{fontSize:10,fontWeight:700,color:"#7A766F",textTransform:"uppercase",letterSpacing:".8px",marginBottom:6}}>Hora de início</div>
-            <select className="pt-sfi" value={startH} onChange={e=>setStartH(e.target.value)}>
-              {SLOTS_H.map(h=><option key={h} value={h}>{h}:00</option>)}
-            </select>
-          </div>
+          <button className="pt-btn pt-btn-light pt-btn-sm" onClick={autoGenerate} disabled={generating||courts.length===0||allMatches.length===0}>
+            {generating?"A gerar…":"Regenerar"}
+          </button>
         </div>
-        <div style={{fontSize:11,color:"#7A766F",marginBottom:10}}>{courts.length} campo{courts.length!==1?"s":""} · {t.slotMinutes||90} min/jogo · {allMatches.length} jogos a calendarizar</div>
-        <button className="pt-btn pt-btn-light pt-btn-w" onClick={autoGenerate} disabled={generating||courts.length===0}>
-          {generating?"A gerar…":"⚡ Gerar Calendário Automático"}
-        </button>
       </div>
 
       {/* SCHEDULE TABLE */}
@@ -2454,10 +2579,11 @@ function SchedulingView({t,cfg,onUpdate}){
                       <div style={{fontSize:11,color:"#7A766F"}}>vs. {slot.p2}</div>
                     </div>
                     <div style={{display:"flex",flexDirection:"column",gap:5,flexShrink:0}}>
-                      <select style={{background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",borderRadius:7,padding:"4px 8px",color:"#EDE9E1",fontSize:11,fontFamily:"inherit",outline:"none"}} value={slot.courtName} onChange={e=>{const c=courts.find(c=>c.name===e.target.value);updateSlot(slot.id,"courtName",e.target.value);updateSlot(slot.id,"courtId",c?.id||slot.courtId);}}>
+                      <input type="date" style={{background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",borderRadius:7,padding:"4px 8px",color:"#EDE9E1",fontSize:11,fontFamily:"inherit",outline:"none"}} value={slot.date} onChange={e=>updateSlot(slot.id,{date:e.target.value})}/>
+                      <select style={{background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",borderRadius:7,padding:"4px 8px",color:"#EDE9E1",fontSize:11,fontFamily:"inherit",outline:"none"}} value={slot.courtName} onChange={e=>{const c=courts.find(c=>c.name===e.target.value);updateSlot(slot.id,{courtName:e.target.value,courtId:c?.id||slot.courtId});}}>
                         {courts.map(c=><option key={c.id}>{c.name}</option>)}
                       </select>
-                      <select style={{background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",borderRadius:7,padding:"4px 8px",color:"#EDE9E1",fontSize:11,fontFamily:"inherit",outline:"none"}} value={slot.time} onChange={e=>updateSlot(slot.id,"time",e.target.value)}>
+                      <select style={{background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",borderRadius:7,padding:"4px 8px",color:"#EDE9E1",fontSize:11,fontFamily:"inherit",outline:"none"}} value={slot.time} onChange={e=>updateSlot(slot.id,{time:e.target.value})}>
                         {SLOT_OPTS.map(s=><option key={s}>{s}</option>)}
                       </select>
                     </div>
@@ -2481,6 +2607,29 @@ function pairNameFromT(t,pairId){
   if(!pairId)return"A definir";
   for(const c of t.categories){const p=c.pairs.find(p=>p.id===pairId);if(p)return`${p.p1} / ${p.p2}`;}
   return"—";
+}
+
+function TournamentSchedulePublic({schedule=[]}){
+  const upcoming=schedule.slice().sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
+  if(upcoming.length===0)return null;
+  return(
+    <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,marginBottom:16,overflow:"hidden"}}>
+      <div style={{padding:"12px 16px",borderBottom:"1px solid rgba(0,0,0,.06)",fontSize:13,fontWeight:800,color:"#141210"}}>Calendário de jogos</div>
+      {upcoming.map(s=>(
+        <div key={s.matchKey} style={{padding:"11px 16px",borderBottom:"1px solid rgba(0,0,0,.05)",display:"flex",gap:10,alignItems:"flex-start"}}>
+          <div style={{width:58,flexShrink:0}}>
+            <div style={{fontSize:12,fontWeight:800,color:"#141210"}}>{s.time}</div>
+            <div style={{fontSize:10,color:"#B5B0A8"}}>{fmtSh(s.date)}</div>
+          </div>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:10,fontWeight:700,color:"#B5B0A8",textTransform:"uppercase",letterSpacing:".7px",marginBottom:3}}>{s.label} · {s.courtName}</div>
+            <div style={{fontSize:12,fontWeight:700,color:"#141210",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.p1}</div>
+            <div style={{fontSize:11,color:"#7A766F",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>vs. {s.p2}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -2800,10 +2949,26 @@ function TournamentPublicView({t,onBack}){
             ))}
           </div>
         )}
+        <TournamentSchedulePublic schedule={t.schedule||[]}/>
         {cat&&(
           <>
+            {t.status==="open"&&(
+              <div style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,padding:"16px",marginBottom:12}}>
+                <div style={{fontSize:14,fontWeight:800,color:"#141210",marginBottom:6}}>Inscrições abertas</div>
+                <div style={{fontSize:13,color:"#7A766F",lineHeight:1.55,marginBottom:12}}>
+                  {TOURNAMENT_FORMATS[t.format||"normal"]?.label||"Torneio"} · {cat.pairs.filter(p=>p.status==="approved").length} dupla{cat.pairs.filter(p=>p.status==="approved").length!==1?"s":""} confirmada{cat.pairs.filter(p=>p.status==="approved").length!==1?"s":""}
+                </div>
+                <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                  {cat.pairs.slice(0,8).map(p=>(
+                    <span key={p.id} style={{fontSize:11,fontWeight:700,padding:"4px 9px",borderRadius:99,background:"#F4F0E8",color:"#7A766F"}}>{p.p1} / {p.p2}</span>
+                  ))}
+                  {cat.pairs.length===0&&<span style={{fontSize:12,color:"#B5B0A8"}}>Ainda sem inscrições nesta categoria.</span>}
+                </div>
+              </div>
+            )}
+
             {/* Groups */}
-            {(t.status==="groups"||t.status==="knockouts"||t.status==="finished")&&cat.groups.map((g,gi)=>(
+            {(t.status==="groups"||t.status==="knockouts"||t.status==="finished")&&(cat.groups||[]).map((g,gi)=>(
               <div key={g.id} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,marginBottom:12,overflow:"hidden"}}>
                 <div style={{padding:"12px 16px 0",fontSize:12,fontWeight:800,color:"#141210",letterSpacing:"-.2px",marginBottom:10}}>Grupo {g.id}</div>
                 <div style={{padding:"0 16px 10px"}}>
@@ -2831,7 +2996,7 @@ function TournamentPublicView({t,onBack}){
               </div>
             ))}
             {/* Bracket */}
-            {(t.status==="knockouts"||t.status==="finished")&&cat.bracket.map((round,ri)=>(
+            {(t.status==="knockouts"||t.status==="finished")&&(cat.bracket||[]).map((round,ri)=>(
               <div key={ri} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.09)",borderRadius:12,marginBottom:12,overflow:"hidden"}}>
                 <div style={{padding:"12px 16px 8px",fontSize:12,fontWeight:800,color:"#141210",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                   {round.name}{round.done&&<span style={{fontSize:10,color:"#34D399",fontWeight:700}}>✓ Concluído</span>}
@@ -2850,7 +3015,7 @@ function TournamentPublicView({t,onBack}){
               </div>
             ))}
             {t.status==="finished"&&(()=>{
-              const finalRound=cat.bracket[cat.bracket.length-1];
+              const finalRound=(cat.bracket||[])[(cat.bracket||[]).length-1];
               const winner=finalRound?.matches[0]?.winner;
               return winner?(
                 <div style={{background:"#141210",borderRadius:12,padding:"24px 20px",textAlign:"center",marginBottom:12}}>
@@ -3387,10 +3552,7 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
     if(!f.email.trim()||!/\S+@\S+\.\S+/.test(f.email)) e.email="Email inválido";
     if(clubs.find(c=>c.email.toLowerCase()===f.email.toLowerCase().trim())) e.email="Este email já está registado";
     if(!f.phone.trim())   e.phone="Obrigatório";
-    if(!f.address.trim()) e.address="Obrigatório";
     if(!f.city.trim())    e.city="Obrigatório";
-    if(f.password.length<6) e.password="Mínimo 6 caracteres";
-    if(f.password!==f.confirm) e.confirm="As passwords não coincidem";
     setErrs(e);
     if(Object.keys(e).length) return;
     setLoading(true);
@@ -3398,7 +3560,7 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
     const club={
       id:Date.now(), name:f.name.trim(), email:f.email.trim(),
       phone:f.phone.trim(), address:f.address.trim(), city:f.city.trim(),
-      password:f.password, status:"pending", since:TODAY,
+      password:"portal2026", status:"pending", since:TODAY,
       // Default club config
       tagline:"O teu campo. À tua hora.", priceDay:3, priceNight:4,
       nightFrom:"18", openFrom:"08", openTo:"22", durations:[60,90,120],
@@ -3420,8 +3582,8 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
           <div style={{fontSize:11,fontWeight:700,color:"#7A766F",textTransform:"uppercase",letterSpacing:"1px",marginBottom:6}}>Próximos passos</div>
           <div style={{fontSize:13,color:"#141210",lineHeight:1.7}}>
             1. A equipa Portal do Padel analisa o teu pedido<br/>
-            2. Recebes aprovação por email<br/>
-            3. Faz login com o teu email e password
+            2. Falamos contigo para configurar o clube<br/>
+            3. Recebes os acessos ao backoffice
           </div>
         </div>
         <AuthBtn onClick={onGoLogin} secondary>Ir para o login</AuthBtn>
@@ -3431,15 +3593,21 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack }) {
 
   return (
     <AuthLayout title="Registar clube" subtitle="Pede a entrada do teu clube no Portal do Padel">
+      <div style={{background:"#141210",color:"#F4F0E8",borderRadius:14,padding:"16px",marginBottom:16}}>
+        <div style={{fontSize:16,fontWeight:800,letterSpacing:"-.4px",marginBottom:6}}>Mensalidade fixa. Zero comissões.</div>
+        <div style={{fontSize:12,color:"rgba(244,240,232,.72)",lineHeight:1.55}}>Reservas, torneios e gestão de campos sem taxa por reserva, sem comissão por torneio e sem perder a relação com os teus jogadores.</div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
+        {["Reservas ilimitadas","Torneios ilimitados","Clientes do clube","Setup acompanhado"].map(x=>(
+          <div key={x} style={{background:"#FFFFFF",border:"1px solid rgba(0,0,0,.08)",borderRadius:10,padding:"10px 11px",fontSize:12,fontWeight:700,color:"#141210"}}>{x}</div>
+        ))}
+      </div>
       <AuthInput label="Nome do clube" value={f.name} onChange={e=>set("name",e.target.value)} placeholder="Ex: Padel Arena Lisboa" error={errs.name}/>
       <AuthInput label="Email" type="email" value={f.email} onChange={e=>set("email",e.target.value)} placeholder="clube@email.pt" error={errs.email}/>
       <AuthInput label="Telefone" type="tel" value={f.phone} onChange={e=>set("phone",e.target.value)} placeholder="+351 2xx xxx xxx" error={errs.phone}/>
-      <AuthInput label="Morada" value={f.address} onChange={e=>set("address",e.target.value)} placeholder="Rua, número" error={errs.address}/>
       <AuthInput label="Cidade" value={f.city} onChange={e=>set("city",e.target.value)} placeholder="Lisboa" error={errs.city}/>
-      <AuthInput label="Password" type="password" value={f.password} onChange={e=>set("password",e.target.value)} placeholder="Mínimo 6 caracteres" error={errs.password}/>
-      <AuthInput label="Confirmar password" type="password" value={f.confirm} onChange={e=>set("confirm",e.target.value)} placeholder="Repete a password" error={errs.confirm}/>
       <div style={{fontSize:11,color:"#7A766F",marginBottom:16,padding:"10px 12px",background:"rgba(0,0,0,.04)",borderRadius:8,lineHeight:1.6}}>
-        📋 O teu pedido será analisado pela equipa Portal do Padel. Receberás resposta por email.
+        O pedido é simples: deixas os dados e nós ajudamos a colocar o clube online.
       </div>
       <AuthBtn onClick={submit} disabled={loading}>{loading?"A enviar…":"Enviar pedido"}</AuthBtn>
       <div style={{textAlign:"center",fontSize:13,color:"#7A766F",marginTop:8}}>
