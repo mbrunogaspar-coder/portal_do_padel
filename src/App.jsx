@@ -242,16 +242,16 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-crv{font-size:12px;font-weight:700;color:#141210}
 .pt-crc{font-size:11px;color:#B5B0A8}
 
-.pt-cdesc{padding:0 16px 12px;font-size:12px;color:#7A766F;line-height:1.65}
-.pt-cstats{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid rgba(0,0,0,0.07);border-bottom:1px solid rgba(0,0,0,0.07)}
+.pt-cdesc{padding:0 16px 12px;font-size:12px;color:#7A766F;line-height:1.65;min-height:68px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.pt-cstats{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid rgba(0,0,0,0.07);border-bottom:1px solid rgba(0,0,0,0.07);flex-shrink:0}
 .pt-cs{padding:10px 12px;position:relative}
 .pt-cs::after{content:'';position:absolute;right:0;top:18%;height:64%;width:1px;background:rgba(0,0,0,0.07)}
 .pt-cs:last-child::after{display:none}
 .pt-csv{font-weight:800;font-size:17px;color:#141210;letter-spacing:-.3px;line-height:1}
 .pt-csl{font-size:9px;color:#B5B0A8;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
-.pt-ctags{padding:10px 16px;display:flex;gap:6px;flex-wrap:wrap}
+.pt-ctags{padding:10px 16px;display:flex;gap:6px;flex-wrap:wrap;min-height:56px;align-content:flex-start;flex-shrink:0}
 .pt-ctag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:#F4F0E8;color:#7A766F}
-.pt-cfoot{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:#F9F7F3;margin-top:auto}
+.pt-cfoot{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:#F9F7F3;margin-top:auto;flex-shrink:0}
 .pt-cprice-v{font-weight:800;font-size:18px;color:#141210;letter-spacing:-.3px}
 .pt-cprice-r{font-size:12px;color:#B5B0A8}
 .pt-ccta{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:9px;background:#141210;color:#F4F0E8;border:none;font-size:12px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:inherit}
@@ -1054,7 +1054,7 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
         <div className="pt-rgs">
           {REGIONS.map(r=>(
             <div key={r.id} className={`pt-rg ${region===r.id?"on":""}`} onClick={()=>{setRegion(r.id);setSearch("");}}>
-              {r.icon} {r.label}
+              {r.label}
               {r.id!=="all"&&<span className="pt-rgc">({rc(r.id)})</span>}
             </div>
           ))}
@@ -1116,6 +1116,7 @@ function ClubCard({ club, delay, onSelect }) {
 function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, bookingsAll, onCancelBooking, onJoinWaitlist, currentUser, onRegisterTournament, pendingTournamentReg, onClearPendingReg }) {
   const [portalTab, setPortalTab] = useState("reserve"); // "reserve" | "mybookings" | "tournaments"
   useEffect(()=>{ if(pendingTournamentReg){ setPortalTab("tournaments"); } },[pendingTournamentReg]);
+  useEffect(()=>{ if(!currentUser&&portalTab==="mybookings") setPortalTab("reserve"); },[currentUser,portalTab]);
   const [waitlistSlot, setWaitlistSlot] = useState(null);
   const [selDay,  setDay]   = useState(null);
   const [selDur,  setDur]   = useState(null);
@@ -1164,7 +1165,7 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
         <span className="pt-pname">{club.name||"Clube"}</span>
         <div style={{display:"flex",background:"rgba(0,0,0,.07)",borderRadius:7,padding:"2px",gap:"2px"}}>
           <button onClick={()=>setPortalTab("reserve")} style={{padding:"4px 10px",borderRadius:5,fontSize:11,fontWeight:600,border:"none",background:portalTab==="reserve"?"#141210":"transparent",color:portalTab==="reserve"?"#F4F0E8":"#7A766F",cursor:"pointer",fontFamily:"inherit"}}>Reservar</button>
-          <button onClick={()=>setPortalTab("mybookings")} style={{padding:"4px 10px",borderRadius:5,fontSize:11,fontWeight:600,border:"none",background:portalTab==="mybookings"?"#141210":"transparent",color:portalTab==="mybookings"?"#F4F0E8":"#7A766F",cursor:"pointer",fontFamily:"inherit"}}>As Minhas</button>
+          {currentUser&&<button onClick={()=>setPortalTab("mybookings")} style={{padding:"4px 10px",borderRadius:5,fontSize:11,fontWeight:600,border:"none",background:portalTab==="mybookings"?"#141210":"transparent",color:portalTab==="mybookings"?"#F4F0E8":"#7A766F",cursor:"pointer",fontFamily:"inherit"}}>As Minhas</button>}
           <button onClick={()=>setPortalTab("tournaments")} style={{padding:"4px 10px",borderRadius:5,fontSize:11,fontWeight:600,border:"none",background:portalTab==="tournaments"?"#141210":openTourneys.length?"#DDF7E7":"transparent",color:portalTab==="tournaments"?"#F4F0E8":openTourneys.length?"#0F6B3A":"#7A766F",cursor:"pointer",fontFamily:"inherit"}}>Torneios{openTourneys.length?` (${openTourneys.length})`:""}</button>
         </div>
       </div>
@@ -2836,7 +2837,7 @@ function TournamentRegistration({tournaments,onRegister,onBack}){
 
   if(done) return(
     <div style={{textAlign:"center",padding:"48px 20px",background:"#F4F0E8",minHeight:"calc(100vh - 52px)"}}>
-      <div style={{fontSize:48,marginBottom:16}}>✅</div>
+      <div style={{width:54,height:54,borderRadius:18,background:"#141210",color:"#F4F0E8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:900,letterSpacing:".8px",margin:"0 auto 16px"}}>OK</div>
       <div style={{fontSize:20,fontWeight:800,color:"#141210",letterSpacing:"-.5px",marginBottom:8}}>Inscrição enviada!</div>
       <div style={{fontSize:14,color:"#7A766F",maxWidth:280,margin:"0 auto",lineHeight:1.65}}>A tua inscrição foi submetida. O clube irá confirmar em breve.</div>
         <button style={{marginTop:24,padding:"11px 24px",borderRadius:10,background:"#141210",color:"#F4F0E8",border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>{setDone(false);if(open.length===1){onBack();return;}setSel(null);setForm({p1:"",p2:"",contact:"",catId:""});}}>← Ver Torneios</button>
@@ -2845,11 +2846,8 @@ function TournamentRegistration({tournaments,onRegister,onBack}){
 
   if(sel) return(
     <div style={{background:"#F4F0E8",minHeight:"calc(100vh - 52px)"}}>
-      <div style={{position:"sticky",top:52,background:"rgba(244,240,232,.95)",backdropFilter:"blur(16px)",borderBottom:"1px solid rgba(0,0,0,.09)",padding:"0 18px",height:48,display:"flex",alignItems:"center",gap:10}}>
-        <button style={{display:"flex",alignItems:"center",gap:6,color:"#7A766F",background:"none",border:"none",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>open.length===1?onBack():setSel(null)}>← Torneios</button>
-        <span style={{fontWeight:800,fontSize:14,color:"#141210",flex:1}}>Inscrição</span>
-      </div>
-      <div style={{maxWidth:540,margin:"0 auto",padding:"20px 18px 80px"}}>
+      <div style={{maxWidth:540,margin:"0 auto",padding:"28px 18px 80px"}}>
+        <button style={{display:"inline-flex",alignItems:"center",gap:6,color:"#7A766F",background:"none",border:"none",fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",marginBottom:14}} onClick={()=>open.length===1?onBack():setSel(null)}>← Voltar aos torneios</button>
         <div style={{background:"#FFFFFF",borderRadius:14,padding:"16px",marginBottom:16,border:"1px solid rgba(0,0,0,.09)"}}>
           <div style={{fontSize:16,fontWeight:800,color:"#141210",letterSpacing:"-.3px"}}>{sel.name}</div>
           <div style={{fontSize:12,color:"#7A766F",marginTop:4}}>{sel.startDate}{sel.endDate&&sel.endDate!==sel.startDate?` → ${sel.endDate}`:""}</div>
@@ -4075,7 +4073,7 @@ function DiscoverTournaments({ allTournaments, onRegister, currentUser }) {
         <div style={{display:"flex",gap:7,overflow:"auto",paddingBottom:4,scrollbarWidth:"none"}}>
           {REGIONS.map(r=>(
             <div key={r.id} className={`pt-rg ${region===r.id?"on":""}`} onClick={()=>setRegion(r.id)}>
-              {r.icon} {r.label}
+              {r.label}
             </div>
           ))}
         </div>
