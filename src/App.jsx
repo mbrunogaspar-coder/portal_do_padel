@@ -73,6 +73,8 @@ const occS   = (t,d)=>{ const s=[]; let cur=t.includes(':')?t:t+':00'; const end
 const fmtLong= (ds)=>new Date(ds+"T12:00:00").toLocaleDateString("pt-PT",{weekday:"long",day:"numeric",month:"long"});
 const fmtSh  = (ds)=>new Date(ds+"T12:00:00").toLocaleDateString("pt-PT",{day:"2-digit",month:"2-digit"});
 const fmtFull= (ds)=>new Date(ds+"T12:00:00").toLocaleDateString("pt-PT",{day:"numeric",month:"long",year:"numeric"});
+const pad2   = (v)=>String(v).padStart(2,"0");
+const money2 = (v)=>Number(v||0).toFixed(2).replace(".",",");
 const getWD  = (ds)=>new Date(ds+"T12:00:00").getDay();
 const genRef = ()=>"PDP-"+Math.random().toString(36).slice(-5).toUpperCase();
 const ini    = (n)=>n.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
@@ -237,7 +239,7 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-phero-live::before{content:'';width:5px;height:5px;border-radius:50%;background:#F4F0E8;flex-shrink:0;animation:ptPulse 2s infinite}
 .pt-phero-title{font-weight:800;font-size:clamp(38px,9vw,66px);line-height:.9;letter-spacing:-2px;color:#141210;margin-bottom:12px;font-family:'DM Serif Display','DM Sans',system-ui,sans-serif}
 .pt-phero-sub{font-size:14px;color:#7A766F;font-weight:400}
-.pt-phero-info{margin-top:18px;font-size:12px;color:#5A5652;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.pt-phero-info{margin-top:18px;font-size:12px;color:#5A5652;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;text-align:center}
 .pt-phero-info span{background:rgba(255,255,255,.68);border:1px solid rgba(0,0,0,.07);border-radius:99px;padding:7px 11px;box-shadow:0 8px 22px rgba(20,18,16,.04)}
 .pt-phero-info b{color:#141210;font-weight:700}
 
@@ -1065,18 +1067,18 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
             </a>
           )}
           <div className="pt-phero-info">
-            <span>☀️ Diurno <b>{priceD}€/jog.</b></span>
-            <span>🌙 Noturno <b>{priceN}€/jog.</b> <span style={{opacity:.5}}>a partir das {nf}h</span></span>
+            <span>☀️ Diurno <b>{money2(priceD)}€/jog.</b></span>
+            <span>🌙 Noturno <b>{money2(priceN)}€/jog.</b> <span style={{opacity:.5}}>a partir das {pad2(nf)}h</span></span>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10,maxWidth:360,margin:"22px auto 0"}}>
-            <div style={{background:"rgba(255,255,255,.72)",border:"1px solid rgba(0,0,0,.08)",borderRadius:14,padding:"13px 14px",boxShadow:"0 10px 26px rgba(0,0,0,.04)",textAlign:"left"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10,width:"100%",maxWidth:340,margin:"22px auto 0"}}>
+            <div style={{background:"rgba(255,255,255,.72)",border:"1px solid rgba(0,0,0,.08)",borderRadius:14,padding:"15px 14px",boxShadow:"0 10px 26px rgba(0,0,0,.04)",textAlign:"center",display:"flex",flexDirection:"column",alignItems:"center"}}>
               <div style={{fontSize:10,fontWeight:800,color:"#B5B0A8",textTransform:"uppercase",letterSpacing:"1px",marginBottom:3}}>Campos</div>
-              <div style={{fontSize:24,fontWeight:900,color:"#141210",letterSpacing:"-.8px",lineHeight:1}}>{courts.length}</div>
+              <div style={{fontSize:26,fontWeight:900,color:"#141210",letterSpacing:"-.8px",lineHeight:1}}>{pad2(courts.length)}</div>
               <div style={{fontSize:11,color:"#7A766F",marginTop:4}}>disponíveis online</div>
             </div>
-            <div style={{background:"rgba(255,255,255,.72)",border:"1px solid rgba(0,0,0,.08)",borderRadius:14,padding:"13px 14px",boxShadow:"0 10px 26px rgba(0,0,0,.04)",textAlign:"left"}}>
+            <div style={{background:"rgba(255,255,255,.72)",border:"1px solid rgba(0,0,0,.08)",borderRadius:14,padding:"15px 14px",boxShadow:"0 10px 26px rgba(0,0,0,.04)",textAlign:"center",display:"flex",flexDirection:"column",alignItems:"center"}}>
               <div style={{fontSize:10,fontWeight:800,color:"#B5B0A8",textTransform:"uppercase",letterSpacing:"1px",marginBottom:3}}>Horário</div>
-              <div style={{fontSize:24,fontWeight:900,color:"#141210",letterSpacing:"-.8px",lineHeight:1}}>{club.openFrom||"08"}–{club.openTo||"22"}</div>
+              <div style={{fontSize:26,fontWeight:900,color:"#141210",letterSpacing:"-.8px",lineHeight:1}}>{pad2(club.openFrom||"08")}–{pad2(club.openTo||"22")}</div>
               <div style={{fontSize:11,color:"#7A766F",marginTop:4}}>reservas abertas</div>
             </div>
           </div>
@@ -1120,7 +1122,7 @@ function PortalView({ club, bookings, blocks, onBook, onBack, tournaments, booki
             {days.map(d=>(
               <div key={d.date} className={`pt-day ${selDay===d.date?"on":""}`} onClick={()=>{setDay(d.date);setTime(null);setCt(null);}}>
                 <span className="pt-day-wd">{d.wd.slice(0,3)}</span>
-                <span className="pt-day-d">{d.day}</span>
+                <span className="pt-day-d">{pad2(d.day)}</span>
                 <span className="pt-day-m">{d.mon.slice(0,3)}</span>
               </div>
             ))}
