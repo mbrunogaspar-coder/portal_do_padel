@@ -956,7 +956,7 @@ function AudienceGate({onPlayer,onClub}){
             <span className="pt-gate-action">Entrar →</span>
           </button>
           <button className="pt-gate-card" onClick={onClub}>
-            <h2>Sou clube</h2>
+            <h2>Tenho um clube</h2>
             <p>Gerir campos, torneios e pedidos de reserva sem comissões por marcação.</p>
             <span className="pt-gate-action">Gerir →</span>
           </button>
