@@ -24,6 +24,24 @@ const REGIONS = [
   {id:"acores",label:"Açores",icon:"🌋"},
   {id:"madeira",label:"Madeira",icon:"🌺"},
 ];
+const normalizeText = (v="") => v.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+const inferRegion = (city="", postalCode="") => {
+  const c = normalizeText(city);
+  const p = String(postalCode||"").trim();
+  if(["porto","braga","guimaraes","viana do castelo","vila real","braganca","maia","matosinhos","gondomar","famalicao"].some(x=>c.includes(x))) return "norte";
+  if(["coimbra","aveiro","viseu","leiria","castelo branco","guarda","figueira da foz"].some(x=>c.includes(x))) return "centro";
+  if(["lisboa","sintra","cascais","oeiras","loures","amadora","setubal","almada","seixal","barreiro","santarem"].some(x=>c.includes(x))) return "lvt";
+  if(["evora","beja","portalegre","elvas","sines"].some(x=>c.includes(x))) return "alent";
+  if(["faro","albufeira","portimao","lagos","loule","tavira","olhao"].some(x=>c.includes(x))) return "alg";
+  if(["ponta delgada","angra","horta","acores"].some(x=>c.includes(x))||p.startsWith("95")) return "acores";
+  if(["funchal","madeira","santa cruz","camara de lobos"].some(x=>c.includes(x))||p.startsWith("90")||p.startsWith("91")||p.startsWith("92")||p.startsWith("93")) return "madeira";
+  if(p.startsWith("4")) return "norte";
+  if(p.startsWith("3")||p.startsWith("6")) return "centro";
+  if(p.startsWith("1")||p.startsWith("2")) return "lvt";
+  if(p.startsWith("7")) return "alent";
+  if(p.startsWith("8")) return "alg";
+  return "all";
+};
 const CLUBS = [
   {id:1,name:"Padel Arena",phone:"+351 210 000 001",amenities:["parking","showers"],city:"Lisboa",district:"Lisboa",region:"lvt",courts:4,indoor:2,outdoor:2,priceDay:3,priceNight:4,nightFrom:18,rating:4.8,reviews:124,tags:["Indoor","Balneários","Estac."],open:"08–22h",desc:"4 campos premium no centro de Lisboa. Balneários equipados e estacionamento privativo."},
   {id:2,name:"Norte Padel",phone:"+351 220 000 001",amenities:["academy","shop"],city:"Porto",district:"Porto",region:"norte",courts:6,indoor:4,outdoor:2,priceDay:2.5,priceNight:3.5,nightFrom:18,rating:4.9,reviews:203,tags:["Indoor","Aulas","Loja"],open:"07–23h",desc:"O maior clube de padel do Porto. Academia com treinadores certificados e loja especializada."},
@@ -187,14 +205,14 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
 .pt-club-gateway-inner{width:100%;max-width:860px;text-align:center}
 .pt-club-gateway-title{font-family:'DM Serif Display','DM Sans',system-ui,sans-serif;font-size:clamp(42px,8vw,78px);line-height:.9;letter-spacing:-2.2px;margin-bottom:16px}
 .pt-club-gateway-copy{font-size:16px;color:#7A766F;line-height:1.7;max-width:560px;margin:0 auto 28px}
-.pt-club-gateway-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.pt-club-gateway-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
 .pt-club-gateway-primary,.pt-club-gateway-secondary{border:none;border-radius:14px;padding:14px 22px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit}
 .pt-club-gateway-primary{background:#141210;color:#F4F0E8;box-shadow:0 14px 34px rgba(20,18,16,.18)}
 .pt-club-gateway-secondary{background:#FFFFFF;color:#141210;border:1px solid rgba(0,0,0,.10)}
-.pt-club-gateway-points{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:720px;margin:0 auto}
-.pt-club-gateway-point{background:rgba(255,255,255,.72);border:1px solid rgba(0,0,0,.08);border-radius:16px;padding:18px 16px;box-shadow:0 12px 34px rgba(20,18,16,.05)}
-.pt-club-gateway-point b{display:block;font-size:15px;letter-spacing:-.2px;margin-bottom:5px}
-.pt-club-gateway-point span{display:block;font-size:12px;color:#7A766F;line-height:1.45}
+.pt-club-gateway-points{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;max-width:760px;margin:0 auto;text-align:center}
+.pt-club-gateway-point{padding:0 10px}
+.pt-club-gateway-point b{display:block;font-size:14px;letter-spacing:-.2px;margin-bottom:8px;color:#141210}
+.pt-club-gateway-point span{display:block;font-size:13px;color:#7A766F;line-height:1.55;max-width:205px;margin:0 auto}
 
 /* ── DISCOVERY ── */
 .pt-page{background:#F4F0E8;min-height:calc(100vh - 52px)}
@@ -653,9 +671,10 @@ body{color:#141210;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;lin
   .pt-club-gateway{align-items:flex-start;padding:46px 18px}
   .pt-club-gateway-title{font-size:46px;letter-spacing:-1.7px}
   .pt-club-gateway-copy{font-size:15px}
-  .pt-club-gateway-actions{flex-direction:column}
+  .pt-club-gateway-actions{flex-direction:column;margin-bottom:34px}
   .pt-club-gateway-primary,.pt-club-gateway-secondary{width:100%}
-  .pt-club-gateway-points{grid-template-columns:1fr}
+  .pt-club-gateway-points{grid-template-columns:1fr;gap:24px;max-width:330px}
+  .pt-club-gateway-point{padding:0}
   .pt-hero{padding:46px 18px 44px}
   .pt-h1{font-size:48px;letter-spacing:-1.8px;margin-bottom:18px}
   .pt-sub{font-size:15px;line-height:1.55;margin-bottom:28px}
@@ -781,8 +800,9 @@ export default function App() {
   const activeClubCfg  = clubId==="demo" ? adminCfg : getCD("cfg", {
     ...DEF_CLUB,
     name:    currentUser?.data?.name    || DEF_CLUB.name,
-    address: currentUser?.data?.address || DEF_CLUB.address,
+    address: [currentUser?.data?.address,currentUser?.data?.postalCode,currentUser?.data?.city].filter(Boolean).join(", ") || DEF_CLUB.address,
     city:    currentUser?.data?.city    || DEF_CLUB.city,
+    postalCode: currentUser?.data?.postalCode || "",
     phone:   currentUser?.data?.phone   || DEF_CLUB.phone,
     email:   currentUser?.data?.email   || DEF_CLUB.email,
   });
@@ -998,8 +1018,8 @@ function DiscoverView({ onSelectClub, allTournaments=[], currentUser, onRegister
   const allClubs = [
     ...CLUBS,
     ...regClubs.map(c=>({
-      id:c.id, name:c.name, city:c.city, district:c.city, region:c.region||"all", isRegistered:true,
-      address:c.address, phone:c.phone, email:c.email,
+      id:c.id, name:c.name, city:c.city, district:c.city, region:c.region||inferRegion(c.city,c.postalCode), isRegistered:true,
+      address:[c.address,c.postalCode,c.city].filter(Boolean).join(", "), postalCode:c.postalCode, phone:c.phone, email:c.email,
       desc:`Clube de padel em ${c.city}.`,
       courts: Array.isArray(c.courts)?c.courts.length:(c.courts||1),
       indoor:c.indoor||1, outdoor:c.outdoor||0,
@@ -3728,7 +3748,7 @@ function ClubLogin({ clubs, onLogin, onGoRegister, onSuperLogin, onBack, onHome 
 
 // ── CLUB REGISTER ─────────────────────────────────────────────────────────────
 function ClubRegister({ clubs, onSubmit, onGoLogin, onBack, onHome }) {
-  const [f,setF]=useState({name:"",email:"",phone:"",address:"",city:"",password:"",confirm:""});
+  const [f,setF]=useState({name:"",email:"",phone:"",address:"",postalCode:"",city:"",password:"",confirm:""});
   const [errs,setErrs]=useState({});
   const [loading,setLoading]=useState(false);
   const [done,setDone]=useState(false);
@@ -3740,14 +3760,17 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack, onHome }) {
     if(!f.email.trim()||!/\S+@\S+\.\S+/.test(f.email)) e.email="Email inválido";
     if(clubs.find(c=>c.email.toLowerCase()===f.email.toLowerCase().trim())) e.email="Este email já está registado";
     if(!f.phone.trim())   e.phone="Obrigatório";
+    if(!f.address.trim()) e.address="Obrigatório";
+    if(!f.postalCode.trim()) e.postalCode="Obrigatório";
     if(!f.city.trim())    e.city="Obrigatório";
     setErrs(e);
     if(Object.keys(e).length) return;
     setLoading(true);
     await new Promise(r=>setTimeout(r,800));
+    const region = inferRegion(f.city, f.postalCode);
     const club={
       id:Date.now(), name:f.name.trim(), email:f.email.trim(),
-      phone:f.phone.trim(), address:f.address.trim(), city:f.city.trim(),
+      phone:f.phone.trim(), address:f.address.trim(), postalCode:f.postalCode.trim(), city:f.city.trim(), locality:f.city.trim(), region,
       password:"portal2026", status:"pending", since:TODAY,
       // Default club config
       tagline:"O teu campo. À tua hora.", priceDay:3, priceNight:4,
@@ -3784,7 +3807,9 @@ function ClubRegister({ clubs, onSubmit, onGoLogin, onBack, onHome }) {
       <AuthInput label="Nome do clube" value={f.name} onChange={e=>set("name",e.target.value)} placeholder="Ex: Padel Arena Lisboa" error={errs.name}/>
       <AuthInput label="Email" type="email" value={f.email} onChange={e=>set("email",e.target.value)} placeholder="clube@email.pt" error={errs.email}/>
       <AuthInput label="Telefone" type="tel" value={f.phone} onChange={e=>set("phone",e.target.value)} placeholder="+351 2xx xxx xxx" error={errs.phone}/>
-      <AuthInput label="Cidade" value={f.city} onChange={e=>set("city",e.target.value)} placeholder="Lisboa" error={errs.city}/>
+      <AuthInput label="Morada" value={f.address} onChange={e=>set("address",e.target.value)} placeholder="Rua, número" error={errs.address}/>
+      <AuthInput label="Código postal" value={f.postalCode} onChange={e=>set("postalCode",e.target.value)} placeholder="0000-000" error={errs.postalCode}/>
+      <AuthInput label="Localidade" value={f.city} onChange={e=>set("city",e.target.value)} placeholder="Lisboa" error={errs.city}/>
       <div style={{fontSize:11,color:"#7A766F",marginBottom:16,padding:"10px 12px",background:"rgba(0,0,0,.04)",borderRadius:8,lineHeight:1.6}}>
         O pedido é simples: deixas os dados e nós ajudamos a colocar o clube online.
       </div>
